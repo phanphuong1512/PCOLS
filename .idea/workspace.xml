@@ -4,78 +4,73 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1f7e7f94-8ac1-4fe8-ab49-279de529dbce" name="Changes" comment="" />
+    <list default="true" id="cae2aaf9-eda7-4e73-aba0-6b45005b84d7" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitattributes" beforeDir="false" afterPath="$PROJECT_DIR$/.gitattributes" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PCOLS/.gitattributes" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PCOLS/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PCOLS/build.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PCOLS/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PCOLS/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PCOLS/gradlew" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PCOLS/gradlew.bat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PCOLS/settings.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PCOLS/src/main/java/com/swp391/PCOLS/PcolsApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PCOLS/src/main/resources/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PCOLS/src/test/java/com/swp391/PCOLS/PcolsApplicationTests.java" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="ExternalProjectsData">
-    <projectState path="$PROJECT_DIR$/phanspring">
+    <projectState path="$PROJECT_DIR$">
       <ProjectState />
     </projectState>
   </component>
-  <component name="ExternalProjectsManager">
-    <system id="GRADLE">
-      <state>
-        <projects_view>
-          <tree_state>
-            <expand>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="phanspring" type="f1a62948:ProjectNode" />
-              </path>
-            </expand>
-            <select />
-          </tree_state>
-        </projects_view>
-      </state>
-    </system>
-  </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Class" />
-      </list>
-    </option>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 3
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 4
 }</component>
-  <component name="ProjectId" id="2rLXPsSzdiShHj8S8KqD3gdeO7I" />
+  <component name="ProjectId" id="2rO2LzgwN2rCV0NxnfmYF4Nukpv" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Gradle.Build phanspring.executor": "Run",
+    "Gradle.Build PCOLS.executor": "Run",
     "RequestMappingsPanelOrder0": "0",
     "RequestMappingsPanelOrder1": "1",
     "RequestMappingsPanelWidth0": "75",
     "RequestMappingsPanelWidth1": "75",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "Spring Boot.PhanspringApplication.executor": "Run",
+    "RunOnceActivity.git.unshallow": "true",
+    "Spring Boot.PcolsApplication.executor": "Run",
+    "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/PCOLS/PCOLS",
+    "last_opened_file_path": "D:/STUDY/SWP/PCOLS",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RunManager">
-    <configuration name="PhanspringApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+    <configuration name="PcolsApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
-      <module name="phanspring.main" />
-      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.phanspring.PhanspringApplication" />
+      <module name="PCOLS.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.swp391.PCOLS.PcolsApplication" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -84,30 +79,34 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-fdfe4dae3a2d-intellij.indexing.shared.core-IU-243.22562.218" />
-        <option value="bundled-js-predefined-d6986cc7102b-deb605915726-JavaScript-IU-243.22562.218" />
+        <option value="bundled-jdk-9823dce3aa75-125ca727e0f0-intellij.indexing.shared.core-IU-243.23654.117" />
+        <option value="bundled-js-predefined-d6986cc7102b-822845ee3bb5-JavaScript-IU-243.23654.117" />
       </set>
     </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="1f7e7f94-8ac1-4fe8-ab49-279de529dbce" name="Changes" comment="" />
-      <created>1736339308525</created>
+      <changelist id="cae2aaf9-eda7-4e73-aba0-6b45005b84d7" name="Changes" comment="" />
+      <created>1736415748693</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1736339308525</updated>
-      <workItem from="1736339309630" duration="4787000" />
-      <workItem from="1736411198949" duration="1479000" />
-      <workItem from="1736414759909" duration="276000" />
-      <workItem from="1736415089030" duration="7000" />
-      <workItem from="1736415147151" duration="181000" />
-      <workItem from="1736415452711" duration="227000" />
-      <workItem from="1736415722753" duration="26000" />
+      <updated>1736415748693</updated>
+      <workItem from="1736415749849" duration="1878000" />
+      <workItem from="1736418164555" duration="487000" />
+      <workItem from="1736688562813" duration="2072000" />
+      <workItem from="1736767620893" duration="926000" />
+      <workItem from="1737127005484" duration="308000" />
+      <workItem from="1737435513780" duration="531000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <ignored-roots>
+      <path value="$PROJECT_DIR$/.." />
+    </ignored-roots>
   </component>
 </project>

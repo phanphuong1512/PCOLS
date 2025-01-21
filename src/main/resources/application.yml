@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: ags
+  datasource:
+    url: jdbc:sqlserver://localhost:1433;databaseName=springdb;trustServerCertificate=true
+    username: sa
+    password: Abc123456
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+  jpa:
+    hibernate:
+      ddl-auto: update
