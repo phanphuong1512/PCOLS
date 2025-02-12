@@ -1,11 +1,17 @@
 spring:
   application:
-    name: ags
+    name: PCOLS
   datasource:
-    url: jdbc:sqlserver://localhost:1433;databaseName=springdb;trustServerCertificate=true
-    username: sa
-    password: Abc123456
-    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    url: jdbc:mysql://localhost:3306/pcshop
+    username: root
+    password: Strongpassword123
+    #    password: Nilspace26
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: update
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

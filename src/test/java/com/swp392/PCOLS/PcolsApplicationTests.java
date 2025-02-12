@@ -1,4 +1,4 @@
-package com.swp391.PCOLS;
+package com.swp392.PCOLS;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
