@@ -20,17 +20,19 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http
-            .formLogin(login -> {
-                login.loginPage("/auth/login");
-                login.usernameParameter("usr");
-                login.passwordParameter("pwd");
-                login.defaultSuccessUrl("/home");
-                login.failureUrl("/auth/login?error");
-            })
-            .authorizeHttpRequests(auth -> {
-                auth.requestMatchers("/auth/login").permitAll();
-                auth.anyRequest().authenticated();
-        });
+                .formLogin(login -> login
+                        .loginPage("/auth/login")
+                        .loginProcessingUrl("/auth/login")
+                        .defaultSuccessUrl("/home")
+                        .failureUrl("/auth/login?error")
+                        .permitAll()
+                )
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/auth/login", "/auth/register").permitAll()
+                        .requestMatchers("/css/**", "/js/**","/img/**","/scss/**").permitAll()
+                        .anyRequest().authenticated()
+                );
+
         return http.build();
     }
 

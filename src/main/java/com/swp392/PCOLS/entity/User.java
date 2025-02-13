@@ -2,26 +2,19 @@ package com.swp392.PCOLS.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
 public class User implements UserDetails {
 
-
-    @Column(name = "role_id")
-    public int roleId;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -38,23 +31,19 @@ public class User implements UserDetails {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "phone")
-    private int phone;
+    @Column(name = "phone", length = 10)
+    private String phone;
 
     @Column(name = "status")
     private boolean status;
+
+    @Column(name = "role_id")
+    private int roleId;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_authority", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "authority_id"))
     private List<Authority> authorities;
 
-    public User(Long id, String username, String password, List<Authority> authorities) {
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        this.id = id;
-        this.username = username;
-        this.password = passwordEncoder.encode(password);
-        this.authorities = authorities;
-    }
 
     @Override
     public List<Authority> getAuthorities() {
@@ -66,14 +55,31 @@ public class User implements UserDetails {
         return this.password;
     }
 
-    public void setPassword(String password) {
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        this.password = passwordEncoder.encode(password);
-    }
-
     @Override
     public String getUsername() {
         return this.username;
     }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+
+    @Override
+    public boolean isEnabled() {
+        return this.status;
+    }
+
 }
 

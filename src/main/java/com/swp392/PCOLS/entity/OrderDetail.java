@@ -1,17 +1,14 @@
 package com.swp392.PCOLS.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "order_details")
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
+
 public class OrderDetail {
 
     @Id
@@ -19,7 +16,7 @@ public class OrderDetail {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "order_id", nullable = false)
+    @JoinColumn(name = "orders_id", nullable = false)
     private Order order;
 
     @Column(name = "product_name")

@@ -1,10 +1,7 @@
 package com.swp392.PCOLS.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -12,8 +9,8 @@ import java.util.List;
 @Table(name = "orders")
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
+
 public class Order {
 
     @Id
@@ -21,7 +18,7 @@ public class Order {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "users_id", nullable = false)
     private User user;
 
     @Column(name = "order_date")
