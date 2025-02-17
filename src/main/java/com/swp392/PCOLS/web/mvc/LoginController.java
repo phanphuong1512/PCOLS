@@ -20,7 +20,6 @@ public class LoginController {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
-    //    @RequestMapping(name = "/login", method = RequestMethod.GET)
     @GetMapping("/login")
     public String getLoginPage() {
         return "auth/login";

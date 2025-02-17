@@ -35,7 +35,7 @@ public class User implements UserDetails {
     private String phone;
 
     @Column(name = "status")
-    private boolean status = true;
+    private boolean status;
 
     @Column(name = "role_id")
     private int roleId;

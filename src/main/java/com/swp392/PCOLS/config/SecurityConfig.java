@@ -8,15 +8,19 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+/**
+ * Configuration class for defining security rules and beans.
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
+    /**
+     * Configures security filters for HTTP requests.
+     *
+     * @param http HttpSecurity object to configure security settings.
+     * @return SecurityFilterChain configured with specified security rules.
+     * @throws Exception If configuration encounters an error.
+     */
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http
@@ -29,11 +33,20 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/login", "/auth/register").permitAll()
-                        .requestMatchers("/css/**", "/js/**","/img/**","/scss/**").permitAll()
-                        .anyRequest().permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/img/**", "/scss/**").permitAll()
+                        .anyRequest().authenticated()
                 );
 
         return http.build();
+    }
+    /**
+     * Provides an instance of BCryptPasswordEncoder for password encoding.
+     *
+     * @return BCryptPasswordEncoder instance.
+     */
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
 }
