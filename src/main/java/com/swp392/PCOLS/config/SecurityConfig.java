@@ -31,14 +31,20 @@ public class SecurityConfig {
                         .failureUrl("/auth/login?error")
                         .permitAll()
                 )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/auth/login?logout")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/login", "/auth/register").permitAll()
-                        .requestMatchers("/css/**", "/js/**", "/img/**", "/scss/**").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/img/**").permitAll()
                         .anyRequest().authenticated()
                 );
-
         return http.build();
     }
+
     /**
      * Provides an instance of BCryptPasswordEncoder for password encoding.
      *

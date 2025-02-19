@@ -34,7 +34,7 @@ public class PasswordController {
             // Validates and updates the password for the authenticated user.
             if (!newPassword.equals(confirmNewPassword)) {
                 model.addAttribute("error", "New passwords do not match");
-                return "profile";
+                return "auth/profile";
             }
 
             userServiceImpl.updatePassword(principal.getName(), currentPassword, newPassword);
@@ -43,7 +43,7 @@ public class PasswordController {
             // Handles exceptions during password update process.
             model.addAttribute("error", e.getMessage());
         }
-        return "profile";
+        return "auth/profile";
     }
 }
 
