@@ -4,9 +4,12 @@ import com.swp392.PCOLS.entity.User;
 import com.swp392.PCOLS.repository.UserRepository;
 import com.swp392.PCOLS.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -79,5 +82,19 @@ public class UserServiceImpl implements UserService {
         newUser.setStatus(true); // Đánh dấu tài khoản là enabled
 
         return userRepository.save(newUser);
+    }
+
+    @Override
+    public List<User> getAllUsers(String keyword, String sortBy) {
+        Sort sort = Sort.by(Sort.Direction.ASC, sortBy);
+        if (keyword != null && !keyword.isEmpty()) {
+            return userRepository.findByUsernameContainingIgnoreCase(keyword, sort);
+        }
+        return userRepository.findAll(sort);
+    }
+
+    @Override
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElse(null);
     }
 }
