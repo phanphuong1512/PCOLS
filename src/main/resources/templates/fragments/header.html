@@ -75,26 +75,12 @@
                                 </strong>
 
                             </div>
-                            <a href="#" class="text-uppercase">Login</a> / <a href="/auth/login"
-                                                                              class="text-uppercase">Join</a>
+                            <a th:href="@{/auth/login}" class="text-uppercase">Login</a> / <a th:href="@{/auth/login}"
+                                                                                              class="text-uppercase">Join</a>
                             <ul class="custom-menu">
                                 <li><a th:href="@{/auth/profile}"><i class="fa fa-user-o"></i> My Account</a></li>
                                 <li><a href="#"><i class="fa fa-heart-o"></i> My Wishlist</a></li>
-                                <li><a href="#"><i class="fa fa-exchange"></i> Logout</a></li>
-                                <form th:action="@{/logout}" method="post" style="display:inline;">
-                                    <li>
-
-                                        <!-- CSRF token nếu có -->
-                                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-
-                                        <!-- Button styled như link -->
-                                        <button type="submit"
-                                                style="background:none; border:none; color:inherit; padding:0; margin:0; cursor:pointer; text-decoration:none;">
-                                            <i class="fa fa-exchange"></i> Logout
-                                        </button>
-
-                                    </li>
-                                </form>
+                                <li><a th:href="@{/logout}"><i class="fa fa-exchange"></i> Logout</a></li>
                                 <li><a href="#"><i class="fa fa-check"></i> Checkout</a></li>
                                 <li><a href="#"><i class="fa fa-unlock-alt"></i> Login</a></li>
                                 <li><a href="#"><i class="fa fa-user-plus"></i> Create An Account</a></li>

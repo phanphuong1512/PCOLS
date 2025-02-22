@@ -10,6 +10,17 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: "phuongpvhe170793@fpt.edu.vn"
+    password: "jikv ywje jwcf axbc"
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 management:
   endpoints:
     web:
