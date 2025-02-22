@@ -8,6 +8,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
     public class AdminConfig implements WebMvcConfigurer {
         @Override
         public void addViewControllers(ViewControllerRegistry registry) {
-            registry.addViewController("/admin/users").setViewName("admin/user-list");
+//            registry.addViewController("/admin/users").setViewName("admin/user-list");
         }
     }

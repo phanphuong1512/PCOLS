@@ -17,21 +17,22 @@ public class Product {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "description", length = 2000)
-    private String description;
-
     @Column(name = "price")
     private double price;
+
+    @Column(name = "description", length = 2000)
+    private String description;
 
     @Column(name = "brand")
     private String brand;
 
-    @Column(name = "category")
-    private String category;
+    @ManyToMany
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     @Column(name = "stock")
     private int stock;
 
-    @Column(name = "image_url")
-    private String imageUrl;
+    @Column(name = "image")
+    private String image;
 }
