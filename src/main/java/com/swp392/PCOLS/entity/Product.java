@@ -3,6 +3,8 @@ package com.swp392.PCOLS.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "products")
 @AllArgsConstructor
@@ -26,9 +28,9 @@ public class Product {
     @Column(name = "brand")
     private String brand;
 
-    @ManyToMany
-    @JoinColumn(name = "category_id")
-    private Category category;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "product_category", joinColumns = @JoinColumn(name = "products_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
+    private List<Category> categories;
 
     @Column(name = "stock")
     private int stock;

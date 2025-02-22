@@ -1,21 +1,24 @@
 package com.swp392.PCOLS.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.ManyToMany;
-import org.springframework.data.annotation.Id;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.List;
+
+@Entity
+@Table(name = "category")
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long categoryId;
+    private Long id;
 
-    @Column(name = "Category_Name")
-    private String categoryName;
+    @Column(name = "name")
+    private String name;
 
-    @ManyToMany(mappedBy = "category")
+    @ManyToMany(mappedBy = "categories")
     private List<Product> products;
 }
