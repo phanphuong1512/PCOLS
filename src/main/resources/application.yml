@@ -4,8 +4,8 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/pcshop
     username: root
-    password: Strongpassword123
-    #    password: Nilspace26
+#    password: Strongpassword123
+    password: Nilspace26
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
@@ -19,5 +19,6 @@ logging:
   level:
     org.springframework.security: DEBUG
     org.springframework.web: DEBUG
+
 
 

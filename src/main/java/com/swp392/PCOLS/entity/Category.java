@@ -1,16 +1,15 @@
 package com.swp392.PCOLS.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.ManyToMany;
-import org.springframework.data.annotation.Id;
+import jakarta.persistence.*;
 
 import java.util.List;
 
+@Entity
 public class Category {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "category_id")
     private Long categoryId;
 
     @Column(name = "Category_Name")

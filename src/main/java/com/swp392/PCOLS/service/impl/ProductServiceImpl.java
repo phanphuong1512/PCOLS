@@ -15,9 +15,10 @@ public class ProductServiceImpl implements ProductService {
         this.productRepository = productRepository;
     }
 
+
     @Override
-    public List<Product> getProductList() {
-        return List.of();
+    public List<Product> getAllProduct() {
+        return this.productRepository.findAll();
     }
 
     @Override
@@ -27,6 +28,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product handleSaveProduct(Product product) {
-        return null;
+        this.productRepository.save(product);
+        return product;
     }
 }

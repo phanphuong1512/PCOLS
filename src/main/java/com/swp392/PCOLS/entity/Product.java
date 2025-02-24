@@ -1,10 +1,16 @@
 package com.swp392.PCOLS.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
+import java.util.List;
+
+@Entity
+@Data
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "product_id")
     private Long productId;
 
     @Column
@@ -20,6 +26,6 @@ public class Product {
     private String image;
 
     @ManyToMany
-    @JoinColumn(name = "category_id")
-    private Category category;
+    @JoinTable(name = "category", joinColumns = @JoinColumn(name = "category_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
+    private List<Category> category;
 }

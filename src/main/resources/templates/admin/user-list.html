@@ -25,7 +25,7 @@
         <td th:text="${user.username}"></td>
         <td th:text="${user.email}"></td>
         <td th:text="${user.createdDate}"></td>
-        <td><a th:href="@{/admin/users/{id}(id=${user.id})}">View</a></td>
+        <td><a th:href="@{/templates/admin/users/{id}(id=${user.id})}">View</a></td>
     </tr>
     </tbody>
 </table>
