@@ -25,11 +25,13 @@ public class User implements UserDetails {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "email", unique = true, nullable = false)
+    private String email;
+
+
     @Column(name = "address")
     private String address;
 
-    @Column(name = "email")
-    private String email;
 
     @Column(name = "phone", length = 10)
     private String phone;
@@ -50,6 +52,8 @@ public class User implements UserDetails {
     @JoinTable(name = "user_authority", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "authority_id"))
     private List<Authority> authorities;
 
+    @OneToOne(mappedBy = "user")
+    private ForgotPassword forgotPassword;
 
     @Override
     public List<Authority> getAuthorities() {

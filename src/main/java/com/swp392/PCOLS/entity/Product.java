@@ -1,7 +1,9 @@
 package com.swp392.PCOLS.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -28,13 +30,15 @@ public class Product {
     @Column(name = "brand")
     private String brand;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "product_category", joinColumns = @JoinColumn(name = "products_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
-    private List<Category> categories;
-
     @Column(name = "stock")
     private int stock;
 
     @Column(name = "image")
     private String image;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "product_category", joinColumns = @JoinColumn(name = "products_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
+    private List<Category> categories;
+
+
 }

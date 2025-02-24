@@ -20,6 +20,7 @@ public class EmailService {
     public void sendSimpleMail(EmailBodyDTO emailBodyDTO) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(emailBodyDTO.to());
+        message.setFrom("phuongpvhe170793@fpt.edu.vn");
         message.setSubject(emailBodyDTO.subject());
         message.setText(emailBodyDTO.body());
         javaMailSender.send(message);
