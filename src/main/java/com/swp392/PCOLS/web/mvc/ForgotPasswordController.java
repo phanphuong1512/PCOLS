@@ -7,7 +7,6 @@ import com.swp392.PCOLS.entity.User;
 import com.swp392.PCOLS.repository.ForgotPasswordRepository;
 import com.swp392.PCOLS.repository.UserRepository;
 import com.swp392.PCOLS.service.EmailService;
-import org.apache.logging.log4j.CloseableThreadContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -36,10 +35,8 @@ public class ForgotPasswordController {
     }
 
     @PostMapping("/verify-email/{email}")
-
     public ResponseEntity<String> verifyEmail(@PathVariable String email) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Email not found"));
-
 
         int otp = otpGenerator();
         EmailBodyDTO emailBodyDTO = EmailBodyDTO.builder()
@@ -58,6 +55,7 @@ public class ForgotPasswordController {
         return ResponseEntity.ok("Email sent for the verification");
 
     }
+
     @PostMapping("/verify-otp/{email}/{otp}")
     public ResponseEntity<String> verifyOTP(@PathVariable String email, @PathVariable int otp) {
         User user = userRepository.findByEmail(email)
@@ -70,13 +68,16 @@ public class ForgotPasswordController {
         }
         return ResponseEntity.ok("OTP verified");
     }
+
     @PostMapping("/reset-password/{email}")
     public ResponseEntity<String> changePassword(@RequestBody ChangePasswordDTO changePasswordDTO,
                                                  @PathVariable String email) {
-        if(!Objects.equals(changePasswordDTO.password(), changePasswordDTO.confirmPassword())) {
+        if (!Objects.equals(changePasswordDTO.password(), changePasswordDTO.confirmPassword())) {
             return new ResponseEntity<>("Passwords do not match", HttpStatus.EXPECTATION_FAILED);
         }
         String encodedPassword = passwordEncoder.encode(changePasswordDTO.password());
+        userRepository.updatePassword(email, encodedPassword);
+        return ResponseEntity.ok("Password has updated successfully");
     }
 
 

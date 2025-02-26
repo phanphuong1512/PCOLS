@@ -8,8 +8,10 @@ spring:
     #    password: Nilspace26
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: update
+    show-sql: true
   mail:
     host: smtp.gmail.com
     port: 587
@@ -30,5 +32,4 @@ logging:
   level:
     org.springframework.security: DEBUG
     org.springframework.web: DEBUG
-
 

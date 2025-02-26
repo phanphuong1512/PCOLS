@@ -1,5 +1,6 @@
 package com.swp392.PCOLS.service.impl;
 
+import com.swp392.PCOLS.dto.RegisterDTO;
 import com.swp392.PCOLS.entity.User;
 import com.swp392.PCOLS.repository.UserRepository;
 import com.swp392.PCOLS.service.UserService;
@@ -32,6 +33,7 @@ public class UserServiceImpl implements UserService {
      * @throws Exception if the current password is incorrect or the user is not found.
      */
     public void updatePassword(String username, String currentPassword, String newPassword) throws Exception {
+
         // Find the user by username or throw an exception if not found
         User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
@@ -43,6 +45,16 @@ public class UserServiceImpl implements UserService {
         // Encode and set the new password, then save the user
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
+    }
+
+    @Override
+    public String registerv2(RegisterDTO registerDTO) {
+        return "";
+    }
+
+    @Override
+    public String verifyAccount(String email, String otp) {
+        return "";
     }
 
     /**
@@ -65,7 +77,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User registerNewUser(String username, String rawPassword, String email, String address, String phone, int roleId) {
+    public User register(String username, String rawPassword, String email, String address, String phone, int roleId) {
         if (userRepository.findByUsername(username).isPresent()) {
             throw new RuntimeException("Username already exists");
         }

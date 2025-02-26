@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -42,11 +43,11 @@ public class User implements UserDetails {
     @Column(name = "role_id")
     private int roleId;
 
-    @Column(name = "active_key")
-    private String activeKey;
+    @Column(name = "otp")
+    private String otp;
 
-    @Column(name = "reset_key")
-    private String resetKey;
+    @Column(name = "expiration_time")
+    private LocalDateTime expirationTime;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_authority", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "authority_id"))
