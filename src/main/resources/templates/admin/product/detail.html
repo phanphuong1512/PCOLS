@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Product Details</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script>
+        function enableEdit() {
+            document.querySelectorAll(".form-control").forEach(input => input.removeAttribute("disabled"));
+            document.getElementById("categoryText").style.display = "none";
+            document.getElementById("categorySelect").style.display = "inline-block";
+            document.getElementById("editBtn").style.display = "none";
+            document.getElementById("cancelBtn").style.display = "inline-block";
+            document.getElementById("saveBtn").style.display = "inline-block";
+        }
+
+        function confirmSave(event) {
+            if (!confirm("Bạn có chắc chắn muốn lưu thay đổi?")) {
+                event.preventDefault();
+            }
+        }
+
+        function cancelEdit() {
+            document.querySelectorAll(".form-control").forEach(input => {
+                input.setAttribute("disabled", "true");
+                input.value = input.defaultValue; // Restore original value
+            });
+
+            document.getElementById("categoryText").style.display = "inline-block";
+            document.getElementById("categorySelect").style.display = "none";
+
+            document.getElementById("saveBtn").style.display = "none";
+            document.getElementById("cancelBtn").style.display = "none";
+            document.getElementById("editBtn").style.display = "inline-block";
+        }
+    </script>
+</head>
+<body>
+<div class="container mt-5">
+    <form th:action="@{/admin/product/detail/saveEdit}" method="post" th:object="${product}">
+        <input type="hidden" th:field="*{id}">
+        <div class="card">
+            <div class="row g-0">
+                <!-- Product Name -->
+                <div class="mb-3">
+                    <label for="name" class="form-label"><strong>Product Name:</strong></label>
+                    <input type="text" id="name" class="form-control" th:field="*{name}" disabled>
+                </div>
+
+                <!-- Category -->
+                <div class="mb-3">
+                    <label for="categorySelect" class="form-label"><strong>Category:</strong></label>
+                    <!-- Show category name when not editing -->
+                    <span id="categoryText" th:text="${product.category != null ? product.category.name : 'No Category'}"></span>
+                    <!-- Show dropdown when editing -->
+                    <select id="categorySelect" class="form-control" th:field="*{category}" style="display:none;" disabled>
+                        <option value="">Select Category</option>
+                        <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
+                    </select>
+                </div>
+
+                <!-- Price -->
+                <div class="mb-3">
+                    <label for="price" class="form-label"><strong>Price:</strong></label>
+                    <input type="number" id="price" class="form-control" th:field="*{price}" disabled>
+                </div>
+
+                <!-- Description -->
+                <div class="mb-3">
+                    <label for="description" class="form-label"><strong>Description:</strong></label>
+                    <textarea id="description" class="form-control" th:field="*{description}" disabled></textarea>
+                </div>
+
+
+                <!-- Buttons -->
+                        <button type="button" class="btn btn-primary" id="editBtn" onclick="enableEdit()">Edit</button>
+                        <button type="button" class="btn btn-danger" id="cancelBtn" style="display:none" onclick="cancelEdit()">Cancel</button>
+                        <button type="submit" class="btn btn-success" id="saveBtn" style="display:none;" onclick="confirmSave(event)">Save</button>
+                        <a th:href="@{/admin/product}" class="btn btn-secondary">Back to Products</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

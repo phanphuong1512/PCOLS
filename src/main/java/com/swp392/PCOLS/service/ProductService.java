@@ -9,4 +9,5 @@ public interface ProductService {
     String addProduct(Product product);
     Product handleSaveProduct(Product product);
 
+    Product getProductById(long id);
 }
