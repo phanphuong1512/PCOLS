@@ -1,31 +1,44 @@
 package com.swp392.PCOLS.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Entity
+@Table(name = "products")
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class Product {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "product_id")
-    private Long productId;
+    private Long id;
 
-    @Column
-    private String productName;
+    @Column(name = "name", nullable = false)
+    private String name;
 
-    @Column
+    @Column(name = "price")
     private double price;
 
-    @Column
+    @Column(name = "description", length = 2000)
     private String description;
 
-    @Column
+    @Column(name = "brand")
+    private String brand;
+
+    @Column(name = "stock")
+    private int stock;
+
+    @Column(name = "image")
     private String image;
 
-    @ManyToMany
-    @JoinTable(name = "category", joinColumns = @JoinColumn(name = "category_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
-    private List<Category> category;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "product_category", joinColumns = @JoinColumn(name = "products_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
+    private List<Category> categories;
+
+
 }

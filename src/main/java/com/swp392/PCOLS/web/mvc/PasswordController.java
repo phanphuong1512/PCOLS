@@ -1,7 +1,7 @@
 package com.swp392.PCOLS.web.mvc;
 
-import com.swp392.PCOLS.service.impl.UserServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.swp392.PCOLS.service.UserService;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,10 +13,10 @@ import java.security.Principal;
 
 @Controller
 @RequestMapping("/auth")
+@AllArgsConstructor
 public class PasswordController {
 
-    @Autowired
-    private UserServiceImpl userServiceImpl;
+    private final UserService userService;
 
     // Handles GET requests to "/update-password" to render the password update form.
     @GetMapping("/profile")
@@ -37,7 +37,7 @@ public class PasswordController {
                 return "auth/profile";
             }
 
-            userServiceImpl.updatePassword(principal.getName(), currentPassword, newPassword);
+            userService.updatePassword(principal.getName(), currentPassword, newPassword);
             model.addAttribute("message", "Password updated successfully");
         } catch (Exception e) {
             // Handles exceptions during password update process.
