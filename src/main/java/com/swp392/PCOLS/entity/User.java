@@ -29,16 +29,14 @@ public class User implements UserDetails {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-
     @Column(name = "address")
     private String address;
-
 
     @Column(name = "phone", length = 10)
     private String phone;
 
     @Column(name = "status")
-    private boolean status = true;
+    private boolean status;
 
     @Column(name = "role_id")
     private int roleId;
@@ -86,11 +84,9 @@ public class User implements UserDetails {
         return true;
     }
 
-
     @Override
     public boolean isEnabled() {
         return this.status;
     }
-
 }
 

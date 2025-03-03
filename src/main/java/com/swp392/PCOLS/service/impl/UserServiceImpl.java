@@ -1,27 +1,89 @@
 package com.swp392.PCOLS.service.impl;
 
+import com.swp392.PCOLS.dto.LoginDTO;
 import com.swp392.PCOLS.dto.RegisterDTO;
 import com.swp392.PCOLS.entity.User;
 import com.swp392.PCOLS.repository.UserRepository;
 import com.swp392.PCOLS.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
+import com.swp392.PCOLS.util.EmailUtil;
+import com.swp392.PCOLS.util.OtpUtil;
+import jakarta.mail.MessagingException;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 @Service
+@AllArgsConstructor
+@Slf4j
+@Primary
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final OtpUtil otpUtil;
+    private final EmailUtil emailUtil;
 
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+
+    @Override
+    public String register(RegisterDTO registerDTO) {
+        String otp = otpUtil.generateOTP();
+        try {
+            emailUtil.sendOtpEmail(registerDTO.email(), otp);
+        } catch (MessagingException e) {
+            log.error("Error sending email: {}", e.getMessage());
+            throw new RuntimeException("Error sending email otp", e);
+        }
+        User user = new User();
+        user.setUsername(registerDTO.username());
+        user.setPassword(registerDTO.password());
+        user.setEmail(registerDTO.email());
+        user.setOtp(otp);
+        user.setExpirationTime(LocalDateTime.now());
+        userRepository.save(user);
+        return "User Registration Successful";
+    }
+
+    @Override
+    public String verifyAccount(String email, String otp) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> (new RuntimeException("Email not found " + email + "Anhxinh")));
+        if (user.getOtp().equals(otp) && Duration
+                .between(user.getExpirationTime(), LocalDateTime.now()).getSeconds() <= 300) {
+            user.setStatus(true);
+            userRepository.save(user);
+            return "Account verified";
+
+        }
+        return "Please regenerate OTP and try again";
+    }
+
+    public String regenerateOtp(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found" + email));
+        String otp = otpUtil.generateOTP();
+        try {
+            emailUtil.sendOtpEmail(email, otp);
+        } catch (MessagingException e) {
+            throw new RuntimeException("Error sending email otp");
+        }
+        user.setOtp(otp);
+        user.setExpirationTime(LocalDateTime.now());
+        userRepository.save(user);
+        return "OTP regenerated, please check email";
+    }
+
+    public String login(LoginDTO loginDTO) {
+        User user = userRepository.findByEmail(loginDTO.email()).orElseThrow(() -> new RuntimeException("User not found" + loginDTO.email()));
+        if (!loginDTO.password().equals(user.getPassword())) {
+            return "Login failed";
+        } else if (!user.isStatus()) {
+            return "Account not verified";
+        }
+        return "Login successful";
     }
 
     /**
@@ -45,68 +107,5 @@ public class UserServiceImpl implements UserService {
         // Encode and set the new password, then save the user
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
-    }
-
-    @Override
-    public String registerv2(RegisterDTO registerDTO) {
-        return "";
-    }
-
-    @Override
-    public String verifyAccount(String email, String otp) {
-        return "";
-    }
-
-    /**
-     * Checks if a user exists by username.
-     *
-     * @param username The username to check.
-     * @return true if the user exists, false otherwise.
-     */
-    public boolean existsByUsername(String username) {
-        return userRepository.findByUsername(username).isPresent();
-    }
-
-    /**
-     * Saves a user to the repository.
-     *
-     * @param user The user to save.
-     */
-    public void saveUser(User user) {
-        userRepository.save(user);
-    }
-
-    @Override
-    public User register(String username, String rawPassword, String email, String address, String phone, int roleId) {
-        if (userRepository.findByUsername(username).isPresent()) {
-            throw new RuntimeException("Username already exists");
-        }
-        User newUser = new User();
-        newUser.setUsername(username);
-        newUser.setPassword(passwordEncoder.encode(rawPassword)); //Encode password
-        newUser.setEmail(email);
-
-        // Nếu form không gửi address, phone thì gán giá trị mặc định
-        newUser.setAddress(address != null ? address : "");
-        newUser.setPhone(phone != null ? phone : "");
-
-        newUser.setRoleId(roleId); // Bạn có thể gán role mặc định (ví dụ: 1 cho user bình thường)
-        newUser.setStatus(true); // Đánh dấu tài khoản là enabled
-
-        return userRepository.save(newUser);
-    }
-
-    @Override
-    public List<User> getAllUsers(String keyword, String sortBy) {
-        Sort sort = Sort.by(Sort.Direction.ASC, sortBy);
-        if (keyword != null && !keyword.isEmpty()) {
-            return userRepository.findByUsernameContainingIgnoreCase(keyword, sort);
-        }
-        return userRepository.findAll(sort);
-    }
-
-    @Override
-    public User getUserById(Long id) {
-        return userRepository.findById(id).orElse(null);
     }
 }

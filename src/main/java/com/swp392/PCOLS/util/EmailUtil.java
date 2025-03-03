@@ -22,8 +22,8 @@ public class EmailUtil {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
         helper.setTo(email);
-        helper.setFrom("");
-        helper.setSubject("Verify OTP");
+        helper.setFrom("phuongpvhe170793@fpt.edu.vn");
+        helper.setSubject("burrito muprup");
         String htmlContent = getHtmlContent(email, otp);
         // setText(content, true) => true để gửi dạng HTML
         helper.setText(htmlContent, true);
@@ -33,7 +33,7 @@ public class EmailUtil {
 
     private String getHtmlContent(String email, String otp) {
         String verifyLink = String.format(
-                "http://localhost:8080/verify-account?email=%s&otp=%s",
+                "http://localhost:8080/auth/verify-account?email=%s&otp=%s",
                 email, otp
         );
 
@@ -41,6 +41,7 @@ public class EmailUtil {
         // Bạn có thể viết thêm nội dung, styling tuỳ ý
         return String.format(
                 """
+                       
                         <html>
                           <body>
                             <p>Chào bạn,</p>
