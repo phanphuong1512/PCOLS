@@ -8,7 +8,22 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
+    show-sql: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: "phuongpvhe170793@fpt.edu.vn"
+    password: "jikv ywje jwcf axbc"
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          ssl:
+            trust: smtp.gmail.com
 management:
   endpoints:
     web:
@@ -18,6 +33,5 @@ logging:
   level:
     org.springframework.security: DEBUG
     org.springframework.web: DEBUG
-
 
 

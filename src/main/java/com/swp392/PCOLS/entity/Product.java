@@ -15,7 +15,6 @@ import java.util.List;
 @Data
 @ToString(exclude = "category") // ✅ Prevents infinite recursion
 public class Product {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,7 +31,7 @@ public class Product {
     @Column(name = "brand")
     private String brand;
 
-    @Column(name = "stock", nullable = false)
+    @Column(name = "stock")
     private int stock;
 
     @Column(name = "image")
@@ -43,4 +42,3 @@ public class Product {
     @JoinColumn(name = "category_id") // Foreign key column
     private Category category;
 }
-

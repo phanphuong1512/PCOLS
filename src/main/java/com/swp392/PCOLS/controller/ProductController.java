@@ -1,4 +1,4 @@
-package com.swp392.PCOLS.web.mvc;
+package com.swp392.PCOLS.controller;
 
 import com.swp392.PCOLS.entity.Category;
 import com.swp392.PCOLS.entity.Product;

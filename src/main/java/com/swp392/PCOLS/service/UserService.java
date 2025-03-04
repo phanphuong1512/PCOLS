@@ -1,12 +1,19 @@
 package com.swp392.PCOLS.service;
 
-import com.swp392.PCOLS.entity.User;
-
-import java.util.List;
+import com.swp392.PCOLS.dto.LoginDTO;
+import com.swp392.PCOLS.dto.RegisterDTO;
 
 public interface UserService {
-    User registerNewUser(String username, String rawPassword, String email, String address, String phone, int roleId);
-    List<User> getAllUsers(String keyword, String sortBy);
-    User getUserById(Long id);
+
+    String login(LoginDTO loginDTO);
+
+    void register(RegisterDTO registerDTO);
+
+    void verifyAccount(String email, String otp);
+
+    void regenerateOtp(String email);
+
+    void updatePassword(String name, String currentPassword, String newPassword) throws Exception;
+
 
 }
