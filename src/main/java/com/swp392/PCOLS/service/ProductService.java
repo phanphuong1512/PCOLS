@@ -5,7 +5,7 @@ import com.swp392.PCOLS.entity.Product;
 import java.util.List;
 
 public interface ProductService {
-    List<Product> getProductList();
+    List<Product> getAllProduct();
 
     String addProduct(Product product);
 
