@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public String register(RegisterDTO registerDTO) {
+    public void register(RegisterDTO registerDTO) {
         String otp = otpUtil.generateOTP();
         try {
             emailUtil.sendOtpEmail(registerDTO.email(), otp);
@@ -41,28 +41,26 @@ public class UserServiceImpl implements UserService {
         }
         User user = new User();
         user.setUsername(registerDTO.username());
-        user.setPassword(registerDTO.password());
+        user.setPassword(passwordEncoder.encode(registerDTO.password()));
         user.setEmail(registerDTO.email());
         user.setOtp(otp);
         user.setExpirationTime(LocalDateTime.now());
         userRepository.save(user);
-        return "User Registration Successful";
     }
 
     @Override
-    public String verifyAccount(String email, String otp) {
+    public void verifyAccount(String email, String otp) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> (new RuntimeException("Email not found " + email + "Anhxinh")));
         if (user.getOtp().equals(otp) && Duration
                 .between(user.getExpirationTime(), LocalDateTime.now()).getSeconds() <= 300) {
             user.setStatus(true);
             userRepository.save(user);
-            return "Account verified";
-
+        } else {
+            throw new RuntimeException("OTP incorrect or expired. Please regenerate OTP and try again.");
         }
-        return "Please regenerate OTP and try again";
     }
 
-    public String regenerateOtp(String email) {
+    public void regenerateOtp(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found" + email));
         String otp = otpUtil.generateOTP();
         try {
@@ -73,7 +71,6 @@ public class UserServiceImpl implements UserService {
         user.setOtp(otp);
         user.setExpirationTime(LocalDateTime.now());
         userRepository.save(user);
-        return "OTP regenerated, please check email";
     }
 
     public String login(LoginDTO loginDTO) {

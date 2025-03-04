@@ -1,4 +1,4 @@
-package com.swp392.PCOLS.web.mvc;
+package com.swp392.PCOLS.controller;
 
 import com.swp392.PCOLS.dto.LoginDTO;
 import com.swp392.PCOLS.dto.RegisterDTO;
@@ -25,24 +25,27 @@ public class AuthController {
         return "auth/login";
     }
 
-    @PutMapping("/loginRE")
-    public ResponseEntity<String> login(@ModelAttribute LoginDTO loginDTO) {
+    @PostMapping("/loginRE")
+    public ResponseEntity<?> login(@ModelAttribute LoginDTO loginDTO) {
         return new ResponseEntity<>(userService.login(loginDTO), HttpStatus.OK);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@ModelAttribute RegisterDTO registerDTO) {
-        return new ResponseEntity<>(userService.register(registerDTO), HttpStatus.OK);
+    public String register(@ModelAttribute RegisterDTO registerDTO) {
+        userService.register(registerDTO);
+        return "/auth/otp";
     }
 
     @GetMapping("/verify-account")
-    public ResponseEntity<String> verifyAccount(@RequestParam String email, @RequestParam String otp) {
-        return new ResponseEntity<>(userService.verifyAccount(email, otp), HttpStatus.OK);
+    public String verifyAccount(@RequestParam String email, @RequestParam String otp) {
+        userService.verifyAccount(email, otp);
+        return "redirect:auth/login";
     }
 
     @PutMapping("/regenerate-otp")
-    public ResponseEntity<String> regenerateOtp(@RequestParam String email) {
-        return new ResponseEntity<>(userService.regenerateOtp(email), HttpStatus.OK);
+    public ResponseEntity<?> regenerateOtp(@RequestParam String email) {
+        userService.regenerateOtp(email);
+        return new ResponseEntity<>("regenerated otp", HttpStatus.OK);
     }
 
 

@@ -1,4 +1,4 @@
-package com.swp392.PCOLS.web.mvc;
+package com.swp392.PCOLS.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

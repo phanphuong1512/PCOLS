@@ -41,7 +41,7 @@ public class SecurityConfig {
                         .deleteCookies("JSESSIONID")
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login", "/auth/register","/auth/registerv2").permitAll()
+                        .requestMatchers("/auth/login", "/auth/register").permitAll()
                         .requestMatchers("/forgot-password/**").permitAll()
                         .requestMatchers("/css/**", "/js/**", "/img/**").permitAll()
                         // .anyRequest().authenticated()

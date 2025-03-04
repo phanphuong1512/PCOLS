@@ -7,11 +7,11 @@ public interface UserService {
 
     String login(LoginDTO loginDTO);
 
-    public String register(RegisterDTO registerDTO);
+    void register(RegisterDTO registerDTO);
 
-    String verifyAccount(String email, String otp);
+    void verifyAccount(String email, String otp);
 
-    String regenerateOtp(String email);
+    void regenerateOtp(String email);
 
     void updatePassword(String name, String currentPassword, String newPassword) throws Exception;
 

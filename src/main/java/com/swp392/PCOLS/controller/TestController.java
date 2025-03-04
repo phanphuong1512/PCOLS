@@ -1,4 +1,4 @@
-package com.swp392.PCOLS.web.mvc;
+package com.swp392.PCOLS.controller;
 
 import jakarta.annotation.security.PermitAll;
 import org.springframework.http.ResponseEntity;

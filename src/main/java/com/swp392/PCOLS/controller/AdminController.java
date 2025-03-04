@@ -1,4 +1,4 @@
-package com.swp392.PCOLS.web.mvc;
+package com.swp392.PCOLS.controller;
 
 import com.swp392.PCOLS.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
