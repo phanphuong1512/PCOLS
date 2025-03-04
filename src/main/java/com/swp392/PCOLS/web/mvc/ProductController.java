@@ -78,7 +78,7 @@ public class ProductController {
     @RequestMapping("/admin/product/detail/{id}")
     public String getProductDetailPage(Model model, @PathVariable long id){
         Product product = this.productService.getProductById(id);
-        List<Category> categories = categoryService.findAll();
+        List<Category> categories = categoryService.getAllCategory();
         model.addAttribute("categories", categories);
         model.addAttribute("product", product);
         model.addAttribute("id", id);

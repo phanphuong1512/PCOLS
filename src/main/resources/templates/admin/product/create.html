@@ -38,13 +38,15 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Category:</label>
-                    <select class="form-control" th:field="*{category.id}">
-                        <option value="">Select a category</option>
-                        <option th:each="category : ${categories}"
-                                th:value="${category.id}"
-                                th:text="${category.name}">
-                        </option>
-                    </select>
+                    <label>
+                        <select class="form-control" th:field="*{category.id}">
+                            <option value="">Select a category</option>
+                            <option th:each="category : ${categories}"
+                                    th:value="${category.id}"
+                                    th:text="${category.name}">
+                            </option>
+                        </select>
+                    </label>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Upload Product Image:</label>

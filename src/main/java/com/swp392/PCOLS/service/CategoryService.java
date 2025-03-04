@@ -11,5 +11,5 @@ public interface CategoryService {
 
     Category getCategoryById(Long selectedCategoryId);
 
-    List<Category> findAll();
+
 }
