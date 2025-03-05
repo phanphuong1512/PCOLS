@@ -48,6 +48,18 @@ public class AuthController {
         return new ResponseEntity<>("regenerated otp", HttpStatus.OK);
     }
 
+    @PutMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestParam String email) {
+        userService.forgotPassword(email);
+        return new ResponseEntity<>("Email sent for the verification", HttpStatus.OK);
+    }
+
+    @PutMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestParam String email, @RequestHeader String newPassword) {
+        userService.resetPassword(email, newPassword);
+        return new ResponseEntity<>("Password reset successfully", HttpStatus.OK);
+    }
+
 
 }
 

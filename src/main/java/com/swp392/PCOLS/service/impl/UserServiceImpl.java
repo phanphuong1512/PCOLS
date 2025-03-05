@@ -11,6 +11,7 @@ import jakarta.mail.MessagingException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -92,16 +93,33 @@ public class UserServiceImpl implements UserService {
      * @throws Exception if the current password is incorrect or the user is not found.
      */
     public void updatePassword(String username, String currentPassword, String newPassword) throws Exception {
-
-        // Find the user by username or throw an exception if not found
         User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        // Check if the current password matches
         if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
-            throw new Exception("Current password is incorrect");
+            throw new BadCredentialsException("Current password is incorrect");
         }
 
-        // Encode and set the new password, then save the user
+        if (passwordEncoder.matches(newPassword, user.getPassword())) {
+            throw new IllegalArgumentException("New password must be different from the current password");
+        }
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
+
+
+    @Override
+    public void forgotPassword(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+        try {
+            emailUtil.sendSetPassword(email);
+        } catch (MessagingException e) {
+            throw new RuntimeException("Error sending email otp");
+        }
+    }
+
+    @Override
+    public void resetPassword(String email, String newPassword) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }

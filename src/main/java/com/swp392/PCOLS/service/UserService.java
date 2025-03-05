@@ -15,5 +15,7 @@ public interface UserService {
 
     void updatePassword(String name, String currentPassword, String newPassword) throws Exception;
 
+    void forgotPassword(String email);
 
+    void resetPassword(String email, String newPassword);
 }
