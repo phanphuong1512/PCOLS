@@ -23,10 +23,10 @@
             <hr />
 
             <!-- Form Submission -->
-            <form th:action="@{/admin/product/create}" th:object="${newProduct}" method="post">
+            <form th:action="@{/admin/product/create}" th:object="${newProduct}" method="post" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label class="form-label">Product Name:</label>
-                    <input type="text" class="form-control" th:field="*{productName}" />
+                    <input type="text" class="form-control" th:field="*{name}" />
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Price:</label>
@@ -36,14 +36,22 @@
                     <label class="form-label">Description:</label>
                     <input type="text" class="form-control" th:field="*{description}" />
                 </div>
-<!--                <div class="mb-3">-->
-<!--                    <label class="form-label">Category:</label>-->
-<!--                    <select class="form-control" th:field="*{category}">-->
-<!--                        <option value="">Select a description</option>-->
-<!--                        <option th:each="category : ${categoryList}" th:value="${category}" th:text="${category}"></option>-->
-<!--                    </select>-->
-<!--                </div>-->
-
+                <div class="mb-3">
+                    <label class="form-label">Category:</label>
+                    <label>
+                        <select class="form-control" th:field="*{category.id}">
+                            <option value="">Select a category</option>
+                            <option th:each="category : ${categories}"
+                                    th:value="${category.id}"
+                                    th:text="${category.name}">
+                            </option>
+                        </select>
+                    </label>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Upload Product Image:</label>
+                    <input type="file" class="form-control" name="imageFile" accept="image/*" required />
+                </div>
                 <button type="submit" class="btn btn-primary">Add</button>
             </form>
         </div>

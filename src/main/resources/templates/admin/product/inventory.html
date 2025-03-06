@@ -33,14 +33,14 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="product : ${product1}">
-                    <td th:text="${product.productId}"></td>
-                    <td th:text="${product.productName}"></td>
-                    <td th:text="${product.category}"></td>
+                <tr th:each="product : ${products}">
+                    <td th:text="${product.id}"></td>
+                    <td th:text="${product.name}"></td>
+                    <td th:text="${product.category != null ? product.category.name : 'No Category'}"></td>
                     <td th:text="${product.description}"></td>
                     <td>
-                        <a th:href="@{/admin/product/edit/{id}(id=${product.productId})}" class="btn btn-warning btn-sm">Edit</a>
-                        <a th:href="@{/admin/product/detail/{id}(id=${product.productId})}" class="btn btn-danger btn-sm">Detail</a>
+                        <a th:href="@{/admin/product/edit/{id}(id=${product.id})}" class="btn btn-warning btn-sm">Edit</a>
+                        <a th:href="@{/admin/product/detail/{id}(id=${product.id})}" class="btn btn-danger btn-sm">Detail</a>
                     </td>
                 </tr>
                 </tbody>
