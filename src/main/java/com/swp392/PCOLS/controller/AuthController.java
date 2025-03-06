@@ -20,7 +20,6 @@ public class AuthController {
     private final UserService userService;
 
     @GetMapping("/login")
-
     public String getLoginPage() {
         return "auth/login";
     }
@@ -39,7 +38,7 @@ public class AuthController {
     @GetMapping("/verify-account")
     public String verifyAccount(@RequestParam String email, @RequestParam String otp) {
         userService.verifyAccount(email, otp);
-        return "redirect:auth/login";
+        return "redirect:/auth/login";
     }
 
     @PutMapping("/regenerate-otp")
