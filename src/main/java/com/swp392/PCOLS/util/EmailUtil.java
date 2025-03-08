@@ -62,7 +62,7 @@ public class EmailUtil {
 
     private String resetPasswordContent(String email) {
         String verifyLink = String.format(
-                "http://localhost:8080/auth/forgot-password?email=%s", email
+                "http://localhost:8080/auth/reset-password?email=%s", email
         );
         return String.format(
                 """
@@ -70,7 +70,7 @@ public class EmailUtil {
                           <body>
                             <p>Chào bạn,</p>
                             <p>Vui lòng bấm vào link bên dưới để reset password:</p>
-                            <a href="%s" target="_blank">Click để resetpass</a>
+                            <a href="%s" target="_blank">Click để reset pass</a>
                           </body>
                         </html>
                         """,

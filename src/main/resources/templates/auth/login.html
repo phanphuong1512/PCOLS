@@ -56,7 +56,7 @@
             <input type="text" name="username" placeholder="Username" required>
             <input type="password" name="password" placeholder="Password" required>
 
-            <a href="#">Forgot Your Password?</a>
+            <a th:href="@{/auth/forgot-password}">Forgot Your Password?</a>
 
             <!-- Hiển thị lỗi đăng nhập nếu có -->
             <p th:if="${param.error}" style="color: red;">Invalid username or password</p>

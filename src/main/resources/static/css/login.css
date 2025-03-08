@@ -8,8 +8,7 @@
 }
 
 body {
-    background-color: #c9d6ff;
-    background: linear-gradient(to right, #e2e2e2, #c9d6ff);
+    background: #c9d6ff linear-gradient(to right, #e2e2e2, #c9d6ff);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -31,7 +30,7 @@ body {
 .container p {
     font-size: 14px;
     line-height: 20px;
-    letter-spacing: 0.3px;
+    letter-spacing: 0;
     margin: 20px 0;
 }
 
@@ -47,14 +46,14 @@ body {
 }
 
 .container button {
-    background-color: #512da8;
+    background-color: #0b1c5a;
     color: #fff;
     font-size: 12px;
     padding: 10px 45px;
     border: 1px solid transparent;
     border-radius: 8px;
     font-weight: 600;
-    letter-spacing: 0.5px;
+    letter-spacing: 1px;
     text-transform: uppercase;
     margin-top: 10px;
     cursor: pointer;
@@ -161,13 +160,11 @@ body {
 }
 
 .toggle {
-    background-color: #512da8;
     height: 100%;
-    background: linear-gradient(to right, #5c6bc0, #512da8);
+    background: #0b1c5a linear-gradient(to right, #36437a, #0b1c5a);
     color: #fff;
     position: relative;
     left: -100%;
-    height: 100%;
     width: 200%;
     transform: translateX(0);
     transition: all 0.6s ease-in-out;

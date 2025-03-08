@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void verifyAccount(String email, String otp) {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> (new RuntimeException("Email not found " + email + "Anhxinh")));
+        User user = userRepository.findByEmail(email).orElseThrow(() -> (new RuntimeException("Email not found " + email + "oh no")));
         if (user.getOtp().equals(otp) && Duration
                 .between(user.getExpirationTime(), LocalDateTime.now()).getSeconds() <= 300) {
             user.setStatus(true);

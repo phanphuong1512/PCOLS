@@ -11,4 +11,10 @@ public class HomeController {
         return "home";
     }
 
+    @GetMapping("/product-page")
+    public String getProductPage() {
+        //        List<Product> products = this.productService.getAllProduct();
+        //        model.addAttribute("products", products);
+        return "product-page";
+    }
 }
