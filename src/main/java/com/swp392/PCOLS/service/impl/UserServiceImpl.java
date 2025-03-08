@@ -92,15 +92,17 @@ public class UserServiceImpl implements UserService {
      * @param newPassword     The new password to be set.
      * @throws Exception if the current password is incorrect or the user is not found.
      */
-    public void updatePassword(String username, String currentPassword, String newPassword) throws Exception {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
+    public void updatePassword(String username, String currentPassword, String newPassword, String confirmNewPassword) throws Exception {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
             throw new BadCredentialsException("Current password is incorrect");
         }
-
         if (passwordEncoder.matches(newPassword, user.getPassword())) {
             throw new IllegalArgumentException("New password must be different from the current password");
+        }
+        if (!newPassword.equals(confirmNewPassword)) {
+            throw new IllegalArgumentException("New password and confirm password do not match");
         }
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);

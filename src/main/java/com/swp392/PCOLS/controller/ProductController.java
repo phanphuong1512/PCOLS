@@ -31,7 +31,7 @@ public class ProductController {
 
     //lay het danh sach san pham
     @RequestMapping("/admin/product")
-    public String getProductPage(Model model){
+    public String getProductPage(Model model) {
         List<Product> products = this.productService.getAllProduct();
         model.addAttribute("products", products);
         System.out.println("check user" + products);
@@ -51,8 +51,8 @@ public class ProductController {
     //ham xu li luu san pham duoc tao moi
     @RequestMapping(value = "/admin/product/create", method = RequestMethod.POST)
     public String createProduct(@ModelAttribute("newProduct") Product product,
-                                    @RequestParam("category.id") Long selectedCategoryId,
-                                    @RequestParam("imageFile") MultipartFile imageFile) {
+                                @RequestParam("category.id") Long selectedCategoryId,
+                                @RequestParam("imageFile") MultipartFile imageFile) {
         // lay category tu DB
         //truyen category co san chu ko tao moi
         Category selectedCategory = categoryService.getCategoryById(selectedCategoryId);
@@ -76,7 +76,7 @@ public class ProductController {
 
     //lay chi tiet thong tin product theo id
     @RequestMapping("/admin/product/detail/{id}")
-    public String getProductDetailPage(Model model, @PathVariable long id){
+    public String getProductDetailPage(Model model, @PathVariable long id) {
         Product product = this.productService.getProductById(id);
         List<Category> categories = categoryService.getAllCategory();
         model.addAttribute("categories", categories);
@@ -86,7 +86,7 @@ public class ProductController {
     }
 
     @PostMapping("/admin/product/detail/saveEdit")
-    public String saveProductDetailEdit(@ModelAttribute Product product){
+    public String saveProductDetailEdit(@ModelAttribute Product product) {
         productService.handleSaveProduct(product);
         return "redirect:/admin/product/detail/" + product.getId();
     }

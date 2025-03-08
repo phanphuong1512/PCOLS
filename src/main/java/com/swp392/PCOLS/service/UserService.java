@@ -13,7 +13,7 @@ public interface UserService {
 
     void regenerateOtp(String email);
 
-    void updatePassword(String name, String currentPassword, String newPassword) throws Exception;
+    void updatePassword(String name, String currentPassword, String newPassword,String confirmNewPassword) throws Exception;
 
     void forgotPassword(String email);
 
