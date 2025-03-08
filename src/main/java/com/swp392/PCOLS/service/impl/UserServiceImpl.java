@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -104,5 +105,20 @@ public class UserServiceImpl implements UserService {
         // Encode and set the new password, then save the user
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
+    }
+
+    @Override
+    public List<User> getAllUser() {
+        return this.userRepository.findAll();
+    }
+
+    @Override
+    public User getUserById(Long id) {
+        return this.userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    @Override
+    public void updateUser(User user) {
+        this.userRepository.save(user);
     }
 }

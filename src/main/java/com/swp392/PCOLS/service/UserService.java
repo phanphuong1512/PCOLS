@@ -2,6 +2,10 @@ package com.swp392.PCOLS.service;
 
 import com.swp392.PCOLS.dto.LoginDTO;
 import com.swp392.PCOLS.dto.RegisterDTO;
+import com.swp392.PCOLS.entity.Product;
+import com.swp392.PCOLS.entity.User;
+
+import java.util.List;
 
 public interface UserService {
 
@@ -15,5 +19,9 @@ public interface UserService {
 
     void updatePassword(String name, String currentPassword, String newPassword) throws Exception;
 
+    List<User> getAllUser();
 
+    User getUserById(Long id);
+
+    void updateUser(User user);
 }

@@ -44,7 +44,7 @@ public class SecurityConfig {
                         .requestMatchers("/auth/login", "/auth/register").permitAll()
                         .requestMatchers("/forgot-password/**").permitAll()
                         .requestMatchers("/css/**", "/js/**", "/img/**").permitAll()
-                        // .anyRequest().authenticated()
+//                         .anyRequest().authenticated()
                         .anyRequest().permitAll()
                 );
         return http.build();

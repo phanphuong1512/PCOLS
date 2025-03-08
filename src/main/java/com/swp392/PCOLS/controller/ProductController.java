@@ -30,8 +30,8 @@ public class ProductController {
     }
 
     //lay het danh sach san pham
-    @RequestMapping("/admin/product")
-    public String getProductPage(Model model){
+    @GetMapping("/admin/product")
+    public String getInventoryPage(Model model){
         List<Product> products = this.productService.getAllProduct();
         model.addAttribute("products", products);
         System.out.println("check user" + products);
@@ -41,7 +41,7 @@ public class ProductController {
     //truy cap trang tao moi san pham
     //truyen vao object "newProduct" de tao moi
     //lay danh sach category
-    @RequestMapping("/admin/product/create") // GET
+    @GetMapping("/admin/product/create") // GET
     public String getCreateProductPage(Model model) {
         model.addAttribute("newProduct", new Product());
         model.addAttribute("categories", categoryService.getAllCategory());
@@ -49,7 +49,7 @@ public class ProductController {
     }
 
     //ham xu li luu san pham duoc tao moi
-    @RequestMapping(value = "/admin/product/create", method = RequestMethod.POST)
+    @PostMapping(value = "/admin/product/create")
     public String createProduct(@ModelAttribute("newProduct") Product product,
                                     @RequestParam("category.id") Long selectedCategoryId,
                                     @RequestParam("imageFile") MultipartFile imageFile) {
@@ -75,7 +75,7 @@ public class ProductController {
 
 
     //lay chi tiet thong tin product theo id
-    @RequestMapping("/admin/product/detail/{id}")
+    @GetMapping("/admin/product/detail/{id}")
     public String getProductDetailPage(Model model, @PathVariable long id){
         Product product = this.productService.getProductById(id);
         List<Category> categories = categoryService.getAllCategory();
@@ -89,5 +89,31 @@ public class ProductController {
     public String saveProductDetailEdit(@ModelAttribute Product product){
         productService.handleSaveProduct(product);
         return "redirect:/admin/product/detail/" + product.getId();
+    }
+
+    @GetMapping("/product-page")
+    public String getProductPage(Model model){
+        List<Product> products = this.productService.getAllProduct();
+        model.addAttribute("products", products);
+        model.addAttribute("categories", categoryService.getAllCategory());
+        return "product-page";
+    }
+
+    @GetMapping("/filter")
+    public String filterProductsByCategory(@RequestParam(name = "categoryId", required = false, defaultValue = "0") Long categoryId, Model model) {
+        List<Category> categories = categoryService.getAllCategories();
+        List<Product> products;
+
+        if (categoryId == 0) {
+            products = productService.getAllProduct(); // Show all products
+        } else {
+            products = productService.getProductsByCategory(categoryId);
+        }
+
+        model.addAttribute("categories", categories);
+        model.addAttribute("products", products);
+        model.addAttribute("selectedCategoryId", categoryId);
+
+        return "search"; // Ensure this matches your Thymeleaf template name
     }
 }

@@ -36,4 +36,9 @@ public class ProductServiceImpl implements ProductService {
     public Product getProductById(long id) {
         return this.productRepository.findById(id);
     }
+
+    @Override
+    public List<Product> getProductsByCategory(Long categoryId) {
+        return this.productRepository.getProductsByCategory(categoryId);
+    }
 }

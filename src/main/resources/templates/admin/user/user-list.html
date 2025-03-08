@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Users List</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        button {
+            margin: 2px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .ban-btn {
+            background-color: #FF5733; /* Red */
+            color: white;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+<h2>Users List</h2>
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Authorities (Roles)</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Loop through each user -->
+    <tr th:each="user : ${users}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.username}"></td>
+        <td th:text="${user.email}"></td>
+        <td>
+            <!-- Loop through each user's authorities -->
+            <span th:each="authority : ${user.authorities}">
+                        <span th:text="${authority.name}"></span><br/>
+                    </span>
+        </td>
+        <td>
+            <!-- Edit Button -->
+            <a th:href="@{/admin/user/edit/{id}(id=${user.id})}" class="btn btn-warning btn-sm">Edit</a>
+
+            <!-- Ban User Button -->
+            <form th:action="@{/users/ban}" method="post">
+                <input type="hidden" name="id" th:value="${user.id}" />
+                <button type="submit" class="ban-btn" onclick="return confirm('Are you sure you want to ban this user?')">Ban User</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

@@ -1,0 +1,12 @@
+/* Header Logo */
+.header-logo {
+    display: flex;
+    align-items: center; /* Align logo vertically */
+    height: 60px; /* Match header height */
+}
+
+.header-logo img {
+    width: 100px; /* Adjust size to be smaller */
+    height: auto; /* Maintain aspect ratio */
+    max-height: 50px; /* Ensure it fits within the header */
+}

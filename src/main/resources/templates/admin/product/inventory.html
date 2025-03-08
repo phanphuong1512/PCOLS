@@ -39,7 +39,7 @@
                     <td th:text="${product.category != null ? product.category.name : 'No Category'}"></td>
                     <td th:text="${product.description}"></td>
                     <td>
-                        <a th:href="@{/admin/product/edit/{id}(id=${product.id})}" class="btn btn-warning btn-sm">Edit</a>
+                        <a th:href="@{/admin/product/delete/{id}(id=${product.id})}" class="btn btn-warning btn-sm">Delete</a>
                         <a th:href="@{/admin/product/detail/{id}(id=${product.id})}" class="btn btn-danger btn-sm">Detail</a>
                     </td>
                 </tr>

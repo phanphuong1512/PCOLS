@@ -12,4 +12,6 @@ public interface ProductService {
     Product handleSaveProduct(Product product);
 
     Product getProductById(long id);
+
+    List<Product> getProductsByCategory(Long categoryId);
 }

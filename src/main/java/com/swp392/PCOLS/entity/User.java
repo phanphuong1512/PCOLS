@@ -38,9 +38,6 @@ public class User implements UserDetails {
     @Column(name = "status")
     private boolean status;
 
-    @Column(name = "role_id")
-    private int roleId;
-
     @Column(name = "otp")
     private String otp;
 
