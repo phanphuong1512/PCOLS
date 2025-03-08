@@ -1,5 +1,5 @@
 body {
-    background: #f5f5f5;
+    background: #29324e;
     margin-top: 20px;
 }
 
@@ -19,9 +19,9 @@ label.btn {
 }
 
 .btn-outline-primary {
-    border-color: #26B4FF;
+    border-color: #29324e;
     background: transparent;
-    color: #26B4FF;
+    color: #29324e;
 }
 
 .btn {
@@ -29,7 +29,7 @@ label.btn {
 }
 
 .text-light {
-    color: #babbbc !important;
+    color: #29324e !important;
 }
 
 .btn-facebook {
@@ -97,7 +97,7 @@ html:not(.dark-style) .account-settings-links .list-group-item.active {
 }
 
 .dark-style .account-settings-links .list-group-item.active {
-    color: #fff !important;
+    color: #29324e !important;
 }
 
 .light-style .account-settings-links .list-group-item.active {

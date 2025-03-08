@@ -51,8 +51,8 @@ public class ProductController {
     //ham xu li luu san pham duoc tao moi
     @PostMapping(value = "/admin/product/create")
     public String createProduct(@ModelAttribute("newProduct") Product product,
-                                    @RequestParam("category.id") Long selectedCategoryId,
-                                    @RequestParam("imageFile") MultipartFile imageFile) {
+                                @RequestParam("category.id") Long selectedCategoryId,
+                                @RequestParam("imageFile") MultipartFile imageFile) {
         // lay category tu DB
         //truyen category co san chu ko tao moi
         Category selectedCategory = categoryService.getCategoryById(selectedCategoryId);
@@ -86,7 +86,7 @@ public class ProductController {
     }
 
     @PostMapping("/admin/product/detail/saveEdit")
-    public String saveProductDetailEdit(@ModelAttribute Product product){
+    public String saveProductDetailEdit(@ModelAttribute Product product) {
         productService.handleSaveProduct(product);
         return "redirect:/admin/product/detail/" + product.getId();
     }

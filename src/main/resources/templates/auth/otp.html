@@ -3,46 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" href="/css/otp.css">
-    <script src="/js/otp.js"></script>
+
+    <link rel="stylesheet" th:href="@{/css/otp.css}" href="/css/otp.css">
+
 </head>
 <body>
-<div class="otp-box">
-    <div class="img">
-        <img src="" width="100px" alt="OTP image"/>
-    </div>
-
-    <div class="content-box">
-        <h2>Verification code</h2>
-        <p>We have sent a verification code to your registered mobile number.</p>
-    </div>
-    <form th:action="@{/auth/verify-otp}" method="get">
-        <div class="inputs">
-            <label>
-                <input type="text" name="digit1" maxlength="1" required/>
-            </label>
-            <label>
-                <input type="text" name="digit2" maxlength="1" required/>
-            </label>
-            <label>
-                <input type="text" name="digit3" maxlength="1" required/>
-            </label>
-            <label>
-                <input type="text" name="digit4" maxlength="1" required/>
-            </label>
-            <label>
-                <input type="text" name="digit5" maxlength="1" required/>
-            </label>
-            <label>
-                <input type="text" name="digit6" maxlength="1" required/>
-            </label>
+<form id="otpForm" th:action="@{/auth/verify-account}" method="get">
+    <div class="otp-box">
+        <div class="img">
+            <img src="" width="100px" alt="OTP image"/>
         </div>
-        <input type="hidden" name="email" th:value="${registerDTO.email}"/>
+
+        <div class="content-box">
+            <h2>Verification code</h2>
+            <p>We have sent a verification code to your registered mobile number.</p>
+        </div>
+
+        <div class="inputs">
+            <input type="hidden" name="email" th:value="${registerDTO.email}"/>
+            <input type="hidden" id="otp" name="otp"/>
+
+            <input type="text" name="digit1" maxlength="1" required/>
+
+            <input type="text" name="digit2" maxlength="1" required/>
+
+            <input type="text" name="digit3" maxlength="1" required/>
+
+            <input type="text" name="digit4" maxlength="1" required/>
+
+            <input type="text" name="digit5" maxlength="1" required/>
+
+            <input type="text" name="digit6" maxlength="1" required/>
+        </div>
         <div class="verify-btn">
             <button>Verify</button>
         </div>
-    </form>
-</div>
-
+    </div>
+</form>
+<script th:src="@{/js/otp.js}" src="/js/otp.js"></script>
 </body>
 </html>

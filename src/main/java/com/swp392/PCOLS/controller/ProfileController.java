@@ -3,47 +3,43 @@ package com.swp392.PCOLS.controller;
 import com.swp392.PCOLS.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 
 @Controller
-@RequestMapping("/auth")
+@RequestMapping("/profile")
 @AllArgsConstructor
-public class PasswordController {
+public class ProfileController {
 
     private final UserService userService;
 
     // Handles GET requests to "/update-password" to render the password update form.
-    @GetMapping("/profile")
-    public String updatePasswordForm() {
+    @GetMapping({""})
+    public String getProfilePage() {
         return "auth/profile";
     }
 
     // Handles POST requests to "/update-password" for updating user password securely.
-    @PostMapping("/profile")
+    @PostMapping("/update-password")
     public String updatePassword(@RequestParam String currentPassword,
                                  @RequestParam String newPassword,
                                  @RequestParam String confirmNewPassword,
-                                 Principal principal, Model model) {
+                                 Principal principal,
+                                 RedirectAttributes ra) throws Exception {
         try {
-            // Validates and updates the password for the authenticated user.
-            if (!newPassword.equals(confirmNewPassword)) {
-                model.addAttribute("error", "New passwords do not match");
-                return "auth/profile";
-            }
-
-            userService.updatePassword(principal.getName(), currentPassword, newPassword);
-            model.addAttribute("message", "Password updated successfully");
+            userService.updatePassword(principal.getName(), currentPassword, newPassword, confirmNewPassword);
+            ra.addFlashAttribute("message", "Password updated successfully");
         } catch (Exception e) {
-            // Handles exceptions during password update process.
-            model.addAttribute("error", e.getMessage());
+            ra.addFlashAttribute("error", e.getMessage());
         }
-        return "auth/profile";
+        return "redirect:/profile/";
     }
 }
+
+
 

@@ -48,9 +48,6 @@ public class User implements UserDetails {
     @JoinTable(name = "user_authority", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "authority_id"))
     private List<Authority> authorities;
 
-    @OneToOne(mappedBy = "user")
-    private ForgotPassword forgotPassword;
-
     @Override
     public List<Authority> getAuthorities() {
         return this.authorities;

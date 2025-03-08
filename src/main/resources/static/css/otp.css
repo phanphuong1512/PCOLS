@@ -18,7 +18,7 @@ body {
     max-width: 400px;
     padding: 2em;
     border-radius: 10px;
-    box-shadow: 0px 2px 5px 10px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 5px 10px rgba(0, 0, 0, 0.05);
     display: grid;
     gap: 1.5em;
     text-align: center;
@@ -27,17 +27,17 @@ body {
 .otp-box .img {
     display: inline;
     width: 100px;
-    length: 100px;
+    height: 100px;
     margin: 0 auto;
 }
 
-.otp-box .content h2 {
+.otp-box .content-box h2 {
     font-size: 20px;
     color: #111;
     margin-bottom: 5px;
 }
 
-.otp-box .content p {
+.otp-box .content-box p {
     color: #555;
     font-size: 14px;
 }
@@ -56,6 +56,7 @@ body {
     border: 1px solid #bbb;
     border-radius: 8px;
     font-size: 20px;
+    text-align: center;
     color: #111;
     caret-color: transparent;
 }
