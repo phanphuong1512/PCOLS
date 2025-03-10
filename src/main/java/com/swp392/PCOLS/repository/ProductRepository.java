@@ -2,6 +2,8 @@ package com.swp392.PCOLS.repository;
 
 import com.swp392.PCOLS.entity.Category;
 import com.swp392.PCOLS.entity.Product;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,5 +15,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Product findById(long id);
     Product getProductById(long id);
 
-    List<Product> getProductsByCategory(Long categoryId);
+    List<Product> findByCategory_Id(Long categoryId);
+
+    Page<Product> findByCategory_Id(Long categoryId, Pageable pageable);
+
 }

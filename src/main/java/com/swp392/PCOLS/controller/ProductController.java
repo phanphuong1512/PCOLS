@@ -4,6 +4,7 @@ import com.swp392.PCOLS.entity.Category;
 import com.swp392.PCOLS.entity.Product;
 import com.swp392.PCOLS.service.CategoryService;
 import com.swp392.PCOLS.service.ProductService;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -91,29 +92,50 @@ public class ProductController {
         return "redirect:/admin/product/detail/" + product.getId();
     }
 
-    @GetMapping("/product-page")
-    public String getProductPage(Model model){
-        List<Product> products = this.productService.getAllProduct();
-        model.addAttribute("products", products);
-        model.addAttribute("categories", categoryService.getAllCategory());
-        return "product-page";
-    }
+    @GetMapping("/products/showProduct")
+    public String getProductPage(@RequestParam(value = "sort", required = false) String sort,
+                                 @RequestParam(value = "categoryId", defaultValue = "0") Long categoryId,
+                                 @RequestParam(value = "page", defaultValue = "0") int page,
+                                 @RequestParam(value = "size", defaultValue = "10") int size,
+                                 Model model) {
+        Page<Product> productPage;
 
-    @GetMapping("/filter")
-    public String filterProductsByCategory(@RequestParam(name = "categoryId", required = false, defaultValue = "0") Long categoryId, Model model) {
-        List<Category> categories = categoryService.getAllCategories();
-        List<Product> products;
-
-        if (categoryId == 0) {
-            products = productService.getAllProduct(); // Show all products
+        if (categoryId != null && categoryId > 0) {
+            productPage = productService.getProductsByCategoryPaginated(categoryId, page, size);
         } else {
-            products = productService.getProductsByCategory(categoryId);
+            productPage = productService.getAllProductsPaginated(page, size);
         }
 
-        model.addAttribute("categories", categories);
-        model.addAttribute("products", products);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", productPage.getTotalPages());
         model.addAttribute("selectedCategoryId", categoryId);
+        model.addAttribute("size", size);
+        model.addAttribute("products", productPage);
+        model.addAttribute("categories", categoryService.getAllCategory());
+        return "products";
+    }
 
-        return "search"; // Ensure this matches your Thymeleaf template name
+    @GetMapping("/sortProductsByPrice")
+    public String filterProductsByCategory(@RequestParam(value = "sort", required = false) String sort,
+                                           @RequestParam(value = "page", defaultValue = "0") int page,
+                                           @RequestParam(value = "size", defaultValue = "10") int size,
+                                           Model model) {
+        Page<Product> productPage;
+
+        if ("price".equals(sort)) {
+            productPage = productService.getAllProductsByPricePaginated(page, size, sort);
+        } else if ("price_desc".equals(sort)) {
+            productPage = productService.getAllProductsByPricePaginated(page, size, sort);
+        } else {
+            productPage = productService.getAllProductsPaginated(page, size);
+        }
+
+        model.addAttribute("currentPage", page);
+        model.addAttribute("size", size);
+        model.addAttribute("sort", sort);
+        model.addAttribute("products", productPage);
+        model.addAttribute("totalPages", productPage.getTotalPages());
+
+        return "products"; // Ensure this matches your Thymeleaf template name
     }
 }
