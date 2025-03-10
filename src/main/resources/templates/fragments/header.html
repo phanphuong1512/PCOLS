@@ -1,7 +1,7 @@
 <div th:fragment="header" xmlns:sec="">
+    <!-- Bắt đầu code header của bạn -->
     <header>
-        <link rel="stylesheet" href="/css/styles.css">
-        <!-- Top Header -->
+        <!-- top Header -->
         <div id="top-header">
             <div class="container">
                 <div class="pull-left">
@@ -13,7 +13,8 @@
                         <li><a href="#">Newsletter</a></li>
                         <li><a href="#">Anh</a></li>
                         <li class="dropdown default-dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">ENG <i class="fa fa-caret-down"></i></a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">ENG <i
+                                    class="fa fa-caret-down"></i></a>
                             <ul class="custom-menu">
                                 <li><a href="#">English (ENG)</a></li>
                                 <li><a href="#">Russian (Ru)</a></li>
@@ -22,7 +23,8 @@
                             </ul>
                         </li>
                         <li class="dropdown default-dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">USD <i class="fa fa-caret-down"></i></a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">USD <i
+                                    class="fa fa-caret-down"></i></a>
                             <ul class="custom-menu">
                                 <li><a href="#">USD ($)</a></li>
                                 <li><a href="#">EUR (€)</a></li>
@@ -32,17 +34,17 @@
                 </div>
             </div>
         </div>
+        <!-- /top Header -->
 
-        <!-- Main Header -->
+        <!-- header -->
         <div id="header">
             <div class="container">
                 <div class="pull-left">
                     <!-- Logo -->
                     <div class="header-logo">
-                        <a class="logo" href="#">
+                        <a class="logo" href="">
                             <img src="https://techspace.vn/wp-content/uploads/2022/08/logo-techspac-nen-trang.png"
-                                 class="header_logo header-logo"
-                                 alt="TechSpace Việt Nam">
+                                 alt="">
                         </a>
                     </div>
                     <!-- /Logo -->
@@ -51,11 +53,11 @@
                     <div class="header-search">
                         <form>
                             <input class="input search-input" type="text" placeholder="Enter your keyword">
-                            <select class="input search-categories">
-                                <option value="0">All Categories</option>
-                                <option value="1">Category 01</option>
-                                <option value="1">Category 02</option>
-                            </select>
+                            <!--                            <select class="input search-categories">-->
+                            <!--                                <option value="0">All Categories</option>-->
+                            <!--                                <option value="1">Category 01</option>-->
+                            <!--                                <option value="1">Category 02</option>-->
+                            <!--                            </select>-->
                             <button class="search-btn"><i class="fa fa-search"></i></button>
                         </form>
                     </div>
@@ -72,6 +74,7 @@
                                 <strong class="text-uppercase">
                                     Hello <span sec:authentication="name"></span> <i class="fa fa-caret-down"></i>
                                 </strong>
+
                             </div>
                             <a th:href="@{/auth/login}" class="text-uppercase">Login</a> / <a th:href="@{/auth/login}"
                                                                                               class="text-uppercase">Join</a>
@@ -139,7 +142,10 @@
                     </ul>
                 </div>
             </div>
-            <!-- /Header -->
+            <!-- header -->
         </div>
+        <!-- container -->
     </header>
+    <!-- /HEADER -->
 </div>
+
