@@ -341,11 +341,14 @@ textarea.input {
 
 .header-logo {
     display: inline-block;
-    margin-right: 15px;
+    line-height: 0;
+    margin-left: 12px;
+
 }
 
 .header-logo .logo > img {
-    width: 100%;
+    display: inline-block;
+    width: 250px;
     max-height: 70px;
 }
 
@@ -355,7 +358,8 @@ textarea.input {
 
 .header-search {
     display: inline-block;
-    padding: 15px 0px;
+    padding: 15px 0;
+    margin-left: 150px;
     max-width: 400px;
 }
 
@@ -364,8 +368,8 @@ textarea.input {
 }
 
 .header-search > form .search-input {
-    padding-left: 150px;
-    padding-right: 45px;
+    padding-left: 10px;
+    padding-right: 150px;
 }
 
 .header-search > form .search-categories {

@@ -15,6 +15,6 @@ public class HomeController {
     public String getProductPage() {
         //        List<Product> products = this.productService.getAllProduct();
         //        model.addAttribute("products", products);
-        return "product-page";
+        return "product-detail";
     }
 }
