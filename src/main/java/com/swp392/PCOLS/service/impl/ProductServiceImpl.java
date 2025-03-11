@@ -3,17 +3,16 @@ package com.swp392.PCOLS.service.impl;
 import com.swp392.PCOLS.entity.Product;
 import com.swp392.PCOLS.repository.ProductRepository;
 import com.swp392.PCOLS.service.ProductService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
-    private ProductRepository productRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
+    private final ProductRepository productRepository;
 
 
     @Override
@@ -22,18 +21,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public String addProduct(Product product) {
-        return "";
-    }
-
-    @Override
-    public Product handleSaveProduct(Product product) {
+    public void handleSaveProduct(Product product) {
         this.productRepository.save(product);
-        return product;
     }
 
     @Override
     public Product getProductById(long id) {
-        return this.productRepository.findById(id);
+        return this.productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
     }
 }

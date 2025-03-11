@@ -3,18 +3,17 @@ package com.swp392.PCOLS.service.impl;
 import com.swp392.PCOLS.entity.Category;
 import com.swp392.PCOLS.repository.CategoryRepository;
 import com.swp392.PCOLS.service.CategoryService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
 
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
-    public CategoryServiceImpl(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
-    }
 
     @Override
     public List<Category> getAllCategory() {
@@ -28,8 +27,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category getCategoryById(Long selectedCategoryId) {
-        return this.categoryRepository.getCategoryById(selectedCategoryId);
+    public Category getCategoryById(Long id) {
+        return this.categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
     }
 
 }

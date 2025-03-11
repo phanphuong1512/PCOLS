@@ -9,7 +9,5 @@ public class Test {
     public static void main(String[] args) {
         SpringApplication.run(Test.class, args);
         System.out.println("Build Successful :DD");
-        //Ham nay de Test Build Successful
     }
-
 }
