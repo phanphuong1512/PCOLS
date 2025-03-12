@@ -1553,6 +1553,11 @@ p {
 
 .text-uppercase {
     text-transform: uppercase
+
+}
+
+.extra-padding {
+    padding-right: 15px;
 }
 
 .text-capitalize {

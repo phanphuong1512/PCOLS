@@ -39,12 +39,18 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/auth/login?logout")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
+                        .permitAll(false)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login", "/auth/register").permitAll()
-                        .requestMatchers("/auth/forgot-password/**").permitAll()
-                        .requestMatchers("/css/**", "/js/**", "/img/**").permitAll()
-//                         .anyRequest().authenticated()
+                        .requestMatchers(
+                                "/auth/login",
+                                "/auth/register",
+                                "/auth/forgot-password/**",
+                                "/css/**",
+                                "/js/**",
+                                "/img/**").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+//                        .anyRequest().hasAnyRole("ADMIN", "USER")
                         .anyRequest().permitAll()
                 );
         return http.build();

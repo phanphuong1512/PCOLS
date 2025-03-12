@@ -30,7 +30,7 @@ public class ProfileController {
                                  @RequestParam String newPassword,
                                  @RequestParam String confirmNewPassword,
                                  Principal principal,
-                                 RedirectAttributes ra) throws Exception {
+                                 RedirectAttributes ra) {
         try {
             userService.updatePassword(principal.getName(), currentPassword, newPassword, confirmNewPassword);
             ra.addFlashAttribute("message", "Password updated successfully");

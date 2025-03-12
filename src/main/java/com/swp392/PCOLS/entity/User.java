@@ -23,7 +23,7 @@ public class User implements UserDetails {
     @Column(name = "username", unique = true, nullable = false)
     private String username;
 
-    @Column(name = "password")
+    @Column(name = "password", unique = true, nullable = false)
     private String password;
 
     @Column(name = "email", unique = true, nullable = false)
@@ -35,8 +35,8 @@ public class User implements UserDetails {
     @Column(name = "phone", length = 10)
     private String phone;
 
-    @Column(name = "status")
-    private boolean status;
+    @Column(name = "enabled")
+    private boolean enabled;
 
     @Column(name = "otp")
     private String otp;
@@ -48,24 +48,5 @@ public class User implements UserDetails {
     @JoinTable(name = "user_authority", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "authority_id"))
     private List<Authority> authorities;
 
-    @Override
-    public List<Authority> getAuthorities() {
-        return this.authorities;
-    }
-
-    @Override
-    public String getPassword() {
-        return this.password;
-    }
-
-    @Override
-    public String getUsername() {
-        return this.username;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return this.status;
-    }
 }
 

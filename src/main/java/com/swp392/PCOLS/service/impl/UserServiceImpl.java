@@ -8,7 +8,7 @@ import com.swp392.PCOLS.service.UserService;
 import com.swp392.PCOLS.util.EmailUtil;
 import com.swp392.PCOLS.util.OtpUtil;
 import jakarta.mail.MessagingException;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 @Primary
 public class UserServiceImpl implements UserService {
@@ -30,7 +30,6 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final OtpUtil otpUtil;
     private final EmailUtil emailUtil;
-
 
     @Override
     public void register(RegisterDTO registerDTO) {
@@ -55,7 +54,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmail(email).orElseThrow(() -> (new RuntimeException("Email not found " + email + "oh no")));
         if (user.getOtp().equals(otp) && Duration
                 .between(user.getExpirationTime(), LocalDateTime.now()).getSeconds() <= 300) {
-            user.setStatus(true);
+            user.setEnabled(true);
             userRepository.save(user);
         } else {
             throw new RuntimeException("OTP incorrect or expired. Please regenerate OTP and try again.");
@@ -79,21 +78,13 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmail(loginDTO.email()).orElseThrow(() -> new RuntimeException("User not found" + loginDTO.email()));
         if (!loginDTO.password().equals(user.getPassword())) {
             return "Login failed";
-        } else if (!user.isStatus()) {
+        } else if (!user.isEnabled()) {
             return "Account not verified";
         }
         return "Login successful";
     }
 
-    /**
-     * Updates the password for a given user if the current password is correct.
-     *
-     * @param username        The username of the user.
-     * @param currentPassword The current password of the user.
-     * @param newPassword     The new password to be set.
-     * @throws Exception if the current password is incorrect or the user is not found.
-     */
-    public void updatePassword(String username, String currentPassword, String newPassword, String confirmNewPassword) throws Exception {
+    public void updatePassword(String username, String currentPassword, String newPassword, String confirmNewPassword) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
@@ -112,11 +103,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void forgotPassword(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+        userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
         try {
             emailUtil.sendSetPassword(email);
         } catch (MessagingException e) {
-            throw new RuntimeException("Error sending email otp");
+            throw new RuntimeException("Error sending email otp", e);
         }
     }
 
