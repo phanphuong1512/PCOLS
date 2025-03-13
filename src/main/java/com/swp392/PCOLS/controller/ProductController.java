@@ -5,6 +5,7 @@ import com.swp392.PCOLS.entity.Product;
 import com.swp392.PCOLS.service.CategoryService;
 import com.swp392.PCOLS.service.ProductService;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -92,26 +93,25 @@ public class ProductController {
         return "redirect:/admin/product/detail/" + product.getId();
     }
 
-    @GetMapping("/products/ProductPage ")
-    public String getProductPage(@RequestParam(value = "sort", required = false) String sort,
-                                 @RequestParam(value = "categoryId", defaultValue = "0") Long categoryId,
-                                 @RequestParam(value = "page", defaultValue = "0") int page,
-                                 @RequestParam(value = "size", defaultValue = "10") int size,
-                                 Model model) {
+    @GetMapping("/ProductPage")
+    public String getProductPage(Model model,
+                                 @RequestParam(value = "sort", required = false) String sort,
+                                 @RequestParam(value = "page", defaultValue = "1") int page) {
+        int PAGE_SIZE = 12;
         Page<Product> productPage;
-
-        if (categoryId != null && categoryId > 0) {
-            productPage = productService.getProductsByCategoryPaginated(categoryId, page, size);
+        if ("asc".equals(sort)) {
+            productPage = productService.getAllProductsSortedByPrice(page, PAGE_SIZE, Sort.Direction.ASC);
+        } else if ("desc".equals(sort)) {
+            productPage = productService.getAllProductsSortedByPrice(page, PAGE_SIZE, Sort.Direction.DESC);
         } else {
-            productPage = productService.getAllProductsPaginated(page, size);
+            productPage = productService.getAllProductsPaginated(page, PAGE_SIZE); // Default: No sorting
         }
 
-        model.addAttribute("currentPage", page);
+        model.addAttribute("products", productPage.getContent());
+        model.addAttribute("sortByPrice", sort);
         model.addAttribute("totalPages", productPage.getTotalPages());
-        model.addAttribute("selectedCategoryId", categoryId);
-        model.addAttribute("size", size);
-        model.addAttribute("products", productPage);
-        model.addAttribute("categories", categoryService.getAllCategory());
+        model.addAttribute("currentPage", page);
+
         return "products";
     }
 }

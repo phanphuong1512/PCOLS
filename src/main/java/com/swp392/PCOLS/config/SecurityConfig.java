@@ -49,7 +49,7 @@ public class SecurityConfig {
                                 "/css/**",
                                 "/js/**",
                                 "/img/**").permitAll()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
+//                        .requestMatchers("/admin/**").hasRole("ADMIN")
 //                        .anyRequest().hasAnyRole("ADMIN", "USER")
                         .anyRequest().permitAll()
                 );
