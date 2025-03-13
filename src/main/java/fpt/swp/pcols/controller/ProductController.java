@@ -30,9 +30,6 @@ public class ProductController {
         return "admin/product/inventory";
     }
 
-    //truy cap trang tao moi san pham
-    //truyen vao object "newProduct" de tao moi
-    //lay danh sach category
     @GetMapping("/admin/product/create") // GET
     public String getCreateProductPage(Model model) {
         model.addAttribute("newProduct", new Product());
@@ -48,7 +45,7 @@ public class ProductController {
         return "redirect:/admin/product";
     }
 
-    //lay chi tiet thong tin product theo id
+    //get product detail by id
     @GetMapping("/admin/product/detail/{id}")
     public String getProductDetailPage(Model model, @PathVariable long id) {
         Product product = this.productService.getProductById(id);
@@ -76,7 +73,7 @@ public class ProductController {
         } else if ("desc".equals(sort)) {
             productPage = productService.getAllProductsSortedByPrice(page, PAGE_SIZE, Sort.Direction.DESC);
         } else {
-            productPage = productService.getAllProductsPaginated(page, PAGE_SIZE); // Default: No sorting
+            productPage = productService.getAllProductsPaginated(page, PAGE_SIZE);
         }
 
         model.addAttribute("products", productPage.getContent());

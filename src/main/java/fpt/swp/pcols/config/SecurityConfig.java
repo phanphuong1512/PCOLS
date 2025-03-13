@@ -41,19 +41,19 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/auth/login?logout")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
-                        .permitAll(false)
+                        .permitAll()
                 )
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers(
-                                        "/auth/login",
-                                        "/auth/register",
-                                        "/auth/forgot-password/**",
-                                        "/css/**",
-                                        "/js/**",
-                                        "/img/**").permitAll()
-                                .requestMatchers("/admin/**").hasRole("ADMIN")
-                                .anyRequest().hasAnyRole("ADMIN", "USER")
-                        //                        .anyRequest().permitAll()
+                        .requestMatchers(
+                                "/auth/login",
+                                "/auth/register",
+                                "/auth/forgot-password/**",
+                                "/css/**",
+                                "/js/**",
+                                "/img/**").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        //                                .anyRequest().hasAnyRole("ADMIN", "USER")
+                        .anyRequest().permitAll()
                 )
                 .exceptionHandling(exception -> exception
                         .accessDeniedHandler((request, response, accessDeniedException) -> {

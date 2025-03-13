@@ -18,7 +18,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +36,7 @@ public class ProductServiceImpl implements ProductService {
         // handle upload file if not null
         if (imageFile != null && !imageFile.isEmpty()) {
             try {
-                String fileName = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
+                String fileName = imageFile.getOriginalFilename();
                 Path imagePath = Paths.get("src/main/resources/static/uploads/" + fileName);
                 Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
                 product.setImage("/uploads/" + fileName); // save relative path to DB

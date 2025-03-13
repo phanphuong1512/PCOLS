@@ -35,8 +35,7 @@ public class Product {
     @Column(name = "image")
     private String image;
 
-    // Correct @ManyToOne mapping
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id") // Foreign key column
+    @JoinColumn(name = "category_id")
     private Category category;
 }

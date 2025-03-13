@@ -8,6 +8,5 @@ class TestClass {
     @org.junit.jupiter.api.Test
     void contextLoads() {
     }
-
 }
 

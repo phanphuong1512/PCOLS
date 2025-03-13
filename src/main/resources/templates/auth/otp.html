@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -8,7 +9,8 @@
 
 </head>
 <body>
-<form id="otpForm" th:action="@{/auth/verify-account}" method="get">
+<form id="otpForm" th:action="@{/auth/verify-account}" method="get" >
+
     <div class="otp-box">
         <div class="img">
             <img src="" width="100px" alt="OTP image"/>
@@ -18,22 +20,34 @@
             <h2>Verification code</h2>
             <p>We have sent a verification code to your registered mobile number.</p>
         </div>
-
         <div class="inputs">
             <input type="hidden" name="email" th:value="${registerDTO.email}"/>
+
             <input type="hidden" id="otp" name="otp"/>
 
-            <input type="text" name="digit1" maxlength="1" required/>
+            <label>
+                <input type="text" name="digit1" maxlength="1" required/>
+            </label>
 
-            <input type="text" name="digit2" maxlength="1" required/>
+            <label>
+                <input type="text" name="digit2" maxlength="1" required/>
+            </label>
 
-            <input type="text" name="digit3" maxlength="1" required/>
+            <label>
+                <input type="text" name="digit3" maxlength="1" required/>
+            </label>
 
-            <input type="text" name="digit4" maxlength="1" required/>
+            <label>
+                <input type="text" name="digit4" maxlength="1" required/>
+            </label>
 
-            <input type="text" name="digit5" maxlength="1" required/>
+            <label>
+                <input type="text" name="digit5" maxlength="1" required/>
+            </label>
 
-            <input type="text" name="digit6" maxlength="1" required/>
+            <label>
+                <input type="text" name="digit6" maxlength="1" required/>
+            </label>
         </div>
         <div class="verify-btn">
             <button>Verify</button>

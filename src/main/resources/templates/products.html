@@ -70,23 +70,6 @@
                         <li><a href="#" style="color:#FFF; background-color:#9A54D8;">Medium Purple</a></li>
                     </ul>
 
-                    <ul class="filter-list">
-                        <li><span class="text-uppercase">Size:</span></li>
-                        <li><a href="#">X</a></li>
-                        <li><a href="#">XL</a></li>
-                    </ul>
-
-                    <ul class="filter-list">
-                        <li><span class="text-uppercase">Price:</span></li>
-                        <li><a href="#">MIN: $20.00</a></li>
-                        <li><a href="#">MAX: $120.00</a></li>
-                    </ul>
-
-                    <ul class="filter-list">
-                        <li><span class="text-uppercase">Gender:</span></li>
-                        <li><a href="#">Men</a></li>
-                    </ul>
-
                     <button class="primary-btn">Clear All</button>
                 </div>
                 <!-- /aside widget -->
@@ -203,7 +186,8 @@
                             <!-- Page Numbers -->
                             <li th:each="pageNum : ${#numbers.sequence(1, totalPages)}"
                                 th:classappend="${pageNum == currentPage} ? 'active' : ''">
-                                <a th:href="@{/ProductPage(page=${pageNum}, sort=${sortByPrice})}" th:text="${pageNum}"></a>
+                                <a th:href="@{/ProductPage(page=${pageNum}, sort=${sortByPrice})}"
+                                   th:text="${pageNum}"></a>
                             </li>
 
                             <!-- Next Page -->
@@ -213,7 +197,7 @@
                         </ul>
                     </div>
                 </div>
-            </div>
+
                 <!-- /store top filter -->
 
                 <div id="store">
@@ -222,7 +206,8 @@
                         <div class="col-md-4 col-sm-6 col-xs-6" th:each="product : ${products}">
                             <div class="product product-single">
                                 <div class="product-thumb">
-                                    <button class="main-btn quick-view"><i class="fa fa-search-plus"></i> Quick view</button>
+                                    <button class="main-btn quick-view"><i class="fa fa-search-plus"></i> Quick view
+                                    </button>
                                     <img th:src="@{${product.image}}" alt="">
                                 </div>
                                 <div class="product-body">
@@ -233,7 +218,9 @@
                                     <div class="product-btns">
                                         <button class="main-btn icon-btn"><i class="fa fa-heart"></i></button>
                                         <button class="main-btn icon-btn"><i class="fa fa-exchange"></i></button>
-                                        <button class="primary-btn add-to-cart"><i class="fa fa-shopping-cart"></i> Add to Cart</button>
+                                        <button class="primary-btn add-to-cart"><i class="fa fa-shopping-cart"></i> Add
+                                            to Cart
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -275,7 +262,8 @@
                             <!-- Page Numbers -->
                             <li th:each="pageNum : ${#numbers.sequence(1, totalPages)}"
                                 th:classappend="${pageNum == currentPage} ? 'active' : ''">
-                                <a th:href="@{/ProductPage(page=${pageNum}, sort=${sortByPrice})}" th:text="${pageNum}"></a>
+                                <a th:href="@{/ProductPage(page=${pageNum}, sort=${sortByPrice})}"
+                                   th:text="${pageNum}"></a>
                             </li>
 
                             <!-- Next Page -->
@@ -284,6 +272,7 @@
                             </li>
                         </ul>
                     </div>
+                </div>
                 <!-- /store bottom filter -->
             </div>
             <!-- /MAIN -->
@@ -306,9 +295,9 @@
 <script th:src="@{/js/jquery.zoom.min.js}" src="/js/jquery.zoom.min.js"></script>
 <script th:src="@{/js/main.js}" src="/js/main.js"></script>
 <script>
-    document.getElementById("sortByPrice").addEventListener("change", function() {
-        var selectedSort = this.value;
-        var url = "/ProductPage";
+    document.getElementById("sortByPrice").addEventListener("change", function () {
+        const selectedSort = this.value;
+        let url = "/ProductPage";
         if (selectedSort) {
             url += "?sort=" + selectedSort;
         }
