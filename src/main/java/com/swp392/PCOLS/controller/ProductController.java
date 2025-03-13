@@ -5,6 +5,7 @@ import com.swp392.PCOLS.entity.Product;
 import com.swp392.PCOLS.service.CategoryService;
 import com.swp392.PCOLS.service.ProductService;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -60,14 +61,7 @@ public class ProductController {
         product.setCategory(selectedCategory);
         // upload anh
         if (!imageFile.isEmpty()) {
-            try {
-                String fileName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
-                Path imagePath = Paths.get("src/main/resources/static/uploads/" + fileName);
-                Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                product.setImage("/uploads/" + fileName); // Store relative path in DB
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            uploadImage(product, imageFile);
         }
         // Save product
         productService.handleSaveProduct(product);
@@ -87,31 +81,54 @@ public class ProductController {
     }
 
     @PostMapping("/admin/product/detail/saveEdit")
-    public String saveProductDetailEdit(@ModelAttribute Product product) {
+    public String saveProductDetailEdit(@ModelAttribute Product product,
+                                        @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) {
+        System.out.println("Received file: " + (imageFile != null ? imageFile.getOriginalFilename() : "No file uploaded"));
+        // Image Upload Logic
+        if (imageFile != null && !imageFile.isEmpty()) {
+            uploadImage(product, imageFile);
+        } else {
+            // Keep the existing image if no new one is uploaded
+            product.setImage(productService.getProductById(product.getId()).getImage());
+            System.out.println("Retained old image: " + product.getImage());
+        }
         productService.handleSaveProduct(product);
         return "redirect:/admin/product/detail/" + product.getId();
     }
 
-    @GetMapping("/products/ProductPage ")
-    public String getProductPage(@RequestParam(value = "sort", required = false) String sort,
-                                 @RequestParam(value = "categoryId", defaultValue = "0") Long categoryId,
-                                 @RequestParam(value = "page", defaultValue = "0") int page,
-                                 @RequestParam(value = "size", defaultValue = "10") int size,
-                                 Model model) {
-        Page<Product> productPage;
-
-        if (categoryId != null && categoryId > 0) {
-            productPage = productService.getProductsByCategoryPaginated(categoryId, page, size);
-        } else {
-            productPage = productService.getAllProductsPaginated(page, size);
+    private void uploadImage(@ModelAttribute Product product, @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) {
+        try {
+            String fileName = UUID.randomUUID().toString() + imageFile.getOriginalFilename();
+            Path imagePath = Paths.get("src/main/resources/static/uploads/" + fileName);
+            Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
+            product.setImage("/uploads/" + fileName); // Store new image path in DB
+            System.out.println("New image saved: " + product.getImage());
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error uploading image");
         }
+    }
 
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", productPage.getTotalPages());
-        model.addAttribute("selectedCategoryId", categoryId);
-        model.addAttribute("size", size);
-        model.addAttribute("products", productPage);
-        model.addAttribute("categories", categoryService.getAllCategory());
+    @GetMapping("/ProductPage")
+    public String getProductPage(Model model,
+                                 @RequestParam(value = "sort", required = false) String sort,
+                                 @RequestParam(value = "brand", required = false) String brand,
+                                 @RequestParam(value = "category", required = false) String category,
+                                 @RequestParam(value = "minPrice", required = false) Double minPrice,
+                                 @RequestParam(value = "maxPrice", required = false) Double maxPrice) {
+        List<Category> listCategories = categoryService.getAllCategories();
+        List<String> listBrands = productService.getAllBrands();
+        List<Product> products = productService.getFilteredProducts(brand, category, minPrice, maxPrice, sort);
+
+        model.addAttribute("products", products);
+        model.addAttribute("categories", category);
+        model.addAttribute("listCategories", listCategories);
+        model.addAttribute("listBrands", listBrands);
+        model.addAttribute("brands", brand);
+        model.addAttribute("minPrice", minPrice);
+        model.addAttribute("maxPrice", maxPrice);
+        model.addAttribute("sort", sort);
         return "products";
     }
+
 }

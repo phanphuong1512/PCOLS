@@ -1,6 +1,5 @@
 package com.swp392.PCOLS.service.impl;
 
-import com.swp392.PCOLS.entity.Category;
 import com.swp392.PCOLS.entity.Product;
 import com.swp392.PCOLS.repository.ProductRepository;
 import com.swp392.PCOLS.service.ProductService;
@@ -34,40 +33,20 @@ public class ProductServiceImpl implements ProductService {
     public Product getProductById(long id) {
         return this.productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
     }
-
     @Override
-    public List<Product> getProductsByCategory(Long categoryId) {
-        return this.productRepository.findByCategory_Id(categoryId);
-    }
-
-    @Override
-    public List<Product> getAllProductsSortedBy(String field, String order) {
-        if ("desc".equalsIgnoreCase(order)) {
-            return productRepository.findAll(Sort.by(Sort.Direction.DESC, field));
-        }
-        return productRepository.findAll(Sort.by(Sort.Direction.ASC, field));
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
     }
 
     @Override
     public Page<Product> getAllProductsPaginated(int page, int size) {
-        return this.productRepository.findAll(PageRequest.of(page, size));
+        Pageable pageable = PageRequest.of(page - 1, size);
+        return productRepository.findAll(pageable);
     }
 
     @Override
-    public Page<Product> getAllProductsByPricePaginated(int page, int size, String sort) {
-        Sort sortOrder = Sort.by("price");
-        if ("price_desc".equals(sort)) {
-            sortOrder = Sort.by("price").descending();
-        }
-
-        Pageable pageable = PageRequest.of(page, size, sortOrder);
-        return this.productRepository.findAll(pageable);
+    public Page<Product> getAllProductsSortedByPrice(int page, int pageSize, Sort.Direction direction) {
+        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by(direction, "price"));
+        return productRepository.findAll(pageable);
     }
-
-    @Override
-    public Page<Product> getProductsByCategoryPaginated(Long categoryId, int page, int size) {
-        return this.productRepository.findByCategory_Id(categoryId, PageRequest.of(page, size));
-    }
-
-
 }

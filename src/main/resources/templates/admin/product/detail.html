@@ -12,6 +12,7 @@
             document.getElementById("editBtn").style.display = "none";
             document.getElementById("cancelBtn").style.display = "inline-block";
             document.getElementById("saveBtn").style.display = "inline-block";
+            document.getElementById("imageFile").style.display = "block";
         }
 
         function confirmSave(event) {
@@ -28,19 +29,34 @@
 
             document.getElementById("categoryText").style.display = "inline-block";
             document.getElementById("categorySelect").style.display = "none";
-
             document.getElementById("saveBtn").style.display = "none";
             document.getElementById("cancelBtn").style.display = "none";
             document.getElementById("editBtn").style.display = "inline-block";
+            document.getElementById("imageFile").style.display = "none";
         }
     </script>
 </head>
 <body>
 <div class="container mt-5">
-    <form th:action="@{/admin/product/detail/saveEdit}" method="post" th:object="${product}">
+    <form th:action="@{/admin/product/detail/saveEdit}" method="post" th:object="${product}" enctype="multipart/form-data">
         <input type="hidden" th:field="*{id}">
         <div class="card">
             <div class="row g-0">
+
+                <!-- Product Image -->
+                <div class="mb-3">
+                    <label class="form-label"><strong></strong></label>
+                    <img th:src="@{${product.image}}" class="img-fluid" alt="Product Image">
+                </div>
+                <!-- Hidden Field to Retain Existing Image -->
+                <input type="hidden" th:field="*{image}" />
+
+                <!-- Upload New Image -->
+                <div class="mb-3">
+                    <label for="imageFile" class="form-label"><strong>Upload New Image</strong></label>
+                    <input type="file" class="form-control" id="imageFile" name="imageFile" style="display: none">
+                </div>
+
                 <!-- Product Name -->
                 <div class="mb-3">
                     <label for="name" class="form-label"><strong>Product Name:</strong></label>

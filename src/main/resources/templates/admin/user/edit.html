@@ -68,16 +68,16 @@
 
             <div class="mb-3">
                 <label class="form-label"><strong>Authority (Roles):</strong>
-                <span id="rolesText" th:text="${user.authorities != null ? user.authorities[0].name : 'No Role'}"></span>
+                <span id="rolesText" th:text="${user.authorities != null ? user.authorities[0].authority : 'No Role'}"></span>
                 <select id="rolesSelect" class="form-control" th:field="*{authorities}" multiple style="display:none;" disabled>
-                    <option th:each="role : ${authorities}" th:value="${role.id}" th:text="${role.name}"></option>
+                    <option th:each="role : ${authorities}" th:value="${role.id}" th:text="${role.authority}"></option>
                 </select>
                 </label>
             </div>
 
             <div class="mb-3">
                 <label class="form-label"><strong>Status:</strong>
-                <select class="form-control" th:field="*{status}" disabled>
+                <select class="form-control" th:field="*{enabled}" disabled>
                     <option value="true">Active</option>
                     <option value="false">Inactive</option>
                 </select>
