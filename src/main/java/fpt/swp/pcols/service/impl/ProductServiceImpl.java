@@ -37,7 +37,7 @@ public class ProductServiceImpl implements ProductService {
         // handle upload file if not null
         if (imageFile != null && !imageFile.isEmpty()) {
             try {
-                String fileName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
+                String fileName = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
                 Path imagePath = Paths.get("src/main/resources/static/uploads/" + fileName);
                 Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
                 product.setImage("/uploads/" + fileName); // save relative path to DB
