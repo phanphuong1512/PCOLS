@@ -39,14 +39,21 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<Product> getAllProductsPaginated(int page, int size) {
-        Pageable pageable = PageRequest.of(page - 1, size);
-        return productRepository.findAll(pageable);
+    public List<Product> getFilteredProducts(String brand, String category, Double minPrice, Double maxPrice, String sort) {
+        Sort sortOption = Sort.unsorted();
+        if ("asc".equalsIgnoreCase(sort)) {
+            sortOption = Sort.by("price").ascending();
+        } else if ("desc".equalsIgnoreCase(sort)) {
+            sortOption = Sort.by("price").descending();
+        }
+
+        return productRepository.findFilteredProducts(brand, category, minPrice, maxPrice, sortOption);
     }
 
     @Override
-    public Page<Product> getAllProductsSortedByPrice(int page, int pageSize, Sort.Direction direction) {
-        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by(direction, "price"));
-        return productRepository.findAll(pageable);
+    public List<String> getAllBrands() {
+        return productRepository.findAllBrands();
     }
+
+
 }

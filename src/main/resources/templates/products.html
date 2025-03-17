@@ -19,8 +19,8 @@
     <link type="text/css" rel="stylesheet" th:href="@{/css/slick.css}"/>
     <link type="text/css" rel="stylesheet" th:href="@{/css/slick-theme.css}"/>
 
-    <!-- nouislider -->
-    <link type="text/css" rel="stylesheet" th:href="@{/css/nouislider.min.css}"/>
+    <!-- noUiSlider (for price range slider) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css">
 
     <!-- Font Awesome Icon -->
     <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}"/>
@@ -70,44 +70,40 @@
                         <li><a href="#" style="color:#FFF; background-color:#9A54D8;">Medium Purple</a></li>
                     </ul>
 
-                    <button class="primary-btn">Clear All</button>
+                    <!-- Clear Filters Button -->
+                    <button id="clearFilters" class="primary-btn">Clear All Filters</button>
                 </div>
                 <!-- /aside widget -->
 
                 <!-- aside widget -->
+                <!-- Category Filter -->
                 <div class="aside">
                     <h3 class="aside-title">Filter by Category</h3>
                     <ul class="list-links">
-                        <li><a th:href="@{/ProductPage(category='Laptops', brand=${brands},  sort=${sortByPrice})}">Laptops</a></li>
-                        <li><a th:href="@{/ProductPage(category='Desktops', brand=${brands},  sort=${sortByPrice})}">Desktops</a></li>
-                        <li><a th:href="@{/ProductPage(category='Accessories', brand=${brands}, sort=${sortByPrice})}">Accessories</a></li>
+                        <li th:each="category : ${listCategories}">
+                            <a href="#" class="category-filter" th:data-category="${category.name}" th:text="${category.name}"></a>
+                        </li>
                     </ul>
                 </div>
                 <!-- aside widget -->
 
                 <!-- aside widget -->
+                <!-- Price Range Filter -->
                 <div class="aside">
-                    <h3 class="aside-title">Filter By Color:</h3>
-                    <ul class="color-option">
-                        <li><a href="#" style="background-color:#475984;"></a></li>
-                        <li><a href="#" style="background-color:#8A2454;"></a></li>
-                        <li class="active"><a href="#" style="background-color:#BF6989;"></a></li>
-                        <li><a href="#" style="background-color:#9A54D8;"></a></li>
-                        <li><a href="#" style="background-color:#675F52;"></a></li>
-                        <li><a href="#" style="background-color:#050505;"></a></li>
-                        <li><a href="#" style="background-color:#D5B47B;"></a></li>
-                    </ul>
+                    <h3 class="aside-title">Filter by Price</h3>
+                    <div id="price-slider"></div>
+                    <p>Price: $<span id="priceRangeText">0 - 5000</span></p>
                 </div>
-                <!-- /aside widget -->
+                <!-- aside widget -->
 
                 <!-- aside widget -->
+                <!-- Brand Filter -->
                 <div class="aside">
                     <h3 class="aside-title">Filter by Brand</h3>
                     <ul class="list-links">
-                        <li><a th:href="@{/ProductPage(brand='ASUS', category=${categories}, sort=${sortByPrice})}">ASUS</a></li>
-                        <li><a th:href="@{/ProductPage(brand='DELL', category=${categories},  sort=${sortByPrice})}">DELL</a></li>
-                        <li><a th:href="@{/ProductPage(brand='LENOVO', category=${categories}, sort=${sortByPrice})}">LENOVO</a></li>
-                        <li><a th:href="@{/ProductPage(brand='HP', category=${categories}, sort=${sortByPrice})}">HP</a></li>
+                        <li th:each="brand : ${listBrands}">
+                            <a href="#" class="brand-filter" th:data-brand="${brand}" th:text="${brand}"></a>
+                        </li>
                     </ul>
                 </div>
 
@@ -171,53 +167,37 @@
                         </div>
                         <div class="sort-filter">
                             <span class="text-uppercase">Sort By:</span>
-                            <select class="input" id="sortByPrice">
+                            <label for="sortByPrice">
+                                <select class="input" id="sortByPrice">
                                 <option value="">Price</option>
                                 <option value="asc">Price (Ascending)</option>
                                 <option value="desc">Price (Descending)</option>
                             </select>
+                            </label>
                         </div>
-                    </div>
-                    <!-- Pagination Section -->
-                    <div class="pull-right">
-                        <ul class="store-pages">
-                            <li><span class="text-uppercase">Page:</span></li>
-
-                            <!-- Previous Page -->
-                            <li th:if="${currentPage > 1}">
-                                <a th:href="@{/ProductPage(page=${currentPage - 1}, sort=${sortByPrice})}">&laquo;</a>
-                            </li>
-
-                            <!-- Page Numbers -->
-                            <li th:each="pageNum : ${#numbers.sequence(1, totalPages)}"
-                                th:classappend="${pageNum == currentPage} ? 'active' : ''">
-                                <a th:href="@{/ProductPage(page=${pageNum}, sort=${sortByPrice})}" th:text="${pageNum}"></a>
-                            </li>
-
-                            <!-- Next Page -->
-                            <li th:if="${currentPage < totalPages}">
-                                <a th:href="@{/ProductPage(page=${currentPage + 1}, sort=${sortByPrice})}">&raquo;</a>
-                            </li>
-                        </ul>
                     </div>
                 </div>
 
                 <!-- /store top filter -->
 
+                <!-- Product List (for AJAX updates) -->
                 <div id="store">
-                    <div class="row">
-                        <!-- Loop through products -->
+                    <div class="row" id="product-list">
                         <div class="col-md-4 col-sm-6 col-xs-6" th:each="product : ${products}">
                             <div class="product product-single">
                                 <div class="product-thumb">
-                                    <button class="main-btn quick-view"><i class="fa fa-search-plus"></i> Quick view</button>
+                                    <button class="main-btn quick-view">
+                                        <i class="fa fa-search-plus"></i> Quick view
+                                    </button>
                                     <img th:src="@{${product.image}}" alt="">
                                 </div>
                                 <div class="product-body">
                                     <h3 class="product-price">
                                         $<span th:text="${product.price}"></span>
                                     </h3>
-                                    <h2 class="product-name"><a href="#" th:text="${product.name}"></a></h2>
+                                    <h2 class="product-name">
+                                        <a href="#" th:text="${product.name}"></a>
+                                    </h2>
                                     <div class="product-btns">
                                         <button class="main-btn icon-btn"><i class="fa fa-heart"></i></button>
                                         <button class="main-btn icon-btn"><i class="fa fa-exchange"></i></button>
@@ -226,10 +206,13 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- /Product Single -->
                     </div>
-                </div>
+            </div>
 
+                <!-- Loading Indicator for Infinite Scroll -->
+                <div id="loading" style="display: none;">
+                    <p>Loading more products...</p>
+                </div>
 
                 <!-- store bottom filter -->
                 <div class="store-filter clearfix">
@@ -250,28 +233,7 @@
                             <a href="#" class="main-btn icon-btn"><i class="fa fa-arrow-down"></i></a>
                         </div>
                     </div>
-                    <!-- Pagination Section -->
-                    <div class="pull-right">
-                        <ul class="store-pages">
-                            <li><span class="text-uppercase">Page:</span></li>
 
-                            <!-- Previous Page -->
-                            <li th:if="${currentPage > 1}">
-                                <a th:href="@{/ProductPage(page=${currentPage - 1}, sort=${sortByPrice}), brand=${brand}, category=${category}}">&laquo;</a>
-                            </li>
-
-                            <!-- Page Numbers -->
-                            <li th:each="pageNum : ${#numbers.sequence(1, totalPages)}"
-                                th:classappend="${pageNum == currentPage} ? 'active' : ''">
-                                <a th:href="@{/ProductPage(page=${pageNum}, sort=${sortByPrice})}" th:text="${pageNum}"></a>
-                            </li>
-
-                            <!-- Next Page -->
-                            <li th:if="${currentPage < totalPages}">
-                                <a th:href="@{/ProductPage(page=${currentPage + 1}, sort=${sortByPrice})}">&raquo;</a>
-                            </li>
-                        </ul>
-                    </div>
                     </div>
                 <!-- /store bottom filter -->
             </div>
@@ -294,16 +256,7 @@
 <script th:src="@{/js/nouislider.min.js}" src="/js/nouislider.min.js"></script>
 <script th:src="@{/js/jquery.zoom.min.js}" src="/js/jquery.zoom.min.js"></script>
 <script th:src="@{/js/main.js}" src="/js/main.js"></script>
-<script>
-    document.getElementById("sortByPrice").addEventListener("change", function() {
-        var selectedSort = this.value;
-        var url = "/ProductPage";
-        if (selectedSort) {
-            url += "?sort=" + selectedSort;
-        }
-        window.location.href = url;
-    });
-</script>
+<script th:src="@{/js/product.js}" src="/js/product.js" defer></script>
 
 </body>
 

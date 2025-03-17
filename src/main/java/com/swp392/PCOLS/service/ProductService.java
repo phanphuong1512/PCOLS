@@ -13,9 +13,9 @@ public interface ProductService {
 
     Product getProductById(long id);
 
-    Page<Product> getAllProductsSortedByPrice(int page, int size, Sort.Direction direction);
-
     List<Product> getAllProducts();
 
-    Page<Product> getAllProductsPaginated(int page, int size);
+    List<Product> getFilteredProducts(String brand, String category, Double minPrice, Double maxPrice, String sort);
+
+    List<String> getAllBrands();
 }
