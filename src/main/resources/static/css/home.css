@@ -249,7 +249,6 @@ textarea.input {
 
 .section {
     padding-top: 30px;
-    padding-bottom: 30px;
 }
 
 .section-grey {
@@ -816,6 +815,10 @@ textarea.input {
     -webkit-transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
+
+}
+.banner-3{
+    padding-top: 8px;
 }
 
 .banner.banner-2 .banner-caption {
@@ -835,11 +838,11 @@ textarea.input {
 ===========================================================*/
 
 #home .home-wrap {
-    margin-left: 270px;
+    /*margin-left: 270px;*/
 }
 
 #home-slick .banner {
-    margin: 0px;
+    margin: 0;
 }
 
 /*=========================================================

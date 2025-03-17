@@ -9,6 +9,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+
     show-sql: true
   mail:
     host: smtp.gmail.com
@@ -33,5 +34,6 @@ logging:
   level:
     org.springframework.security: DEBUG
     org.springframework.web: DEBUG
+
 
 
