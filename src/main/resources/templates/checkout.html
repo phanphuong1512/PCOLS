@@ -75,65 +75,55 @@
                                 <th class="text-right"></th>
                             </tr>
                             </thead>
-                            <tbody>
-                            <tr>
-                                <td class="thumb"><img src="./img/thumb-product01.jpg" alt=""></td>
+                            <tbody th:each="detail : ${orderDetails}">
+                            <tr id="row-[[${detail.id}]]">
+                                <!-- Ảnh sản phẩm -->
+                                <td class="thumb">
+                                    <img th:src="${detail.product.image}" alt="Product Image"/>
+                                </td>
+                                <!-- Tên sản phẩm và thông tin bổ sung -->
                                 <td class="details">
-                                    <a href="#">Product Name Goes Here</a>
+                                    <a th:href="@{/product-detail(id=${detail.product.id})}"
+                                       th:text="${detail.productName}">Product Name</a>
                                     <ul>
-                                        <li><span>Size: XL</span></li>
-                                        <li><span>Color: Camelot</span></li>
+                                        <li>
+                                            <span>Brand: </span>
+                                            <span th:text="${detail.product.brand}">Brand</span>
+                                        </li>
+                                        <li>
+                                            <span>Category: </span>
+                                            <span th:text="${detail.product.category.name}">Category</span>
+                                        </li>
                                     </ul>
                                 </td>
-                                <td class="price text-center"><strong>$32.50</strong><br>
-                                    <del class="font-weak"><small>$40.00</small></del>
+                                <!-- Giá sản phẩm -->
+                                <td class="price text-center">
+                                    <strong th:text="${detail.price}">0</strong>
                                 </td>
-                                <td class="qty text-center"><input class="input" type="number" value="1"></td>
-                                <td class="total text-center"><strong class="primary-color">$32.50</strong></td>
+                                <!-- Số lượng -->
+                                <td class="qty text-center">
+                                    <input class="input quantity-field" type="number"
+                                           th:value="${detail.quantity}" min="1"
+                                           th:attr="data-detail-id=${detail.id}, data-price=${detail.price}"/>
+                                </td>
+                                <!-- Tổng tiền cho dòng này -->
+                                <td class="total text-center">
+                                    <strong th:attr="id='total-' + ${detail.id}" class="primary-color"
+                                            th:text="${detail.totalPrice}">
+                                        0
+                                    </strong>
+                                </td>
+                                <!-- Nút xóa -->
                                 <td class="text-right">
-                                    <button class="main-btn icon-btn"><i class="fa fa-close"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="thumb"><img src="./img/thumb-product01.jpg" alt=""></td>
-                                <td class="details">
-                                    <a href="#">Product Name Goes Here</a>
-                                    <ul>
-                                        <li><span>Size: XL</span></li>
-                                        <li><span>Color: Camelot</span></li>
-                                    </ul>
-                                </td>
-                                <td class="price text-center"><strong>$32.50</strong></td>
-                                <td class="qty text-center"><label>
-                                    <input class="input" type="number" value="1">
-                                </label></td>
-                                <td class="total text-center"><strong class="primary-color">$32.50</strong></td>
-                                <td class="text-right">
-                                    <button class="main-btn icon-btn"><i class="fa fa-close"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="thumb"><img src="./img/thumb-product01.jpg" alt=""></td>
-                                <td class="details">
-                                    <a href="#">Product Name Goes Here</a>
-                                    <ul>
-                                        <li><span>Size: XL</span></li>
-                                        <li><span>Color: Camelot</span></li>
-                                    </ul>
-                                </td>
-                                <td class="price text-center"><strong>$32.50</strong></td>
-                                <td class="qty text-center"><input class="input" type="number" value="1"></td>
-                                <td class="total text-center"><strong class="primary-color">$32.50</strong></td>
-                                <td class="text-right">
-                                    <button class="main-btn icon-btn"><i class="fa fa-close"></i></button>
+                                    <button class="main-btn icon-btn delete-btn"
+                                            th:attr="data-detail-id=${detail.id}">
+                                        <i class="fa fa-close"></i>
+                                    </button>
                                 </td>
                             </tr>
                             </tbody>
-
                         </table>
-
                     </div>
-
                 </div>
 
                 <div class="col-md-6">
@@ -259,7 +249,7 @@
                             <tr>
                                 <th class="empty" colspan="3"></th>
                                 <th>SHIPPING</th>
-                                <td colspan="2">Free Shipping</td>
+                                <th colspan="2">Free Shipping</th>
                             </tr>
                             <tr>
                                 <th class="empty" colspan="3"></th>
@@ -267,10 +257,13 @@
                                 <th colspan="2" class="total">$97.50</th>
                             </tr>
                             </thead>
-
+                            <tbody>
+                            <!-- Nội dung giỏ hàng (nếu có) -->
+                            </tbody>
                         </table>
+                        <!-- Nút nằm ngoài bảng -->
                         <div class="pull-right">
-                            <button class="primary-btn">Place Order</button>
+                            <button class="primary-btn close-to-footer">Place Order</button>
                         </div>
 
                     </div>
@@ -296,6 +289,8 @@
 <script th:src="@{/js/nouislider.min.js}" src="/js/nouislider.min.js"></script>
 <script th:src="@{/js/jquery.zoom.min.js}" src="/js/jquery.zoom.min.js"></script>
 <script th:src="@{/js/main.js}" src="/js/main.js"></script>
+<script th:src="@{/js/checkout.js}"></script>
+.
 
 </body>
 

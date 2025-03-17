@@ -13,4 +13,10 @@ public interface OrderService {
     Optional<Order> getCurrentCartForUser(User user);
 
     OrderDetail findOrderDetailByOrderAndProduct(Order cart, Long productId);
+
+    Optional<OrderDetail> findDetailById(Long detailId);
+
+    void deleteDetail(OrderDetail detail);
+
+    void saveDetail(OrderDetail detail);
 }

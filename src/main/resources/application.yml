@@ -25,11 +25,6 @@ spring:
             required: true
           ssl:
             trust: smtp.gmail.com
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
 logging:
   level:
     org.springframework.security: DEBUG

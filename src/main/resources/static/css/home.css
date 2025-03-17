@@ -157,6 +157,9 @@ hr {
     color: #FFF;
     background-color: #30323A;
 }
+.close-to-footer{
+    margin-bottom: 10px;
+}
 
 /*----------------------------*\
 	Inputs

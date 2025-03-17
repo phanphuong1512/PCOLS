@@ -8,6 +8,7 @@ import fpt.swp.pcols.service.OrderService;
 import fpt.swp.pcols.service.ProductService;
 import fpt.swp.pcols.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,8 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -33,8 +33,14 @@ public class OrderController {
 
     @GetMapping("/checkout")
     public String checkoutPage(Model model, Principal principal) {
-        User user = userService.findByUsername(principal.getName()).orElseThrow(() -> new RuntimeException("User not found"));
+        if (principal == null) {
+            return "redirect:/auth/login";
+        }
 
+        User user = userService.findByUsername(principal.getName()).orElse(null);
+        if (user == null) {
+            return "redirect:/auth/login";
+        }
         Optional<Order> optionalCart = orderService.getCurrentCartForUser(user);
         Order cart;
         if (optionalCart.isPresent()) {
@@ -87,5 +93,53 @@ public class OrderController {
         }
         orderService.save(cart);
         return ResponseEntity.ok("Product added to cart successfully");
+    }
+
+    @PostMapping("/cart/update")
+    @ResponseBody
+    public ResponseEntity<Map<String, String>> updateCartDetail(@RequestParam Long detailId,
+                                                                @RequestParam int quantity) {
+        // Tìm OrderDetail theo ID
+        Optional<OrderDetail> optionalDetail = orderService.findDetailById(detailId);
+        if (optionalDetail.isEmpty()) {
+            // Nếu không tìm thấy, trả về 404 NOT FOUND kèm thông báo lỗi
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonMap("error", "Order detail not found for id: " + detailId));
+        }
+
+        OrderDetail detail = optionalDetail.get();
+        // Cập nhật số lượng
+        detail.setQuantity(quantity);
+        // Lưu thay đổi
+        orderService.saveDetail(detail);
+
+        // Tính lại tổng tiền cho dòng này
+        BigDecimal lineTotal = detail.getPrice().multiply(BigDecimal.valueOf(quantity));
+
+        // Tạo response
+        Map<String, String> response = new HashMap<>();
+        response.put("status", "ok");
+        response.put("lineTotal", lineTotal.toString());
+
+        // Trả về JSON với mã 200 OK
+        return ResponseEntity.ok(response);
+    }
+
+    // Xóa một OrderDetail khỏi giỏ hàng
+    @PostMapping("/cart/remove")
+    @ResponseBody
+    public ResponseEntity<Map<String, String>> removeCartDetail(@RequestParam Long detailId) {
+        // Tìm OrderDetail theo id
+        OrderDetail detail = orderService.findDetailById(detailId)
+                .orElseThrow(() -> new RuntimeException("Order detail not found for id: " + detailId));
+
+        // Xóa OrderDetail; giả sử bạn có phương thức trong service để xóa detail
+        orderService.deleteDetail(detail);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("status", "ok");
+        response.put("message", "Item removed successfully");
+
+        return ResponseEntity.ok(response);
     }
 }
