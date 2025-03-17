@@ -17,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -77,5 +78,10 @@ public class ProductServiceImpl implements ProductService {
     public Page<Product> getAllProductsSortedByPrice(int page, int pageSize, Sort.Direction direction) {
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by(direction, "price"));
         return productRepository.findAll(pageable);
+    }
+
+    @Override
+    public Collection<Product> getProductsByCategory(String categoryName) {
+        return productRepository.findByCategory_Name(categoryName);
     }
 }

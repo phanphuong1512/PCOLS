@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<body>
+<!-- Fragment: productCard -->
+<div th:fragment="productCard (product)" class="col-md-3 col-sm-6 col-xs-6">
+    <div class="product product-single">
+        <a th:href="@{/product-detail(id=${product.id})}">
+            <div class="product-thumb">
+                <img th:src="${product.image}" alt="">
+            </div>
+        </a>
+
+        <div class="product-body">
+            <h3 class="product-price">
+                $<span th:text="${product.price}"></span>
+            </h3>
+            <div class="product-rating">
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star-o empty"></i>
+            </div>
+            <h2 class="product-name">
+                <a th:text="${product.name}" href="#">Product Name Goes Here</a>
+            </h2>
+            <div class="product-btns">
+                <button class="main-btn icon-btn"><i class="fa fa-heart"></i></button>
+                <button class="main-btn icon-btn"><i class="fa fa-exchange"></i></button>
+                <button class="primary-btn add-to-cart"><i class="fa fa-shopping-cart"></i> Add to Cart</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

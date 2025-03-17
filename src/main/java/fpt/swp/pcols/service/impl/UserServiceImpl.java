@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -61,6 +62,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
     public void regenerateOtp(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found" + email));
         String otp = otpUtil.generateOTP();
@@ -131,5 +133,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateUser(User user) {
         this.userRepository.save(user);
+    }
+
+    @Override
+    public Optional<User> findByUsername(String name) {
+        return userRepository.findByUsername(name);
     }
 }
