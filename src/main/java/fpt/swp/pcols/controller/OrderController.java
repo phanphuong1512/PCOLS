@@ -1,5 +1,6 @@
 package fpt.swp.pcols.controller;
 
+import fpt.swp.pcols.dto.BillDTO;
 import fpt.swp.pcols.entity.Order;
 import fpt.swp.pcols.entity.OrderDetail;
 import fpt.swp.pcols.entity.Product;
@@ -12,10 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.security.Principal;
@@ -141,5 +139,29 @@ public class OrderController {
         response.put("message", "Item removed successfully");
 
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/checkout/confirm")
+    public String confirmCheckout(@ModelAttribute BillDTO billDTO, Model model, Principal principal) {
+        // Lấy user đã đăng nhập
+        User user = userService.findByUsername(principal.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Order order = orderService.getCurrentCartForUser(user)
+                .orElseThrow(() -> new RuntimeException("Cart not found"));
+
+        order.setFirstName(billDTO.firstName());
+        order.setLastName(billDTO.lastName());
+        order.setEmail(billDTO.email());
+        order.setAddress(billDTO.address());
+        order.setCity(billDTO.city());
+        order.setCountry(billDTO.country());
+        order.setZipCode(billDTO.zipCode());
+        order.setPhone(billDTO.phone());
+        order.setShippingMethod(billDTO.shipping());
+        order.setPaymentMethod(billDTO.payment());
+        orderService.save(order);
+
+        return "redirect:/home";
     }
 }

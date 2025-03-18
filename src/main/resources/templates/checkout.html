@@ -58,85 +58,84 @@
     <div class="container">
         <!-- row -->
         <div class="row">
-            <form id="checkout-form" class="clearfix">
-                <div class="col-md-12">
-                    <div class="order-summary clearfix">
-                        <div class="section-title">
-                            <h3 class="title">Order Review</h3>
-                        </div>
-                        <table class="shopping-cart-table table">
-                            <thead>
-                            <tr>
-                                <th>Product</th>
-                                <th></th>
-                                <th class="text-center">Price</th>
-                                <th class="text-center">Quantity</th>
-                                <th class="text-center">Total</th>
-                                <th class="text-right"></th>
-                            </tr>
-                            </thead>
-                            <tbody th:each="detail : ${orderDetails}">
-                            <tr id="row-[[${detail.id}]]">
-                                <!-- Ảnh sản phẩm -->
-                                <td class="thumb">
-                                    <img th:src="${detail.product.image}" alt="Product Image"/>
-                                </td>
-                                <!-- Tên sản phẩm và thông tin bổ sung -->
-                                <td class="details">
-                                    <a th:href="@{/product-detail(id=${detail.product.id})}"
-                                       th:text="${detail.productName}">Product Name</a>
-                                    <ul>
-                                        <li>
-                                            <span>Brand: </span>
-                                            <span th:text="${detail.product.brand}">Brand</span>
-                                        </li>
-                                        <li>
-                                            <span>Category: </span>
-                                            <span th:text="${detail.product.category.name}">Category</span>
-                                        </li>
-                                    </ul>
-                                </td>
-                                <!-- Giá sản phẩm -->
-                                <td class="price text-center">
-                                    <strong th:text="${detail.price}">0</strong>
-                                </td>
-                                <!-- Số lượng -->
-                                <td class="qty text-center">
-                                    <input class="input quantity-field" type="number"
-                                           th:value="${detail.quantity}" min="1"
-                                           th:attr="data-detail-id=${detail.id}, data-price=${detail.price}"/>
-                                </td>
-                                <!-- Tổng tiền cho dòng này -->
-                                <td class="total text-center">
-                                    <strong th:attr="id='total-' + ${detail.id}" class="primary-color"
-                                            th:text="${detail.totalPrice}">
-                                        0
-                                    </strong>
-                                </td>
-                                <!-- Nút xóa -->
-                                <td class="text-right">
-                                    <button class="main-btn icon-btn delete-btn"
-                                            th:attr="data-detail-id=${detail.id}">
-                                        <i class="fa fa-close"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
 
+            <div class="col-md-12">
+                <div class="order-summary clearfix">
+                    <div class="section-title">
+                        <h3 class="title">Order Review</h3>
+                    </div>
+                    <table class="shopping-cart-table table">
+                        <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th></th>
+                            <th class="text-center">Price</th>
+                            <th class="text-center">Quantity</th>
+                            <th class="text-center">Total</th>
+                            <th class="text-right"></th>
+                        </tr>
+                        </thead>
+                        <tbody th:each="detail : ${orderDetails}">
+                        <tr id="row-[[${detail.id}]]">
+                            <!-- Ảnh sản phẩm -->
+                            <td class="thumb">
+                                <img th:src="${detail.product.image}" alt="Product Image"/>
+                            </td>
+                            <!-- Tên sản phẩm và thông tin bổ sung -->
+                            <td class="details">
+                                <a th:href="@{/product-detail(id=${detail.product.id})}"
+                                   th:text="${detail.productName}">Product Name</a>
+                                <ul>
+                                    <li>
+                                        <span>Brand: </span>
+                                        <span th:text="${detail.product.brand}">Brand</span>
+                                    </li>
+                                    <li>
+                                        <span>Category: </span>
+                                        <span th:text="${detail.product.category.name}">Category</span>
+                                    </li>
+                                </ul>
+                            </td>
+                            <!-- Giá sản phẩm -->
+                            <td class="price text-center">
+                                <strong th:text="${detail.price}">0</strong>
+                            </td>
+                            <!-- Số lượng -->
+                            <td class="qty text-center">
+                                <input class="input quantity-field" type="number"
+                                       th:value="${detail.quantity}" min="1"
+                                       th:attr="data-detail-id=${detail.id}, data-price=${detail.price}"/>
+                            </td>
+                            <!-- Tổng tiền cho dòng này -->
+                            <td class="total text-center">
+                                <strong th:attr="id='total-' + ${detail.id}" class="primary-color"
+                                        th:text="${detail.totalPrice}">
+                                    0
+                                </strong>
+                            </td>
+                            <!-- Nút xóa -->
+                            <td class="text-right">
+                                <button class="main-btn icon-btn delete-btn"
+                                        th:attr="data-detail-id=${detail.id}">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <form id="checkout-form" th:action="@{/checkout/confirm}" method="post" class="clearfix">
                 <div class="col-md-6">
                     <div class="billing-details">
-                        <p>Already a customer ? <a href="#">Login</a></p>
                         <div class="section-title">
                             <h3 class="title">Billing Details</h3>
                         </div>
                         <div class="form-group">
-                            <input class="input" type="text" name="first-name" placeholder="First Name">
+                            <input class="input" type="text" name="firstName" placeholder="First Name">
                         </div>
                         <div class="form-group">
-                            <input class="input" type="text" name="last-name" placeholder="Last Name">
+                            <input class="input" type="text" name="lastName" placeholder="Last Name">
                         </div>
                         <div class="form-group">
                             <input class="input" type="email" name="email" placeholder="Email">
@@ -151,49 +150,33 @@
                             <input class="input" type="text" name="country" placeholder="Country">
                         </div>
                         <div class="form-group">
-                            <input class="input" type="text" name="zip-code" placeholder="ZIP Code">
+                            <input class="input" type="text" name="zipCode" placeholder="ZIP Code">
                         </div>
                         <div class="form-group">
-                            <input class="input" type="tel" name="tel" placeholder="Telephone">
-                        </div>
-                        <div class="form-group">
-                            <div class="input-checkbox">
-                                <input type="checkbox" id="register">
-                                <label class="font-weak" for="register">Create Account?</label>
-                                <div class="caption">
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                                        incididunt.
-                                    <p>
-                                        <input class="input" type="password" name="password"
-                                               placeholder="Enter Your Password">
-                                </div>
-                            </div>
+                            <input class="input" type="tel" name="phone" placeholder="Telephone">
                         </div>
                     </div>
                 </div>
-
                 <div class="col-md-6">
                     <div class="shiping-methods">
                         <div class="section-title">
                             <h4 class="title">Shiping Methods</h4>
                         </div>
                         <div class="input-checkbox">
-                            <input type="radio" name="shipping" id="shipping-1" checked>
+                            <input type="radio" name="shipping" id="shipping-1" value="FREE" checked>
                             <label for="shipping-1">Free Shiping - $0.00</label>
                             <div class="caption">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                                    exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                <p>“Chúng tôi cung cấp dịch vụ giao hàng miễn phí để bạn tiết kiệm chi phí. Thời gian
+                                    giao hàng có thể lâu hơn một chút, nhưng bạn sẽ không phải trả thêm phí vận chuyển.”
                                 <p>
                             </div>
                         </div>
                         <div class="input-checkbox">
-                            <input type="radio" name="shipping" id="shipping-2">
+                            <input type="radio" name="shipping" id="shipping-2" value="STANDARD">
                             <label for="shipping-2">Standard - $4.00</label>
                             <div class="caption">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                                    exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                <p>“Với phương thức này, đơn hàng được giao nhanh hơn so với giao hàng miễn phí. Mức phí
+                                    hợp lý giúp bạn nhận sản phẩm đúng hẹn mà không phải chờ đợi quá lâu.”
                                 <p>
                             </div>
                         </div>
@@ -204,32 +187,20 @@
                             <h4 class="title">Payments Methods</h4>
                         </div>
                         <div class="input-checkbox">
-                            <input type="radio" name="payments" id="payments-1" checked>
+                            <input type="radio" name="payments" id="payments-1" value="BANK" checked>
                             <label for="payments-1">Direct Bank Transfer</label>
                             <div class="caption">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                                    exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                <p>“Bạn có thể chuyển khoản trực tiếp qua ngân hàng. Hệ thống sẽ tự động xác nhận ngay
+                                    khi giao dịch thành công."
                                 <p>
                             </div>
                         </div>
                         <div class="input-checkbox">
-                            <input type="radio" name="payments" id="payments-2">
-                            <label for="payments-2">Cheque Payment</label>
+                            <input type="radio" name="payments" id="payments-2" value="BANK">
+                            <label for="payments-2">Paypal</label>
                             <div class="caption">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                                    exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                <p>
-                            </div>
-                        </div>
-                        <div class="input-checkbox">
-                            <input type="radio" name="payments" id="payments-3">
-                            <label for="payments-3">Paypal System</label>
-                            <div class="caption">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                                    exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                <p>“Dễ dàng, an toàn, và nhanh chóng – hãy chọn PayPal để thanh toán. Hệ thống sẽ mã hóa
+                                    thông tin, giúp bạn yên tâm về tính bảo mật trong mỗi giao dịch.”
                                 <p>
                             </div>
                         </div>

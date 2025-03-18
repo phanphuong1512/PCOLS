@@ -19,29 +19,58 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Liên kết đến người dùng đặt hàng
+    // Liên kết đến người dùng đặt hàng (không lưu các thông tin billing từ đây)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    // Sử dụng LocalDateTime để lưu ngày đặt hàng
+    // Ngày đặt hàng
     @Column(name = "order_date", nullable = false)
     private LocalDateTime orderDate = LocalDateTime.now();
 
-    // Sử dụng enum để lưu trạng thái đơn hàng
+    // Trạng thái đơn hàng
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 50)
     private OrderStatus status = OrderStatus.PENDING;
 
-    // Danh sách các chi tiết đơn hàng (OrderDetail)
+    // Danh sách chi tiết đơn hàng
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<OrderDetail> orderDetails;
 
-    // Enum định nghĩa các trạng thái đơn hàng
+    // Thông tin billing/shipping (snapshot tại thời điểm đặt hàng)
+    @Column(name = "first_name")
+    private String firstName;
+
+    @Column(name = "last_name")
+    private String lastName;
+
+    // Email của khách hàng (snapshot, tránh phụ thuộc vào thông tin User)
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "address")
+    private String address;
+
+    @Column(name = "city")
+    private String city;
+
+    @Column(name = "country")
+    private String country;
+
+    @Column(name = "zip_code")
+    private String zipCode;
+
+    @Column(name = "phone")
+    private String phone;
+
+    // Các trường bổ sung cho Shipping và Payment
+    @Column(name = "shipping_method")
+    private String shippingMethod; // Ví dụ: FREE, STANDARD,...
+
+    @Column(name = "payment_method")
+    private String paymentMethod;  // Ví dụ: BANK, CHEQUE, PAYPAL,...
+
     public enum OrderStatus {
-        PENDING,
-        PAID,
-        SHIPPED,
-        CANCELLED
+        PENDING, PAID, SHIPPED, CANCELLED
     }
 }
