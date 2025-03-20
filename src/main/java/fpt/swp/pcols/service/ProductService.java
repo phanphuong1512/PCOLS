@@ -29,6 +29,8 @@ public interface ProductService {
 
     List<Product> getFilteredProducts(String brand, String category, Double minPrice, Double maxPrice, String sort);
 
-
     void deleteImagesByProductId(Long id);
+
+    List<Product> getProductsWithFirstImageByCategory(String categoryName, int limit);
+
 }

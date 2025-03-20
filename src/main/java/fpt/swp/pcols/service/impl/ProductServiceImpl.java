@@ -19,8 +19,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -106,4 +108,20 @@ public class ProductServiceImpl implements ProductService {
     public void deleteImagesByProductId(Long id) {
         this.imageRepository.deleteByProductId(id);
     }
+
+    @Override
+    public List<Product> getProductsWithFirstImageByCategory(String categoryName, int limit) {
+        List<Product> products = productRepository.findByCategory_Name(categoryName).stream()
+                .limit(limit)
+                .collect(Collectors.toList());
+
+        // Gán ảnh có id nhỏ nhất vào từng sản phẩm
+        for (Product product : products) {
+            Image firstImage = productRepository.findFirstImageByProductId(product.getId());
+            product.setImages(firstImage != null ? List.of(firstImage) : new ArrayList<>());
+        }
+        return products;
+    }
+
+
 }

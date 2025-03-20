@@ -24,15 +24,10 @@ public class HomeController {
 
     @GetMapping({"/", "/home"})
     public String getHomePage(Model model) {
-        List<Product> gearProducts = productService.getProductsByCategory("Gear")
-                .stream().limit(3)
-                .collect(Collectors.toList());
-        List<Product> monitorProducts = productService.getProductsByCategory("Monitor")
-                .stream().limit(3)
-                .collect(Collectors.toList());
-        List<Product> pcProducts = productService.getProductsByCategory("PC")
-                .stream().limit(3)
-                .collect(Collectors.toList());
+        List<Product> gearProducts = productService.getProductsWithFirstImageByCategory("Gear", 3);
+        List<Product> monitorProducts = productService.getProductsWithFirstImageByCategory("Monitor", 3);
+        List<Product> pcProducts = productService.getProductsWithFirstImageByCategory("PC", 3);
+
         model.addAttribute("gearProducts", gearProducts);
         model.addAttribute("monitorProducts", monitorProducts);
         model.addAttribute("pcProducts", pcProducts);
