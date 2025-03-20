@@ -41,3 +41,7 @@ out/
 
 #.YML file
 src/main/resources/application.yml
+
+.env
+
+
