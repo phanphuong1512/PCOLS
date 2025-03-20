@@ -68,31 +68,20 @@
             <div class="product product-details clearfix">
                 <div class="col-md-6">
                     <div id="product-main-view">
-                        <div class="product-view">
-                            <img th:src="${product.image}" alt="">
+                        <div class="product-view" th:each="image : ${product.images}">
+                            <img th:src="${image.imageUrl}" alt="">
                         </div>
-                        <div class="product-view">
-                            <img th:src="${product.image}" alt="">
-                        </div>
-                        <div class="product-view">
-                            <img th:src="${product.image}" alt="">
-                        </div>
-                        <div class="product-view">
-                            <img th:src="${product.image}" alt="">
+                        <div class="product-view" th:if="${product.images.isEmpty()}">
+                            <img src="/images/default.jpg" alt="No Image">
                         </div>
                     </div>
                     <div id="product-view">
-                        <div class="product-view">
-                            <img src="./img/thumb-product01.jpg" alt="">
+                        <div class="product-view" th:each="image : ${product.images}">
+                            <img th:src="${image.imageUrl}" alt="">
                         </div>
-                        <div class="product-view">
-                            <img src="./img/thumb-product02.jpg" alt="">
-                        </div>
-                        <div class="product-view">
-                            <img src="./img/thumb-product03.jpg" alt="">
-                        </div>
-                        <div class="product-view">
-                            <img src="./img/thumb-product04.jpg" alt="">
+                        <!-- Nếu không có hình ảnh, hiển thị mặc định -->
+                        <div class="product-view" th:if="${product.images.isEmpty()}">
+                            <img src="/images/default.jpg" alt="No Image">
                         </div>
                     </div>
                 </div>
@@ -173,7 +162,6 @@
                                     deserunt mollit anim id est laborum.</p>
                             </div>
                             <div id="tab2" class="tab-pane fade in">
-
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="product-reviews">

@@ -39,5 +39,8 @@ spring:
             user-name-attribute: name
 logging:
   level:
+    org.hibernate: INFO
+    org.springframework: INFO
     org.springframework.security: DEBUG
     org.springframework.web: DEBUG
+    root: DEBUG

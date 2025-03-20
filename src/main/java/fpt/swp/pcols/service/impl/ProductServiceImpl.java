@@ -2,6 +2,7 @@ package fpt.swp.pcols.service.impl;
 
 import fpt.swp.pcols.entity.Category;
 import fpt.swp.pcols.entity.Product;
+import fpt.swp.pcols.repository.CategoryRepository;
 import fpt.swp.pcols.repository.ProductRepository;
 import fpt.swp.pcols.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -12,11 +13,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.Collection;
 import java.util.List;
 
@@ -26,27 +22,29 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryServiceImpl categoryService;
+    private final CategoryRepository categoryRepository;
 
 
     @Override
     public void createProduct(Product product, Long categoryId, MultipartFile imageFile) {
-        // get category from DB
-        Category selectedCategory = categoryService.getCategoryById(categoryId);
-        product.setCategory(selectedCategory);
-
-        // handle upload file if not null
-        if (imageFile != null && !imageFile.isEmpty()) {
-            try {
-                String fileName = imageFile.getOriginalFilename();
-                Path imagePath = Paths.get("src/main/resources/static/uploads/" + fileName);
-                Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                product.setImage("/uploads/" + fileName); // save relative path to DB
-            } catch (IOException e) {
-                throw new RuntimeException("Error uploading image", e);
-            }
-        }
-        productRepository.save(product);
+        //        // get category from DB
+        //        Category selectedCategory = categoryService.getCategoryById(categoryId);
+        //        product.setCategory(selectedCategory);
+        //
+        //        // handle upload file if not null
+        //        if (imageFile != null && !imageFile.isEmpty()) {
+        //            try {
+        //                String fileName = imageFile.getOriginalFilename();
+        //                Path imagePath = Paths.get("src/main/resources/static/uploads/" + fileName);
+        //                Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
+        //                product.setImage("/uploads/" + fileName); // save relative path to DB
+        //            } catch (IOException e) {
+        //                throw new RuntimeException("Error uploading image", e);
+        //            }
+        //        }
+        //        productRepository.save(product);
     }
+
 
     @Override
     public List<Product> getAllProduct() {
@@ -80,8 +78,20 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findAll(pageable);
     }
 
-    @Override
-    public Collection<Product> getProductsByCategory(String categoryName) {
-        return productRepository.findByCategory_Name(categoryName);
+    public List<Product> getProductsByCategoryWithImages(String categoryName) {
+        Category category = categoryRepository.findByName(categoryName)
+                .orElseThrow(() -> new RuntimeException("Category not found: " + categoryName));
+        return productRepository.findByCategoryWithImages(category);
+    }
+
+    public Product getProductById(Long productId) {
+        return productRepository.findByIdWithImages(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
+    }
+
+    public List<Product> getProductsByCategory(String categoryName) {
+        Category category = categoryRepository.findByName(categoryName)
+                .orElseThrow(() -> new RuntimeException("Category not found: " + categoryName));
+        return productRepository.findByCategoryWithImages(category);
     }
 }

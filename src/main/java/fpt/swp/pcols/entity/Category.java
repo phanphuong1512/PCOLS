@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@ToString(exclude = "products") // ✅ Prevents infinite recursion
+@ToString(exclude = "products")
 public class Category {
 
     @Id
@@ -24,7 +24,7 @@ public class Category {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
-    @JsonIgnore // Prevents infinite recursion in JSON serialization
+    @JsonIgnore
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Product> products;
 }

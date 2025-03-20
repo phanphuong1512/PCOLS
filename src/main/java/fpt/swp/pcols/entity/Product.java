@@ -1,17 +1,21 @@
 package fpt.swp.pcols.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "products")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@ToString(exclude = "category") // ✅ Prevents infinite recursion
+@ToString(exclude = {"category", "images"})
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,8 +36,10 @@ public class Product {
     @Column(name = "stock")
     private int stock;
 
-    @Column(name = "image")
-    private String image;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JsonIgnore
+    private List<Image> images = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")

@@ -26,4 +26,6 @@ public interface ProductService {
     Page<Product> getAllProductsPaginated(int page, int size);
 
     Collection<Product> getProductsByCategory(String categoryNam);
+
+    public List<Product> getProductsByCategoryWithImages(String category);
 }
