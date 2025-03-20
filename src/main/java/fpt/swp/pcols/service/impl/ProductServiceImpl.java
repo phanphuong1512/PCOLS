@@ -106,4 +106,9 @@ public class ProductServiceImpl implements ProductService {
     public void deleteImagesByProductId(Long id) {
         this.imageRepository.deleteByProductId(id);
     }
+
+    @Override
+    public void deleteProductById(Long id) {
+        this.productRepository.deleteById(id);
+    }
 }

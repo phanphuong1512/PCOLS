@@ -89,4 +89,10 @@ public class ProductController {
 
         return "products";
     }
+
+    @GetMapping("admin/product/delete/{id}")
+    public String deleteProduct(@PathVariable Long id) {
+        productService.deleteProductById(id);
+        return "redirect:/admin/product"; // Redirect back to inventory after deletion
+    }
 }
