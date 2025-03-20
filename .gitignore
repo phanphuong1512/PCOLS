@@ -38,3 +38,7 @@ out/
 
 # Ignore macOS system files
 .DS_Store
+/src/main/resources/static/uploads/
+
+#.env file
+.env

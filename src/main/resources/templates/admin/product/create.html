@@ -50,9 +50,10 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Upload Product Image:</label>
-                    <input type="file" class="form-control" name="imageFile" accept="image/*" required />
+                    <input type="file" class="form-control" name="imageFiles" accept="image/*" multiple required />
                 </div>
                 <button type="submit" class="btn btn-primary">Add</button>
+                <a th:href="@{/admin/product}" class="btn btn-secondary">Back to Products</a>
             </form>
         </div>
     </div>

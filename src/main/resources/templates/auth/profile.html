@@ -11,7 +11,7 @@
 </head>
 
 <body>
-<form th:action="@{/profile/update-password}" method="post">
+<form th:object="${user}" th:action="@{/profile/update}" method="post">
     <div class="container light-style flex-grow-1 container-p-y">
         <h4 class="font-weight-bold py-3 mb-4">
             Account settings
@@ -46,30 +46,32 @@
                                         <input type="file" class="account-settings-fileinput">
                                     </label> &nbsp;
                                     <button type="button" class="btn btn-default md-btn-flat">Reset</button>
-                                    <div class="text-light small mt-1">Allowed JPG, GIF or PNG. Max size of 800K</div>
+                                    <div class="text-secondary small mt-1">Allowed JPG, GIF or PNG. Max size of 800K
+                                    </div>
                                 </div>
                             </div>
                             <hr class="border-light m-0">
                             <div class="card-body">
                                 <div class="form-group">
                                     <label class="form-label">Username</label>
-                                    <input type="text" class="form-control mb-1" value="nmaxwell">
+                                    <input type="text" class="form-control mb-1" th:field="*{username}"/>
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">Name</label>
-                                    <input type="text" class="form-control" value="Nelle Maxwell">
+                                    <input type="text" class="form-control" />
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">E-mail</label>
-                                    <input type="text" class="form-control mb-1" value="nmaxwell@mail.com">
-                                    <div class="alert alert-warning mt-3">
+                                    <input type="email" class="form-control mb-1" />
+                                    <!-- Nếu email chưa được xác nhận, bạn có thể hiển thị alert -->
+                                    <div class="alert alert-warning mt-3" th:if="${!user.emailConfirmed}">
                                         Your email is not confirmed. Please check your inbox.<br>
                                         <a href="javascript:void(0)">Resend confirmation</a>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">Company</label>
-                                    <input type="text" class="form-control" value="Company Ltd.">
+                                    <input type="text" class="form-control" />
                                 </div>
                             </div>
                         </div>

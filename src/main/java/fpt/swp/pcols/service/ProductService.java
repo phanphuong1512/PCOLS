@@ -11,7 +11,7 @@ import java.util.List;
 public interface ProductService {
 
 
-    void createProduct(Product product, Long categoryId, MultipartFile imageFile);
+    void createProduct(Product product, Long categoryId, List<MultipartFile> imageFile);
 
     List<Product> getAllProduct();
 
@@ -23,7 +23,12 @@ public interface ProductService {
 
     List<Product> getAllProducts();
 
-    Page<Product> getAllProductsPaginated(int page, int size);
-
     Collection<Product> getProductsByCategory(String categoryNam);
+
+    List<String> getAllBrands();
+
+    List<Product> getFilteredProducts(String brand, String category, Double minPrice, Double maxPrice, String sort);
+
+
+    void deleteImagesByProductId(Long id);
 }

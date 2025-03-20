@@ -1,7 +1,9 @@
 package fpt.swp.pcols.service.impl;
 
 import fpt.swp.pcols.entity.Category;
+import fpt.swp.pcols.entity.Image;
 import fpt.swp.pcols.entity.Product;
+import fpt.swp.pcols.repository.ImageRepository;
 import fpt.swp.pcols.repository.ProductRepository;
 import fpt.swp.pcols.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -26,26 +28,37 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryServiceImpl categoryService;
+    private final ImageRepository imageRepository;
 
 
     @Override
-    public void createProduct(Product product, Long categoryId, MultipartFile imageFile) {
+    public void createProduct(Product product, Long categoryId, List<MultipartFile> imageFiles) {
         // get category from DB
         Category selectedCategory = categoryService.getCategoryById(categoryId);
         product.setCategory(selectedCategory);
+        product.getImages().clear(); // Clear all images
+        productRepository.save(product); // Save product to DB
 
         // handle upload file if not null
-        if (imageFile != null && !imageFile.isEmpty()) {
-            try {
-                String fileName = imageFile.getOriginalFilename();
-                Path imagePath = Paths.get("src/main/resources/static/uploads/" + fileName);
-                Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                product.setImage("/uploads/" + fileName); // save relative path to DB
-            } catch (IOException e) {
-                throw new RuntimeException("Error uploading image", e);
+        if (imageFiles != null && !imageFiles.isEmpty()) {
+            for (MultipartFile imageFile : imageFiles) {
+                if (!imageFile.isEmpty()) {
+                    try {
+                        String fileName = imageFile.getOriginalFilename();
+                        Path imagePath = Paths.get("src/main/resources/static/uploads/" + fileName);
+                        Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
+
+                        Image image = new Image();
+                        image.setImageUrl("/uploads/" + fileName);
+                        image.setProduct(product);
+                        imageRepository.save(image); // Save image to DB
+
+                    } catch (IOException e) {
+                        throw new RuntimeException("Error uploading image", e);
+                    }
+                }
             }
         }
-        productRepository.save(product);
     }
 
     @Override
@@ -69,12 +82,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<Product> getAllProductsPaginated(int page, int size) {
-        Pageable pageable = PageRequest.of(page - 1, size);
-        return productRepository.findAll(pageable);
-    }
-
-    @Override
     public Page<Product> getAllProductsSortedByPrice(int page, int pageSize, Sort.Direction direction) {
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by(direction, "price"));
         return productRepository.findAll(pageable);
@@ -83,5 +90,20 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Collection<Product> getProductsByCategory(String categoryName) {
         return productRepository.findByCategory_Name(categoryName);
+    }
+
+    @Override
+    public List<String> getAllBrands() {
+        return this.productRepository.findAllBrands();
+    }
+
+    @Override
+    public List<Product> getFilteredProducts(String brand, String category, Double minPrice, Double maxPrice, String sort) {
+        return this.productRepository.findFilteredProducts(brand, category, minPrice, maxPrice, sort);
+    }
+
+    @Override
+    public void deleteImagesByProductId(Long id) {
+        this.imageRepository.deleteByProductId(id);
     }
 }

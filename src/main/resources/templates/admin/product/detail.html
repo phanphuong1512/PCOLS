@@ -12,7 +12,7 @@
             document.getElementById("editBtn").style.display = "none";
             document.getElementById("cancelBtn").style.display = "inline-block";
             document.getElementById("saveBtn").style.display = "inline-block";
-            document.getElementById("imageFile").style.display = "block";
+            document.getElementById("imageFiles").style.display = "block";
         }
 
         function confirmSave(event) {
@@ -32,7 +32,7 @@
             document.getElementById("saveBtn").style.display = "none";
             document.getElementById("cancelBtn").style.display = "none";
             document.getElementById("editBtn").style.display = "inline-block";
-            document.getElementById("imageFile").style.display = "none";
+            document.getElementById("imageFiles").style.display = "none";
         }
     </script>
 </head>
@@ -44,17 +44,16 @@
             <div class="row g-0">
 
                 <!-- Product Image -->
-                <div class="mb-3">
-                    <label class="form-label"><strong></strong></label>
-                    <img th:src="@{${product.image}}" class="img-fluid" alt="Product Image">
+                <div>
+                    <img th:each="img : ${product.images}" th:src="@{${img.imageUrl}}" class="img-fluid m-1" alt="Product Image">
                 </div>
                 <!-- Hidden Field to Retain Existing Image -->
-                <input type="hidden" th:field="*{image}" />
+<!--                <input type="hidden" th:field="*{images}" />-->
 
                 <!-- Upload New Image -->
                 <div class="mb-3">
-                    <label for="imageFile" class="form-label"><strong>Upload New Image</strong></label>
-                    <input type="file" class="form-control" id="imageFile" name="imageFile" style="display: none">
+                    <label class="form-label"><strong>Upload New Image</strong></label>
+                    <input type="file" class="form-control" id="imageFiles" name="imageFiles" style="display: none" multiple disabled>
                 </div>
 
                 <!-- Product Name -->

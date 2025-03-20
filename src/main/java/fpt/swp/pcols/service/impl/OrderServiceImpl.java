@@ -35,4 +35,19 @@ public class OrderServiceImpl implements OrderService {
     public OrderDetail findOrderDetailByOrderAndProduct(Order cart, Long productId) {
         return orderDetailRepository.findByOrderAndProductId(cart, productId);
     }
+
+    @Override
+    public Optional<OrderDetail> findDetailById(Long detailId) {
+        return orderDetailRepository.findById(detailId);
+    }
+
+    @Override
+    public void deleteDetail(OrderDetail detail) {
+        orderDetailRepository.delete(detail);
+    }
+
+    @Override
+    public void saveDetail(OrderDetail detail) {
+        orderDetailRepository.save(detail);
+    }
 }

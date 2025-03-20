@@ -3,37 +3,35 @@ package fpt.swp.pcols.controller;
 import fpt.swp.pcols.entity.Authority;
 import fpt.swp.pcols.entity.User;
 import fpt.swp.pcols.repository.AuthorityRepository;
-import fpt.swp.pcols.repository.UserRepository;
 import fpt.swp.pcols.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-    private final UserRepository userRepository;
     private final AuthorityRepository authorityRepository;
 
-    public UserController(UserService userService, UserRepository userRepository, AuthorityRepository authorityRepository) {
-        this.userService = userService;
-        this.userRepository = userRepository;
-        this.authorityRepository = authorityRepository;
-    }
 
     @GetMapping("/admin/user")
-    public String getUserPage(Model model){
+    public String getUserPage(Model model) {
         List<User> users = this.userService.getAllUser();
         model.addAttribute("users", users);
-//        System.out.println("check user" + users);
+        //        System.out.println("check user" + users);
         return "admin/user/user-list";
     }
 
     @GetMapping("/admin/user/edit/{id}")
-    public String getEditUserPage(Model model, @PathVariable long id){
+    public String getEditUserPage(Model model, @PathVariable long id) {
         User user = this.userService.getUserById(id);
         List<Authority> authorities = this.authorityRepository.findAll();
         model.addAttribute("user", user);
@@ -48,7 +46,7 @@ public class UserController {
         if (result.hasErrors()) {
             return "admin/user/edit";
         }
-        userService.updateUser(user);
+        userService.save(user);
         return "redirect:/admin/user";
     }
 }

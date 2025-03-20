@@ -1,8 +1,10 @@
 package fpt.swp.pcols.controller;
 
+import fpt.swp.pcols.entity.User;
 import fpt.swp.pcols.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,10 +20,13 @@ public class ProfileController {
 
     private final UserService userService;
 
-    // Handles GET requests to "/update-password" to render the password update form.
-    @GetMapping({""})
-    public String getProfilePage() {
-        return "auth/profile";
+    @GetMapping("/profile")
+    public String profilePage(Model model, Principal principal) {
+        // Lấy user từ DB theo principal (hoặc theo email/username)
+        User user = userService.findByUsername(principal.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        model.addAttribute("user", user);
+        return "/auth/profile";
     }
 
     // Handles POST requests to "/update-password" for updating user password securely.

@@ -1,0 +1,92 @@
+package fpt.swp.pcols.controller;
+
+import fpt.swp.pcols.entity.Category;
+import fpt.swp.pcols.entity.Product;
+import fpt.swp.pcols.service.CategoryService;
+import fpt.swp.pcols.service.ProductService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+
+@Controller
+@RequiredArgsConstructor
+public class ProductController {
+
+    private final ProductService productService;
+    private final CategoryService categoryService;
+
+
+    @GetMapping("/admin/product")
+    public String getInventoryPage(Model model) {
+        List<Product> products = this.productService.getAllProduct();
+        model.addAttribute("products", products);
+        System.out.println("check user" + products);
+        return "admin/product/inventory";
+    }
+
+    @GetMapping("/admin/product/ProductCreatePage") // GET
+    public String getCreateProductPage(Model model) {
+        model.addAttribute("newProduct", new Product());
+        model.addAttribute("categories", categoryService.getAllCategory());
+        return "admin/product/create";
+    }
+
+    @PostMapping(value = "/admin/product/create")
+    public String createProduct(@ModelAttribute("newProduct") Product product,
+                                @RequestParam("category.id") Long selectedCategoryId,
+                                @RequestParam("imageFiles") List<MultipartFile> imageFiles) {
+        productService.createProduct(product, selectedCategoryId, imageFiles);
+        return "redirect:/admin/product";
+    }
+
+    //get product detail by id
+    @GetMapping("/admin/product/detail/{id}")
+    public String getProductDetailPage(Model model, @PathVariable long id, @ModelAttribute List<MultipartFile> imageFiles) {
+        Product product = this.productService.getProductById(id);
+        List<Category> categories = categoryService.getAllCategory();
+        model.addAttribute("categories", categories);
+        model.addAttribute("product", product);
+        model.addAttribute("imageFiles", imageFiles);
+        model.addAttribute("id", id);
+        return "admin/product/detail";
+    }
+
+    @PostMapping("/admin/product/detail/saveEdit")
+    public String saveProductDetailEdit(@ModelAttribute Product product,
+                                        @RequestParam(value = "imageFiles", required = false) List<MultipartFile> imageFiles) {
+        // Delete old images before saving new ones
+        productService.deleteImagesByProductId(product.getId());
+        productService.createProduct(product, product.getCategory().getId(), imageFiles);
+        productService.handleSaveProduct(product);
+        return "redirect:/admin/product/detail/" + product.getId();
+    }
+
+    @GetMapping("/products")
+    public String getProductPage(Model model,
+                                 @RequestParam(value = "sort", required = false) String sort,
+                                 @RequestParam(value = "brand", required = false) String brand,
+                                 @RequestParam(value = "category", required = false) String category,
+                                 @RequestParam(value = "minPrice", required = false) Double minPrice,
+                                 @RequestParam(value = "maxPrice", required = false) Double maxPrice) {
+        List<Category> listCategories = categoryService.getAllCategories();
+        List<String> listBrands = productService.getAllBrands();
+        List<Product> products = productService.getFilteredProducts(brand, category, minPrice, maxPrice, sort);
+
+        model.addAttribute("products", products);
+        model.addAttribute("categories", category);
+        model.addAttribute("listCategories", listCategories);
+        model.addAttribute("listBrands", listBrands);
+        model.addAttribute("brands", brand);
+        model.addAttribute("minPrice", minPrice);
+        model.addAttribute("maxPrice", maxPrice);
+        model.addAttribute("sort", sort);
+
+        return "products";
+    }
+}

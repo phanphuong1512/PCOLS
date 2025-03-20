@@ -1,6 +1,3 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="">
-<body>
 <!-- Fragment: productCard -->
 <div th:fragment="productCard (product)" class="col-md-3 col-sm-6 col-xs-6">
     <div class="product product-single">
@@ -9,7 +6,6 @@
                 <img th:src="${product.image}" alt="">
             </div>
         </a>
-
         <div class="product-body">
             <h3 class="product-price">
                 $<span th:text="${product.price}"></span>
@@ -27,10 +23,10 @@
             <div class="product-btns">
                 <button class="main-btn icon-btn"><i class="fa fa-heart"></i></button>
                 <button class="main-btn icon-btn"><i class="fa fa-exchange"></i></button>
-                <button class="primary-btn add-to-cart"><i class="fa fa-shopping-cart"></i> Add to Cart</button>
+                <button class="primary-btn add-to-cart" th:attr="data-product-id=${product.id}">
+                    <i class="fa fa-shopping-cart"></i> Add to Cart
+                </button>
             </div>
         </div>
     </div>
 </div>
-</body>
-</html>

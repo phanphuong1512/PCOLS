@@ -20,4 +20,6 @@ public class Authority implements GrantedAuthority {
 
     @Column(name = "authority")
     private String authority;
+
+
 }

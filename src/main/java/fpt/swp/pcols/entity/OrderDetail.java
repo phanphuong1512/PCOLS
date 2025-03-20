@@ -39,4 +39,12 @@ public class OrderDetail {
     // Snapshot tên sản phẩm, nhằm lưu giữ thông tin ngay lúc đặt hàng
     @Column(name = "product_name", nullable = false)
     private String productName;
+
+    @Transient
+    public BigDecimal getTotalPrice() {
+        if (price == null || quantity == 0) {
+            return BigDecimal.ZERO;
+        }
+        return price.multiply(BigDecimal.valueOf(quantity));
+    }
 }
