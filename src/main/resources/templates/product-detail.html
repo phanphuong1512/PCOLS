@@ -32,11 +32,11 @@
 
 <body>
 <!-- HEADER -->
-<div th:replace="fragments/header :: header"></div>
+<div th:replace="~{fragments/header :: header}"></div>
 <!-- /HEADER -->
 
 <!-- NAVIGATION -->
-<div th:replace="fragments/navbar :: navbar"></div>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
 <!-- /NAVIGATION -->
 
 <!-- BREADCRUMB -->
@@ -336,7 +336,7 @@
 
             <!-- Product Single -->
             <div th:each="product : ${relatedProducts}">
-                <div th:replace="fragments/product :: productCard(product=${product})"></div>
+                <div th:replace="~{fragments/product :: productCard(product=${product})}"></div>
             </div>
             <!-- /Product Single -->
         </div>

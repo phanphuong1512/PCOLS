@@ -27,7 +27,10 @@ public interface UserService {
 
     User getUserById(Long id);
 
-    void updateUser(User user);
-
     Optional<User> findByUsername(String name);
+
+    Optional<User> findByEmail(String name);
+
+    User save(User user);
+
 }

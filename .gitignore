@@ -38,3 +38,6 @@ out/
 
 # Ignore macOS system files
 .DS_Store
+
+#.YML file
+src/main/resources/application.yml

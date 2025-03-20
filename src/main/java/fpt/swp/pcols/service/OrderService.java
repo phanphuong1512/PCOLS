@@ -19,4 +19,5 @@ public interface OrderService {
     void deleteDetail(OrderDetail detail);
 
     void saveDetail(OrderDetail detail);
+
 }

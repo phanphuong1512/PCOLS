@@ -33,11 +33,11 @@
 
 <body>
 <!-- HEADER -->
-<div th:replace="fragments/header :: header"></div>
+<div th:replace="~{fragments/header :: header}"></div>
 <!-- /HEADER -->
 
 <!-- NAVIGATION -->
-<div th:replace="fragments/navbar :: navbar"></div>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
 <!-- /NAVIGATION -->
 
 <!-- BREADCRUMB -->
@@ -202,14 +202,14 @@
 
                 <div id="store">
                     <div class="row">
-                        <!-- Loop through products -->
+                        <!--Loop through products -->
                         <div class="col-md-4 col-sm-6 col-xs-6" th:each="product : ${products}">
                             <div class="product product-single">
-                                <div class="product-thumb">
-                                    <button class="main-btn quick-view"><i class="fa fa-search-plus"></i> Quick view
-                                    </button>
-                                    <img th:src="@{${product.image}}" alt="">
-                                </div>
+                                <a th:href="@{/product-detail(id=${product.id})}">
+                                    <div class="product-thumb">
+                                        <img th:src="@{${product.image}}" alt="">
+                                    </div>
+                                </a>
                                 <div class="product-body">
                                     <h3 class="product-price">
                                         $<span th:text="${product.price}"></span>
@@ -225,7 +225,7 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- /Product Single -->
+                        <!--                        /Product Single-->
                     </div>
                 </div>
 

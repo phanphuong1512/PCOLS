@@ -131,12 +131,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(User user) {
-        this.userRepository.save(user);
+    public Optional<User> findByUsername(String name) {
+        return userRepository.findByUsername(name);
     }
 
     @Override
-    public Optional<User> findByUsername(String name) {
-        return userRepository.findByUsername(name);
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public User save(User user) {
+        return userRepository.save(user);
     }
 }

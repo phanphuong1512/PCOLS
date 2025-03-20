@@ -34,11 +34,11 @@
 
 <body>
 <!-- HEADER -->
-<div th:replace="fragments/header :: header"></div>
+<div th:replace="~{fragments/header :: header}"></div>
 <!-- /HEADER -->
 
 <!-- NAVIGATION -->
-<div th:replace="fragments/navbar :: navbar"></div>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
 <!-- /NAVIGATION -->
 
 <!-- BREADCRUMB -->
@@ -76,7 +76,7 @@
                         </tr>
                         </thead>
                         <tbody th:each="detail : ${orderDetails}">
-                        <tr id="row-[[${detail.id}]]">
+                        <tr class="order-detail-row" id="row-[[${detail.id}]]">
                             <!-- Ảnh sản phẩm -->
                             <td class="thumb">
                                 <img th:src="${detail.product.image}" alt="Product Image"/>
@@ -108,9 +108,8 @@
                             </td>
                             <!-- Tổng tiền cho dòng này -->
                             <td class="total text-center">
-                                <strong th:attr="id='total-' + ${detail.id}" class="primary-color"
+                                <strong th:attr="id='total-' + ${detail.id}" class=" line-total primary-color"
                                         th:text="${detail.totalPrice}">
-                                    0
                                 </strong>
                             </td>
                             <!-- Nút xóa -->
@@ -187,7 +186,7 @@
                             <h4 class="title">Payments Methods</h4>
                         </div>
                         <div class="input-checkbox">
-                            <input type="radio" name="payments" id="payments-1" value="BANK" checked>
+                            <input type="radio" name="payment" id="payments-1" value="BANK" checked>
                             <label for="payments-1">Direct Bank Transfer</label>
                             <div class="caption">
                                 <p>“Bạn có thể chuyển khoản trực tiếp qua ngân hàng. Hệ thống sẽ tự động xác nhận ngay
@@ -196,7 +195,7 @@
                             </div>
                         </div>
                         <div class="input-checkbox">
-                            <input type="radio" name="payments" id="payments-2" value="BANK">
+                            <input type="radio" name="payment" id="payments-2" value="PAYPAL">
                             <label for="payments-2">Paypal</label>
                             <div class="caption">
                                 <p>“Dễ dàng, an toàn, và nhanh chóng – hãy chọn PayPal để thanh toán. Hệ thống sẽ mã hóa
@@ -205,27 +204,32 @@
                             </div>
                         </div>
                     </div>
-
                     <div>
                         <div class="section-title">
-                            <h4 class="title">Order Detail</h4>
+                            <h4 class="title">Order Total</h4>
                         </div>
                         <table>
                             <thead>
                             <tr>
                                 <th class="empty" colspan="3"></th>
                                 <th>SUBTOTAL</th>
-                                <th colspan="2" class="sub-total">$97.50</th>
+                                <th colspan="2" class="sub-total">
+                                    $<span id="subtotal-value">97.50</span>
+                                </th>
                             </tr>
                             <tr>
                                 <th class="empty" colspan="3"></th>
                                 <th>SHIPPING</th>
-                                <th colspan="2">Free Shipping</th>
+                                <th colspan="2">
+                                    $<span id="shipping-value">0.00</span>
+                                </th>
                             </tr>
                             <tr>
                                 <th class="empty" colspan="3"></th>
                                 <th>TOTAL</th>
-                                <th colspan="2" class="total">$97.50</th>
+                                <th colspan="2" class="total">
+                                    $<span id="total-value">97.50</span>
+                                </th>
                             </tr>
                             </thead>
                             <tbody>
@@ -236,10 +240,7 @@
                         <div class="pull-right">
                             <button class="primary-btn close-to-footer">Place Order</button>
                         </div>
-
                     </div>
-
-
                 </div>
             </form>
         </div>
@@ -250,7 +251,7 @@
 <!-- /section -->
 
 <!-- FOOTER -->
-<div th:replace="fragments/footer :: footer"></div>
+<div th:replace="~{fragments/footer :: footer}"></div>
 <!-- /FOOTER -->
 
 <!-- jQuery Plugins -->
