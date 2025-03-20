@@ -45,6 +45,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
 
     // devtool(for development environment)
+    implementation 'io.github.cdimascio:dotenv-java:3.0.0'
 
     // Testing dependencies
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

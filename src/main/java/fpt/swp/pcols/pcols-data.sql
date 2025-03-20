@@ -194,7 +194,7 @@ INSERT INTO `user_authority` VALUES (1,1),(2,2);
 /*!40000 ALTER TABLE `user_authority` ENABLE KEYS */;
 UNLOCK TABLES;
 
-CREATE TABLE `image` (
+CREATE TABLE `images` (
                          `id` bigint NOT NULL AUTO_INCREMENT,
                          `product_id` bigint NOT NULL,
                          `image_url` varchar(255) NOT NULL,
@@ -202,23 +202,23 @@ CREATE TABLE `image` (
                          KEY `FK_image_product` (`product_id`),
                          CONSTRAINT `FK_image_product` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-INSERT INTO `image` (`product_id`, `image_url`) VALUES
-                                              (1, 'https://www.tncstore.vn/media/product/250-11383-cpu-core-ultra-9-285k--1-.jpg'),
-                                              (2, 'https://www.tncstore.vn/media/product/250-12004-tnc-store-card-man-hinh-msi-geforce-rtx-5070-12g-vanguard-soc--2-.jpg'),
-                                              (3, 'https://www.tncstore.vn/media/product/250-11384-cpu-core-ultra-7-265k--1-.jpg'),
-                                              (4, 'https://www.tncstore.vn/media/product/250-11386-cpu-core-ultra-5-245k--1-.jpg'),
-                                              (5, 'https://www.tncstore.vn/media/product/250-4625-card-man-hinh-galax-gtx-1650-super-ex-1-click-oc-01.jpg'),
-                                              (6, '/uploads/79a55e32-d66e-4f74-8481-207f3f5b90d8_pc1.jpg'),
-                                              (7, 'https://www.tncstore.vn/media/product/250-11335-tnc-store-card-card-man-hinh-gigabyte-geforce-gt-1030-oc-2g-gv-n1030oc-2gi--2-.jpg'),
-                                              (8, 'https://www.tncstore.vn/media/product/250-11617-card-man-hinh-asus-rog-astral-geforce-rtx-5090-32gb-gddr7-oc-edition--5-.jpg'),
-                                              (9, 'https://www.tncstore.vn/media/product/250-9247-man-asus-4.jpg'),
-                                              (10, 'https://www.tncstore.vn/media/product/250-9073-man-hinh-gaming-lg-uttra-gear-27-gr75q-b-5.jpg'),
-                                              (11, 'https://www.tncstore.vn/media/product/250-11465-man-hinh-gaming-lg-24gs65f-b--6-.jpg'),
-                                              (12, 'https://www.tncstore.vn/media/product/250-8340-razer-deathadder-v3-pro-ergonomic-white.jpg'),
-                                              (13, 'https://www.tncstore.vn/media/product/250-4854-ban-phim-co-e-dra-ek387-v2-brown-switch-1a.jpg'),
-                                              (14, 'https://www.tncstore.vn/media/product/250-2316-tai-nghe-steelseries-arctis-pro-gamedac-11.jpg'),
-                                              (15, 'https://www.tncstore.vn/media/product/250-9979-pc-gaming-sentinel-i4090-wh--16-.jpg'),
-                                              (16, 'https://www.tncstore.vn/media/product/250-9835-tnc-store-pc-gaming-nova-i4080-super-bl-15-.jpg');
+INSERT INTO `images` (`product_id`, `image_url`) VALUES
+                                                    (1, 'https://www.tncstore.vn/media/product/250-11383-cpu-core-ultra-9-285k--1-.jpg'),
+                                                    (2, 'https://www.tncstore.vn/media/product/250-12004-tnc-store-card-man-hinh-msi-geforce-rtx-5070-12g-vanguard-soc--2-.jpg'),
+                                                    (3, 'https://www.tncstore.vn/media/product/250-11384-cpu-core-ultra-7-265k--1-.jpg'),
+                                                    (4, 'https://www.tncstore.vn/media/product/250-11386-cpu-core-ultra-5-245k--1-.jpg'),
+                                                    (5, 'https://www.tncstore.vn/media/product/250-4625-card-man-hinh-galax-gtx-1650-super-ex-1-click-oc-01.jpg'),
+                                                    (6, '/uploads/79a55e32-d66e-4f74-8481-207f3f5b90d8_pc1.jpg'),
+                                                    (7, 'https://www.tncstore.vn/media/product/250-11335-tnc-store-card-card-man-hinh-gigabyte-geforce-gt-1030-oc-2g-gv-n1030oc-2gi--2-.jpg'),
+                                                    (8, 'https://www.tncstore.vn/media/product/250-11617-card-man-hinh-asus-rog-astral-geforce-rtx-5090-32gb-gddr7-oc-edition--5-.jpg'),
+                                                    (9, 'https://www.tncstore.vn/media/product/250-9247-man-asus-4.jpg'),
+                                                    (10, 'https://www.tncstore.vn/media/product/250-9073-man-hinh-gaming-lg-uttra-gear-27-gr75q-b-5.jpg'),
+                                                    (11, 'https://www.tncstore.vn/media/product/250-11465-man-hinh-gaming-lg-24gs65f-b--6-.jpg'),
+                                                    (12, 'https://www.tncstore.vn/media/product/250-8340-razer-deathadder-v3-pro-ergonomic-white.jpg'),
+                                                    (13, 'https://www.tncstore.vn/media/product/250-4854-ban-phim-co-e-dra-ek387-v2-brown-switch-1a.jpg'),
+                                                    (14, 'https://www.tncstore.vn/media/product/250-2316-tai-nghe-steelseries-arctis-pro-gamedac-11.jpg'),
+                                                    (15, 'https://www.tncstore.vn/media/product/250-9979-pc-gaming-sentinel-i4090-wh--16-.jpg'),
+                                                    (16, 'https://www.tncstore.vn/media/product/250-9835-tnc-store-pc-gaming-nova-i4080-super-bl-15-.jpg');
 --
 -- Table structure for table `users`
 --

@@ -4,6 +4,7 @@ import fpt.swp.pcols.entity.Category;
 import fpt.swp.pcols.entity.Image;
 import fpt.swp.pcols.entity.Product;
 import fpt.swp.pcols.repository.ImageRepository;
+import fpt.swp.pcols.repository.CategoryRepository;
 import fpt.swp.pcols.repository.ProductRepository;
 import fpt.swp.pcols.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final CategoryServiceImpl categoryService;
     private final ImageRepository imageRepository;
+    private final CategoryRepository categoryRepository;
 
 
     @Override
@@ -87,9 +89,21 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findAll(pageable);
     }
 
-    @Override
-    public Collection<Product> getProductsByCategory(String categoryName) {
-        return productRepository.findByCategory_Name(categoryName);
+    public List<Product> getProductsByCategoryWithImages(String categoryName) {
+        Category category = categoryRepository.findByName(categoryName)
+                .orElseThrow(() -> new RuntimeException("Category not found: " + categoryName));
+        return productRepository.findByCategoryWithImages(category);
+    }
+
+    public Product getProductById(Long productId) {
+        return productRepository.findByIdWithImages(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
+    }
+
+    public List<Product> getProductsByCategory(String categoryName) {
+        Category category = categoryRepository.findByName(categoryName)
+                .orElseThrow(() -> new RuntimeException("Category not found: " + categoryName));
+        return productRepository.findByCategoryWithImages(category);
     }
 
     @Override

@@ -3,7 +3,7 @@
     <div class="product product-single">
         <a th:href="@{/product-detail(id=${product.id})}">
             <div class="product-thumb">
-                <img th:src="${product.image}" alt="">
+                <img th:src="${!product.images.isEmpty() ? product.images[0].imageUrl : '/images/default.jpg'}" alt="">
             </div>
         </a>
         <div class="product-body">

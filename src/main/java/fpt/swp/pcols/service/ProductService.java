@@ -23,7 +23,11 @@ public interface ProductService {
 
     List<Product> getAllProducts();
 
+    Page<Product> getAllProductsPaginated(int page, int size);
+
     Collection<Product> getProductsByCategory(String categoryNam);
+
+    public List<Product> getProductsByCategoryWithImages(String category);
 
     List<String> getAllBrands();
 
