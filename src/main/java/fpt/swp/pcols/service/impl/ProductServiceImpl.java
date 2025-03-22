@@ -13,8 +13,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -93,5 +93,14 @@ public class ProductServiceImpl implements ProductService {
         Category category = categoryRepository.findByName(categoryName)
                 .orElseThrow(() -> new RuntimeException("Category not found: " + categoryName));
         return productRepository.findByCategoryWithImages(category);
+    }
+
+    @Override
+    public List<Product> getRelatedProducts(Product product, int limit) {
+        return getProductsByCategory(product.getCategory().getName())
+                .stream()
+                .filter(p -> !p.getId().equals(product.getId()))
+                .limit(limit)
+                .collect(Collectors.toList());
     }
 }

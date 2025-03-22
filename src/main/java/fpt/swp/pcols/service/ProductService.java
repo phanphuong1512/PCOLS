@@ -28,4 +28,6 @@ public interface ProductService {
     Collection<Product> getProductsByCategory(String categoryNam);
 
     public List<Product> getProductsByCategoryWithImages(String category);
+
+    List<Product> getRelatedProducts(Product product, int limit);
 }

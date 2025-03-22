@@ -166,6 +166,7 @@
                         </div>
                         <div class="sort-filter">
                             <span class="text-uppercase">Sort By:</span>
+                            <label for="sortByPrice"></label>
                             <select class="input" id="sortByPrice">
                                 <option value="">Price</option>
                                 <option value="asc">Price (Ascending)</option>
@@ -207,7 +208,8 @@
                             <div class="product product-single">
                                 <a th:href="@{/product-detail(id=${product.id})}">
                                     <div class="product-thumb">
-                                        <img th:src="@{${product.image}}" alt="">
+                                        <img th:src="${!product.images.isEmpty() ? product.images[0].imageUrl : '/images/default.jpg'}"
+                                             alt="">
                                     </div>
                                 </a>
                                 <div class="product-body">
@@ -225,11 +227,9 @@
                                 </div>
                             </div>
                         </div>
-                        <!--                        /Product Single-->
+                        <!--/Product Single-->
                     </div>
                 </div>
-
-
                 <!-- store bottom filter -->
                 <div class="store-filter clearfix">
                     <div class="pull-left">
