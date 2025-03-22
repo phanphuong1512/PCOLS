@@ -23,8 +23,19 @@ public class ProductController {
 
 
     @GetMapping("/admin/product")
-    public String getInventoryPage(Model model) {
-        List<Product> products = this.productService.getAllProduct();
+    public String getInventoryPage(Model model,
+                                   @RequestParam(value = "category", required = false) String category,
+                                      @RequestParam(value = "brand", required = false) String brand,
+                                   @RequestParam(value = "search", required = false) String search) {
+        String categoryName = (category != null && !category.isEmpty()) ? category : null;
+        String brandName = (brand != null && !brand.isEmpty()) ? brand : null;
+        String searchTerm = (search != null && !search.isEmpty()) ? search : null;
+        List<Product> products = productService.getFilteredProductsForAdmin(categoryName, brandName, searchTerm);
+        model.addAttribute("searchTerm", search);
+        model.addAttribute("categories", categoryService.getAllCategories());
+        model.addAttribute("brands", productService.getAllBrands());
+        model.addAttribute("selectedCategory", category);
+        model.addAttribute("selectedBrand", brand);
         model.addAttribute("products", products);
         System.out.println("check user" + products);
         return "admin/product/inventory";
@@ -72,6 +83,7 @@ public class ProductController {
                                  @RequestParam(value = "sort", required = false) String sort,
                                  @RequestParam(value = "brand", required = false) String brand,
                                  @RequestParam(value = "category", required = false) String category,
+                                 @RequestParam(value = "imageFiles", required = false) List<MultipartFile> imageFiles,
                                  @RequestParam(value = "minPrice", required = false) Double minPrice,
                                  @RequestParam(value = "maxPrice", required = false) Double maxPrice) {
         List<Category> listCategories = categoryService.getAllCategories();

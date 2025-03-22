@@ -17,6 +17,40 @@
 
 <body>
 <div class="container mt-5">
+    <div class="mb-4">
+        <form method="get" action="/admin/product">
+            <div class="row g-3 align-items-center">
+                <div class="col-md-3">
+                    <select name="category" class="form-control">
+                        <option value="">All Categories</option>
+                        <th:block th:each="cat : ${categories}">
+                            <option th:value="${cat.name}"
+                                    th:text="${cat.name}"
+                                    th:selected="${cat.name == selectedCategory}"></option>
+                        </th:block>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select name="brand" class="form-control">
+                        <option value="">All Brands</option>
+                        <th:block th:each="brand : ${brands}">
+                            <option th:value="${brand}"
+                                    th:text="${brand}"
+                                    th:selected="${brand == selectedBrand}"></option>
+                        </th:block>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <input type="text" name="search" class="form-control"
+                           placeholder="Search by name" th:value="${searchTerm}">
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary me-2">Apply Filters</button>
+                    <a href="/admin/product" class="btn btn-secondary">Reset</a>
+                </div>
+            </div>
+        </form>
+    </div>
     <div class="row">
         <div class="col-md-8 col-12 mx-auto">
             <h3>Product List</h3>

@@ -2,7 +2,6 @@ package fpt.swp.pcols.repository;
 
 import fpt.swp.pcols.entity.Category;
 import fpt.swp.pcols.entity.Product;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -34,4 +33,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("SELECT DISTINCT p.brand FROM Product p WHERE p.brand IS NOT NULL")
     List<String> findAllBrands();
 
+    @Query("SELECT p FROM Product p WHERE " +
+            "(:categoryName IS NULL OR p.category.name = :categoryName) AND " +
+            "(:brandName IS NULL OR p.brand = :brandName) AND " +
+            "(:name IS NULL OR p.name LIKE %:name%)")
+    List<Product> findProducts(@Param("categoryName") String categoryName,
+                               @Param("brandName") String brandName,
+                               @Param("name") String name);
 }

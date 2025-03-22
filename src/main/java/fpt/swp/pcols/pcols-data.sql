@@ -197,12 +197,12 @@ UNLOCK TABLES;
 CREATE TABLE `images` (
                          `id` bigint NOT NULL AUTO_INCREMENT,
                          `product_id` bigint NOT NULL,
-                         `image_url` varchar(255) NOT NULL,
+                         `url` varchar(255) NOT NULL,
                          PRIMARY KEY (`id`),
                          KEY `FK_image_product` (`product_id`),
                          CONSTRAINT `FK_image_product` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-INSERT INTO `images` (`product_id`, `image_url`) VALUES
+INSERT INTO `images` (`product_id`, `url`) VALUES
                                                     (1, 'https://www.tncstore.vn/media/product/250-11383-cpu-core-ultra-9-285k--1-.jpg'),
                                                     (2, 'https://www.tncstore.vn/media/product/250-12004-tnc-store-card-man-hinh-msi-geforce-rtx-5070-12g-vanguard-soc--2-.jpg'),
                                                     (3, 'https://www.tncstore.vn/media/product/250-11384-cpu-core-ultra-7-265k--1-.jpg'),
@@ -247,7 +247,12 @@ CREATE TABLE `users` (
 --
 -- Dumping data for table `users`
 --
-
+INSERT INTO reviews (product_id, user_id, rating, comment, created_at) VALUES
+                                                                           (1, 1, 5, 'Sản phẩm tuyệt vời! Hiệu năng mạnh mẽ, chạy mượt mà mọi tác vụ.', '2025-03-21 10:00:00'),
+                                                                           (2, 2, 4, 'Card đồ họa rất tốt, chơi game mượt, nhưng giá hơi cao.', '2025-03-21 11:00:00'),
+                                                                           (6, 1, 5, 'PC này quá đỉnh! Đồ họa đẹp, chơi game 4K không giật lag.', '2025-03-21 12:00:00'),
+                                                                           (12, 2, 3, 'Chuột dùng ổn, nhưng cảm giác không thoải mái lắm khi cầm lâu.', '2025-03-21 13:00:00'),
+                                                                           (15, 1, 4, 'Cấu hình mạnh, nhưng cần cải thiện hệ thống tản nhiệt.', '2025-03-21 14:00:00');
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` VALUES (_binary '',0,'2025-03-12 16:42:41.436144',1,NULL,NULL,'phuongandphan@gmail.com','901212','$2a$10$qhiafOCSYSgXBX/PGDRUv.8.P1RbHL.HivbUrYS.uUzV4YqW8sgBy','user'),(_binary '',0,'2025-03-12 16:43:34.945308',2,NULL,NULL,'fanphuong215@gmail.com','261995','$2a$10$L.Wcd0tD01tBWwE5/TpYruqhv.UNHaTHZO/M6DG8C4CMUPJxT/dwe','admin');

@@ -23,8 +23,6 @@ public interface ProductService {
 
     List<Product> getAllProducts();
 
-    Page<Product> getAllProductsPaginated(int page, int size);
-
     Collection<Product> getProductsByCategory(String categoryNam);
 
     public List<Product> getProductsByCategoryWithImages(String category);
@@ -33,6 +31,7 @@ public interface ProductService {
 
     List<Product> getFilteredProducts(String brand, String category, Double minPrice, Double maxPrice, String sort);
 
+    List<Product> getFilteredProductsForAdmin(String categoryName, String brandName, String searchTerm);
 
     void deleteImagesByProductId(Long id);
 

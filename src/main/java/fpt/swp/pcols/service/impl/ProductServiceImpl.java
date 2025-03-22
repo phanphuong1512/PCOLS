@@ -51,7 +51,7 @@ public class ProductServiceImpl implements ProductService {
                         Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
 
                         Image image = new Image();
-                        image.setImageUrl("/uploads/" + fileName);
+                        image.setUrl("/uploads/" + fileName);
                         image.setProduct(product);
                         imageRepository.save(image); // Save image to DB
 
@@ -114,6 +114,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> getFilteredProducts(String brand, String category, Double minPrice, Double maxPrice, String sort) {
         return this.productRepository.findFilteredProducts(brand, category, minPrice, maxPrice, sort);
+    }
+
+    @Override
+    public List<Product> getFilteredProductsForAdmin(String categoryName, String brandName, String searchTerm) {
+        return productRepository.findProducts(categoryName, brandName, searchTerm);
     }
 
     @Override

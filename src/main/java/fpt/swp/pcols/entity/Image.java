@@ -19,8 +19,8 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "image_url")
-    private String imageUrl;
+    @Column(name = "url")
+    private String url;
 
     @ManyToOne
     @JsonIgnore
