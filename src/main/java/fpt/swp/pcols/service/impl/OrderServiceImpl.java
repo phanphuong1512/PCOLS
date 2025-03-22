@@ -50,4 +50,5 @@ public class OrderServiceImpl implements OrderService {
     public void saveDetail(OrderDetail detail) {
         orderDetailRepository.save(detail);
     }
+
 }

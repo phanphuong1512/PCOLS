@@ -35,20 +35,16 @@ public class OrderController {
         if (principal == null) {
             return "redirect:/auth/login";
         }
-
         User user;
-        // Kiểm tra nếu đăng nhập bằng OAuth2 (ví dụ, Google)
         if (principal instanceof OAuth2AuthenticationToken oauthToken) {
             String email = (String) oauthToken.getPrincipal().getAttributes().get("email");
             user = userService.findByEmail(email)
                     .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
         } else {
-            // Đăng nhập truyền thống, sử dụng username
             user = userService.findByUsername(principal.getName())
                     .orElseThrow(() -> new RuntimeException("User not found with username: " + principal.getName()));
         }
 
-        // Lấy giỏ hàng hiện tại (Order có trạng thái PENDING) của người dùng
         Order cart = orderService.getCurrentCartForUser(user)
                 .orElseGet(() -> {
                     Order newCart = new Order();
@@ -58,6 +54,14 @@ public class OrderController {
                     newCart.setOrderDetails(new ArrayList<>());
                     return orderService.save(newCart);
                 });
+
+        // Thêm log để kiểm tra
+        System.out.println("Cart: " + cart);
+        System.out.println("Order Details: " + cart.getOrderDetails());
+        cart.getOrderDetails().forEach(detail -> {
+            System.out.println("Product: " + detail.getProduct());
+            System.out.println("Images: " + detail.getProduct().getImages());
+        });
 
         model.addAttribute("order", cart);
         model.addAttribute("orderDetails", cart.getOrderDetails());

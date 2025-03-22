@@ -27,6 +27,8 @@
 
     <!-- Custom style sheet -->
     <link type="text/css" rel="stylesheet" th:href="@{/css/home.css}"/>
+    <!--    chat bot-->
+    <link rel="stylesheet" th:href="@{/css/chatbot.css}">
 
 
 </head>
@@ -251,10 +253,10 @@
 </div>
 <!-- /section -->
 
+
 <!-- FOOTER -->
 <div th:replace="fragments/footer :: footer"></div>
 <!-- /FOOTER -->
-
 
 <!-- jQuery Plugins -->
 <script th:src="@{/js/jquery.min.js}" src="/js/jquery.min.js"></script>
@@ -264,6 +266,8 @@
 <script th:src="@{/js/jquery.zoom.min.js}" src="/js/jquery.zoom.min.js"></script>
 <script th:src="@{/js/main.js}" src="/js/main.js"></script>
 <script th:src="@{/js/add-to-cart.js}" src="/js/main.js"></script>
+<script th:src="@{/js/chat-fragment.js}" defer></script>
+
 
 </body>
 

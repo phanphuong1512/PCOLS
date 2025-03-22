@@ -27,6 +27,8 @@ public interface ProductService {
 
     public List<Product> getProductsByCategoryWithImages(String category);
 
+    List<Product> getRelatedProducts(Product product, int limit);
+
     List<String> getAllBrands();
 
     List<Product> getFilteredProducts(String brand, String category, Double minPrice, Double maxPrice, String sort);
