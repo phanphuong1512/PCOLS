@@ -22,6 +22,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -104,6 +105,15 @@ public class ProductServiceImpl implements ProductService {
         Category category = categoryRepository.findByName(categoryName)
                 .orElseThrow(() -> new RuntimeException("Category not found: " + categoryName));
         return productRepository.findByCategoryWithImages(category);
+    }
+
+    @Override
+    public List<Product> getRelatedProducts(Product product, int limit) {
+        return getProductsByCategory(product.getCategory().getName())
+                .stream()
+                .filter(p -> !p.getId().equals(product.getId()))
+                .limit(limit)
+                .collect(Collectors.toList());
     }
 
     @Override
