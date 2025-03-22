@@ -78,7 +78,7 @@
                         <tr class="order-detail-row" id="row-[[${detail.id}]]">
                             <!-- Ảnh sản phẩm -->
                             <td class="thumb">
-                                <img th:src="${detail.product.images != null && !detail.product.images.isEmpty() ? detail.product.images[0].imageUrl : '/default-image.jpg'}"
+                                <img th:src="${detail.product.images != null && !detail.product.images.isEmpty() ? detail.product.images[0].url : '/default-image.jpg'}"
                                      alt="Product Image"/>
                             </td>
                             <!-- Tên sản phẩm và thông tin bổ sung -->
