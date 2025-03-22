@@ -1,80 +1,129 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-
-    <title>Users List</title>
-    <!-- Google font -->
-    <link href="https://fonts.googleapis.com/css?family=Hind:400,700" rel="stylesheet">
-
-    <!-- Bootstrap -->
-    <link type="text/css" rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
-
-    <!-- Slick -->
-    <link type="text/css" rel="stylesheet" th:href="@{/css/slick.css}"/>
-    <link type="text/css" rel="stylesheet" th:href="@{/css/slick-theme.css}"/>
-
-    <!-- nouislider -->
-    <link type="text/css" rel="stylesheet" th:href="@{/css/nouislider.min.css}"/>
-
-    <!-- Font Awesome Icon -->
-    <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}"/>
-
-    <!-- Custom stylesheet -->
-    <link type="text/css" rel="stylesheet" th:href="@{/css/home.css}"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - User List</title>
+    <link rel="stylesheet" th:href="@{/admin_assets/css/style.css}">
+    <style>
+        .filter-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 20px 0;
+            background: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        }
+        .filter-form div {
+            display: flex;
+            flex-direction: column;
+        }
+        .filter-form label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .filter-form select,
+        .filter-form input {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .filter-form button {
+            align-self: flex-end;
+            padding: 10px 20px;
+            background: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .filter-form button:hover {
+            background: #45a049;
+        }
+    </style>
 </head>
 <body>
-<!-- HEADER -->
-<div th:replace="fragments/header :: header"></div>
-<!-- /HEADER -->
-
 <!-- NAVIGATION -->
-<div th:replace="fragments/navbar :: navbar"></div>
+<div th:replace="fragments/admin_nav :: admin_nav"></div>
 <!-- /NAVIGATION -->
-<h2>Users List</h2>
-<table border="1">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Username</th>
-        <th>Email</th>
-        <th>Authorities (Roles)</th>
-        <th>Action</th>
-    </tr>
-    </thead>
-    <tbody>
-    <!-- Loop through each user -->
-    <tr th:each="user : ${users}">
-        <td th:text="${user.id}"></td>
-        <td th:text="${user.username}"></td>
-        <td th:text="${user.email}"></td>
-        <td>
-            <!-- Loop through each user's authorities -->
-            <span th:each="authority : ${user.authorities}">
-                        <span th:text="${authority.authority}"></span><br/>
-                    </span>
-        </td>
-        <td>
-            <!-- Edit Button -->
-            <a th:href="@{/admin/user/edit/{id}(id=${user.id})}" class="btn btn-warning btn-sm">Edit</a>
 
-            <!-- Ban User Button -->
-            <form th:action="@{/users/ban}" method="post">
-                <input type="hidden" name="id" th:value="${user.id}" />
-                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to ban this user?')">Ban User</button>
-            </form>
-        </td>
-    </tr>
-    </tbody>
-</table>
+<div class="container">
+    <div class="main">
+        <div class="topbar">
+            <div class="toggle">
+                <ion-icon name="menu-outline"></ion-icon>
+            </div>
+            <div class="search">
+                <label>
+                    <input type="text" placeholder="Search users">
+                    <ion-icon name="search-outline"></ion-icon>
+                </label>
+            </div>
+            <div class="user">
+                <img src="/admin_assets/imgs/customer01.jpg" alt="Admin Avatar">
+            </div>
+        </div>
 
-<!-- FOOTER -->
-<div th:replace="fragments/footer :: footer"></div>
-<!-- /FOOTER -->
-<script th:src="@{/js/jquery.min.js}" src="/js/jquery.min.js"></script>
-<script th:src="@{/js/bootstrap.min.js}" src="/js/bootstrap.min.js"></script>
-<script th:src="@{/js/slick.min.js}" src="/js/slick.min.js"></script>
-<script th:src="@{/js/nouislider.min.js}" src="/js/nouislider.min.js"></script>
-<script th:src="@{/js/jquery.zoom.min.js}" src="/js/jquery.zoom.min.js"></script>
-<script th:src="@{/js/main.js}" src="/js/main.js"></script>
+        <div class="details">
+            <div class="recentOrders">
+                <div class="cardHeader">
+                    <h2>User List</h2>
+                </div>
+
+                <!-- Filter & Sort Form -->
+                <form th:action="@{/admin/user}" method="get" class="filter-form">
+                    <div>
+                        <label for="role">Filter by Role:</label>
+                        <select name="role" id="role">
+                            <option value="">All Roles</option>
+                            <option value="ADMIN" th:selected="${authorities == 'ADMIN'}">Admin</option>
+                            <option value="SALE" th:selected="${authorities == 'SALE'}">Sale</option>
+                            <option value="USER" th:selected="${authorities == 'CUSTOMER'}">Customer</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="email">Search by Email:</label>
+                        <input type="text" name="email" id="email" th:value="${email}"/>
+                    </div>
+                    <button type="submit">Apply Filters</button>
+                </form>
+                <!-- /Filter & Sort Form -->
+
+                <table>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Role</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="user : ${users}">
+                        <td th:text="${user.id}"></td>
+                        <td th:text="${user.username}"></td>
+                        <td th:text="${user.email}"></td>
+                        <td th:text="${user.phone}"></td>
+                        <td th:text="${#lists.size(user.authorities) > 0 ? user.authorities[0].authority : 'N/A'}"></td>
+                        <td>
+                            <a th:href="@{/admin/user/edit/{id}(id=${user.id})}" class="btn btn-warning btn-sm">Edit</a>
+                            <a th:href="@{/admin/user/delete/{id}(id=${user.id})}" class="btn btn-danger btn-sm">Delete</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script th:src="@{/admin_assets/js/main.js}"></script>
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </body>
 </html>
