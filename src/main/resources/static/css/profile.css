@@ -53,7 +53,7 @@ label.btn {
     overflow: hidden;
 }
 
-.account-settings-fileinput {
+.account-settings-file-input {
     position: absolute;
     visibility: hidden;
     width: 1px;

@@ -44,7 +44,7 @@
 <div id="breadcrumb">
     <div class="container">
         <ul class="breadcrumb">
-            <li><a th:href="@{/}">Home</a></li>
+            <li><a th:href="@{/home}">Home</a></li>
             <li class="active">Products</li>
         </ul>
     </div>
@@ -81,7 +81,8 @@
                     <h3 class="aside-title">Filter by Category</h3>
                     <ul class="list-links">
                         <li th:each="category : ${listCategories}">
-                            <a href="#" class="category-filter" th:data-category="${category.name}" th:text="${category.name}"></a>
+                            <a href="#" class="category-filter" th:data-category="${category.name}"
+                               th:text="${category.name}"></a>
                         </li>
                     </ul>
                 </div>
@@ -169,10 +170,10 @@
                             <span class="text-uppercase">Sort By:</span>
                             <label for="sortByPrice">
                                 <select class="input" id="sortByPrice">
-                                <option value="">Price</option>
-                                <option value="asc">Price (Ascending)</option>
-                                <option value="desc">Price (Descending)</option>
-                            </select>
+                                    <option value="">Price</option>
+                                    <option value="asc">Price (Ascending)</option>
+                                    <option value="desc">Price (Descending)</option>
+                                </select>
                             </label>
                         </div>
                     </div>
@@ -203,7 +204,9 @@
                                     <div class="product-btns">
                                         <button class="main-btn icon-btn"><i class="fa fa-heart"></i></button>
                                         <button class="main-btn icon-btn"><i class="fa fa-exchange"></i></button>
-                                        <button class="primary-btn add-to-cart"><i class="fa fa-shopping-cart"></i> Add to Cart</button>
+                                        <button class="primary-btn add-to-cart"><i class="fa fa-shopping-cart"></i> Add
+                                            to Cart
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -236,7 +239,7 @@
                         </div>
                     </div>
 
-                    </div>
+                </div>
                 <!-- /store bottom filter -->
             </div>
             <!-- /MAIN -->

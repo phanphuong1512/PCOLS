@@ -10,11 +10,12 @@ import fpt.swp.pcols.util.OtpUtil;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -32,6 +33,9 @@ public class UserServiceImpl implements UserService {
     private final OtpUtil otpUtil;
     private final EmailUtil emailUtil;
 
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+
+
     @Override
     public void register(RegisterDTO registerDTO) {
         String otp = otpUtil.generateOTP();
@@ -46,6 +50,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(registerDTO.password()));
         user.setEmail(registerDTO.email());
         user.setOtp(otp);
+        user.setAvatar("https://engineering.usask.ca/images/no_avatar.jpg");
         user.setExpirationTime(LocalDateTime.now());
         userRepository.save(user);
     }
@@ -85,23 +90,6 @@ public class UserServiceImpl implements UserService {
         }
         return "Login successful";
     }
-
-    public void updatePassword(String username, String currentPassword, String newPassword, String confirmNewPassword) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
-            throw new BadCredentialsException("Current password is incorrect");
-        }
-        if (passwordEncoder.matches(newPassword, user.getPassword())) {
-            throw new IllegalArgumentException("New password must be different from the current password");
-        }
-        if (!newPassword.equals(confirmNewPassword)) {
-            throw new IllegalArgumentException("New password and confirm password do not match");
-        }
-        user.setPassword(passwordEncoder.encode(newPassword));
-        userRepository.save(user);
-    }
-
 
     @Override
     public void forgotPassword(String email) {
@@ -143,6 +131,53 @@ public class UserServiceImpl implements UserService {
     @Override
     public User save(User user) {
         return userRepository.save(user);
+    }
+
+    @Transactional
+    public void updateUser(User updatedUser) {
+        logger.debug("Starting updateUser for user with id: {}", updatedUser.getId());
+
+        // Tìm user hiện tại trong cơ sở dữ liệu
+        User existingUser = userRepository.findById(updatedUser.getId())
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + updatedUser.getId()));
+
+        logger.debug("Current user state: {}", existingUser);
+
+        // Cập nhật các trường từ updatedUser
+        existingUser.setUsername(updatedUser.getUsername());
+        existingUser.setEmail(updatedUser.getEmail());
+        existingUser.setPhone(updatedUser.getPhone());
+        existingUser.setAddress(updatedUser.getAddress());
+        existingUser.setAvatar(updatedUser.getAvatar()); // Thêm để cập nhật avatar
+
+        // Chỉ đặt enabled = true nếu cần thiết (bỏ nếu không cần)
+        // existingUser.setEnabled(true);
+
+        logger.debug("User state after update: {}", existingUser);
+
+        // Lưu thay đổi
+        userRepository.save(existingUser);
+        logger.info("User updated successfully with id: {}", existingUser.getId());
+    }
+
+    public boolean checkPassword(String username, String rawPassword) {
+        Optional<User> userOptional = findByUsername(username);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            return passwordEncoder.matches(rawPassword, user.getPassword()); // So sánh mật khẩu mã hóa
+        }
+        return false;
+    }
+
+    public void changePassword(String username, String newPassword) {
+        Optional<User> userOptional = findByUsername(username);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.setPassword(passwordEncoder.encode(newPassword)); // Mã hóa mật khẩu mới
+            userRepository.save(user);
+        } else {
+            throw new RuntimeException("User not found");
+        }
     }
 
     @Override

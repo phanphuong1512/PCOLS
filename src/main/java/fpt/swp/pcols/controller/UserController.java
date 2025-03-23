@@ -18,7 +18,6 @@ public class UserController {
     private final UserService userService;
     private final AuthorityRepository authorityRepository;
 
-
     @GetMapping("/admin/user")
     public String getUserPage(Model model,
                               @RequestParam(name = "role", required = false) String role,

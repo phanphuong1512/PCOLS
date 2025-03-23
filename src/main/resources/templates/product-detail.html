@@ -224,6 +224,8 @@
                                                                th:checked="${reviewForm.rating == 1}"/>
                                                         <label for="star1"></label>
                                                     </div>
+                                                    <div class="text-danger" th:if="${commentError}"
+                                                         th:text="${commentError}"></div>
                                                     <div class="text-danger" th:if="${ratingError}"
                                                          th:text="${ratingError}"></div>
                                                 </div>

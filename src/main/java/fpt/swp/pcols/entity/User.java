@@ -32,14 +32,23 @@ public class User implements UserDetails {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
+    @Column(name = "pending_email", unique = true)
+    private String pendingEmail;
+
     @Column(name = "address")
     private String address;
 
     @Column(name = "phone", length = 10)
     private String phone;
 
+    @Column(name = "avatar")
+    private String avatar;
+
     @Column(name = "enabled")
     private boolean enabled;
+
+    @Column(name = "email_verified")
+    private boolean emailVerified = true;
 
     @Column(name = "otp")
     private String otp;
@@ -51,6 +60,5 @@ public class User implements UserDetails {
     @JsonIgnore
     @JoinTable(name = "user_authority", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "authority_id"))
     private List<Authority> authorities;
-
 }
 

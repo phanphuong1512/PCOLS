@@ -149,7 +149,7 @@
 
             <!-- Product Single -->
             <div th:each="product : ${gearProducts}">
-                <div th:replace="fragments/product :: productCard(product=${product})"></div>
+                <div th:replace="~{fragments/product :: productCard(product=${product})}"></div>
             </div>
             <!-- /Product Single -->
         </div>

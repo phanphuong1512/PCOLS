@@ -29,10 +29,10 @@ public class Review {
     private User user;
 
     @Column(name = "rating", nullable = false)
-    private Integer rating; // Số sao (1-5)
+    private Integer rating;
 
     @Column(name = "comment", nullable = false, length = 1000)
-    private String comment; // Nội dung đánh giá
+    private String comment;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
