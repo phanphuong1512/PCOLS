@@ -116,7 +116,7 @@
                     <!-- widget product -->
                     <div class="product product-widget">
                         <div class="product-thumb">
-                            <img src="./img/thumb-product01.jpg" alt="">
+                            <img src="" alt="">
                         </div>
                         <div class="product-body">
                             <h2 class="product-name"><a href="#">Product Name Goes Here</a></h2>
@@ -137,7 +137,7 @@
                     <!-- widget product -->
                     <div class="product product-widget">
                         <div class="product-thumb">
-                            <img src="./img/thumb-product01.jpg" alt="">
+                            <img src="" alt="">
                         </div>
                         <div class="product-body">
                             <h2 class="product-name"><a href="#">Product Name Goes Here</a></h2>
@@ -190,7 +190,9 @@
                                     <button class="main-btn quick-view">
                                         <i class="fa fa-search-plus"></i> Quick view
                                     </button>
-                                    <img th:src="@{${product.image}}" alt="">
+                                    <img th:if="${#lists.size(product.images) > 0}"
+                                         th:src="@{${product.images[0].url}}"
+                                         alt="Product Image" />
                                 </div>
                                 <div class="product-body">
                                     <h3 class="product-price">

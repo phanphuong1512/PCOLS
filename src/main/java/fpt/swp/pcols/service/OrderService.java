@@ -4,6 +4,7 @@ import fpt.swp.pcols.entity.Order;
 import fpt.swp.pcols.entity.OrderDetail;
 import fpt.swp.pcols.entity.User;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface OrderService {
@@ -21,4 +22,7 @@ public interface OrderService {
     void saveDetail(OrderDetail detail);
 
 
-    }
+    List<Order> getFilteredOrders(String sort, Order.OrderStatus status, String email);
+
+    Order getOrderById(Long id);
+}

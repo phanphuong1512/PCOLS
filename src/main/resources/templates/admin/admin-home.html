@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -7,79 +7,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <!-- ======= Styles ====== -->
-    <link rel="stylesheet" href="product/assets/css/style.css">
+    <link rel="stylesheet" th:href="@{../../admin_assets/css/style.css}">
 </head>
 
 <body>
-    <!-- =============== Navigation ================ -->
-    <div class="container">
-        <div class="navigation">
-            <ul>
-                <li>
-                    <a href="#">
-                        <span class="icon">
-                            <ion-icon name="logo-apple"></ion-icon>
-                        </span>
-                        <span class="title">Brand Name</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#">
-                        <span class="icon">
-                            <ion-icon name="home-outline"></ion-icon>
-                        </span>
-                        <span class="title">Dashboard</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="">
-                        <span class="icon">
-                            <ion-icon name="people-outline"></ion-icon>
-                        </span>
-                        <span class="title">User</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#">
-                        <span class="icon">
-                            <ion-icon name="chatbubble-outline"></ion-icon>
-                        </span>
-                        <span class="title">Inventory</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#">
-                        <span class="icon">
-                            <ion-icon name="help-outline"></ion-icon>
-                        </span>
-                        <span class="title">Discount</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#">
-                        <span class="icon">
-                            <ion-icon name="settings-outline"></ion-icon>
-                        </span>
-                        <span class="title">Order</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#">
-                        <span class="icon">
-                            <ion-icon name="log-out-outline"></ion-icon>
-                        </span>
-                        <span class="title">Sign Out</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-
+<!-- NAVIGATION -->
+<div th:replace="fragments/admin_nav :: admin_nav"></div>
+<!-- /NAVIGATION -->
+<div class="container">
         <!-- ========================= Main ==================== -->
         <div class="main">
             <div class="topbar">
@@ -95,7 +30,7 @@
                 </div>
 
                 <div class="user">
-                    <img src="product/assets/imgs/customer01.jpg" alt="">
+                    <img src="../../admin_assets/imgs/customer01.jpg" alt="">
                 </div>
             </div>
 
@@ -151,7 +86,7 @@
                 <div class="recentOrders">
                     <div class="cardHeader">
                         <h2>Recent Orders</h2>
-                        <a href="#" class="btn">View All</a>
+                        <a th:href="@{/admin/product}" class="btn">View All</a>
                     </div>
 
                     <table>
@@ -233,7 +168,7 @@
                     <table>
                         <tr>
                             <td width="60px">
-                                <div class="imgBx"><img src="product/assets/imgs/customer02.jpg" alt=""></div>
+                                <div class="imgBx"><img src="../../static/admin_assets/imgs/customer02.jpg" alt=""></div>
                             </td>
                             <td>
                                 <h4>David <br> <span>Italy</span></h4>
@@ -242,7 +177,7 @@
 
                         <tr>
                             <td width="60px">
-                                <div class="imgBx"><img src="product/assets/imgs/customer01.jpg" alt=""></div>
+                                <div class="imgBx"><img src="../../static/admin_assets/imgs/customer01.jpg" alt=""></div>
                             </td>
                             <td>
                                 <h4>Amit <br> <span>India</span></h4>
@@ -251,7 +186,7 @@
 
                         <tr>
                             <td width="60px">
-                                <div class="imgBx"><img src="product/assets/imgs/customer02.jpg" alt=""></div>
+                                <div class="imgBx"><img src="../../static/admin_assets/imgs/customer02.jpg" alt=""></div>
                             </td>
                             <td>
                                 <h4>David <br> <span>Italy</span></h4>
@@ -260,7 +195,7 @@
 
                         <tr>
                             <td width="60px">
-                                <div class="imgBx"><img src="product/assets/imgs/customer01.jpg" alt=""></div>
+                                <div class="imgBx"><img src="../../admin_assets/imgs/customer01.jpg" alt=""></div>
                             </td>
                             <td>
                                 <h4>Amit <br> <span>India</span></h4>
@@ -269,7 +204,7 @@
 
                         <tr>
                             <td width="60px">
-                                <div class="imgBx"><img src="product/assets/imgs/customer02.jpg" alt=""></div>
+                                <div class="imgBx"><img src="../../admin_assets/imgs/customer02.jpg" alt=""></div>
                             </td>
                             <td>
                                 <h4>David <br> <span>Italy</span></h4>
@@ -278,7 +213,7 @@
 
                         <tr>
                             <td width="60px">
-                                <div class="imgBx"><img src="product/assets/imgs/customer01.jpg" alt=""></div>
+                                <div class="imgBx"><img src="../../admin_assets/imgs/customer01.jpg" alt=""></div>
                             </td>
                             <td>
                                 <h4>Amit <br> <span>India</span></h4>
@@ -287,7 +222,7 @@
 
                         <tr>
                             <td width="60px">
-                                <div class="imgBx"><img src="product/assets/imgs/customer01.jpg" alt=""></div>
+                                <div class="imgBx"><img src="../../admin_assets/imgs/customer01.jpg" alt=""></div>
                             </td>
                             <td>
                                 <h4>David <br> <span>Italy</span></h4>
@@ -296,7 +231,7 @@
 
                         <tr>
                             <td width="60px">
-                                <div class="imgBx"><img src="product/assets/imgs/customer02.jpg" alt=""></div>
+                                <div class="imgBx"><img src="../../admin_assets/imgs/customer02.jpg" alt=""></div>
                             </td>
                             <td>
                                 <h4>Amit <br> <span>India</span></h4>
@@ -309,7 +244,7 @@
     </div>
 
     <!-- =========== Scripts =========  -->
-    <script src="product/assets/js/main.js"></script>
+    <script th:src="@{../../admin_assets/js/main.js}"></script>
 
     <!-- ====== ionicons ======= -->
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>

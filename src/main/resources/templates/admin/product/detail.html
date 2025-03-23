@@ -45,7 +45,7 @@
 
                 <!-- Product Image -->
                 <div>
-                    <img th:each="img : ${product.images}" th:src="@{${img.imageUrl}}" class="img-fluid m-1" alt="Product Image">
+                    <img th:each="img : ${product.images}" th:src="@{${img.url}}" class="img-fluid m-1" alt="Product Image">
                 </div>
                 <!-- Hidden Field to Retain Existing Image -->
 <!--                <input type="hidden" th:field="*{images}" />-->

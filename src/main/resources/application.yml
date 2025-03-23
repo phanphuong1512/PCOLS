@@ -51,14 +51,4 @@ logging:
   level:
     org.springframework.security: DEBUG
     org.springframework.web: DEBUG
-    org.springframework.web.bind: DEBUG
-    org.springframework.web.multipart: DEBUG
-    org.springframework.validation: DEBUG
-    org.springframework.orm.jpa: TRACE
-    org.springframework.transaction: TRACE
-    org.hibernate.SQL: DEBUG
-    org.hibernate.orm.jdbc.bind: TRACE
-    org.hibernate.orm.jdbc.extract: TRACE
-    fpt.swp.pcols.controller.ProfileController: TRACE
-
-    fpt.swp.pcols.service.UserService: TRACE
+#    root: DEBUG

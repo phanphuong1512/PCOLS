@@ -179,4 +179,17 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("User not found");
         }
     }
+
+    @Override
+    public List<User> searchUsers(String role, String email) {
+        if ((role == null || role.isEmpty()) && (email == null || email.isEmpty())) {
+            return userRepository.findAll();
+        } else if (role != null && !role.isEmpty() && (email == null || email.isEmpty())) {
+            return userRepository.findByAuthorities_Authority(role);
+        } else if ((role == null || role.isEmpty()) && email != null && !email.isEmpty()) {
+            return userRepository.findByEmailContaining(email);
+        } else {
+            return userRepository.findByAuthorities_AuthorityAndEmailContaining(role, email);
+        }
+    }
 }

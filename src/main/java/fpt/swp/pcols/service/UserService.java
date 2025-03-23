@@ -37,4 +37,5 @@ public interface UserService {
 
     void changePassword(String username, String newPassword);
 
+   List<User> searchUsers(String role, String email);
 }
