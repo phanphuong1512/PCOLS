@@ -26,29 +26,24 @@ import java.util.*;
 public class OrderController {
 
     private final OrderService orderService;
-    private final UserService userService; // Service để lấy thông tin User
+    private final UserService userService;
     private final ProductService productService;
-
 
     @GetMapping("/checkout")
     public String checkoutPage(Model model, Principal principal) {
         if (principal == null) {
             return "redirect:/auth/login";
         }
-
         User user;
-        // Kiểm tra nếu đăng nhập bằng OAuth2 (ví dụ, Google)
         if (principal instanceof OAuth2AuthenticationToken oauthToken) {
             String email = (String) oauthToken.getPrincipal().getAttributes().get("email");
             user = userService.findByEmail(email)
                     .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
         } else {
-            // Đăng nhập truyền thống, sử dụng username
             user = userService.findByUsername(principal.getName())
                     .orElseThrow(() -> new RuntimeException("User not found with username: " + principal.getName()));
         }
 
-        // Lấy giỏ hàng hiện tại (Order có trạng thái PENDING) của người dùng
         Order cart = orderService.getCurrentCartForUser(user)
                 .orElseGet(() -> {
                     Order newCart = new Order();
@@ -59,11 +54,18 @@ public class OrderController {
                     return orderService.save(newCart);
                 });
 
+        // Thêm log để kiểm tra
+        System.out.println("Cart: " + cart);
+        System.out.println("Order Details: " + cart.getOrderDetails());
+        cart.getOrderDetails().forEach(detail -> {
+            System.out.println("Product: " + detail.getProduct());
+            System.out.println("Images: " + detail.getProduct().getImages());
+        });
+
         model.addAttribute("order", cart);
         model.addAttribute("orderDetails", cart.getOrderDetails());
         return "checkout";
     }
-
 
     @PostMapping("/cart/add")
     @ResponseBody
@@ -169,5 +171,37 @@ public class OrderController {
         orderService.save(order);
 
         return "redirect:/home";
+    }
+
+    @GetMapping("admin/orders")
+    public String listOrders(Model model,
+                             @RequestParam(value = "sort", required = false, defaultValue = "desc") String sort,
+                             @RequestParam(value = "status", required = false) String status,
+                             @RequestParam(value = "email", required = false) String email) {
+        Order.OrderStatus orderStatus = null;
+        if (status != null && !status.isEmpty()) {
+            try {
+                orderStatus = Order.OrderStatus.valueOf(status.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                // Handle invalid status gracefully (e.g., log it or ignore)
+                orderStatus = null;
+            }
+        }
+        List<Order> orders = orderService.getFilteredOrders(sort, orderStatus, email);
+        model.addAttribute("orders", orders);
+        model.addAttribute("sort", sort);
+        model.addAttribute("status", status);
+        model.addAttribute("email", email);
+        return "admin/order/list"; // Maps to src/main/resources/templates/orders/list.html
+    }
+
+    @GetMapping("admin/order/detail/{id}")
+    public String orderDetail(@PathVariable Long id, Model model) {
+        Order order = orderService.getOrderById(id);
+        if (order == null) {
+            return "redirect:/orders?error=Order not found";
+        }
+        model.addAttribute("order", order);
+        return "admin/order/details"; // Maps to src/main/resources/templates/orders/detail.html
     }
 }

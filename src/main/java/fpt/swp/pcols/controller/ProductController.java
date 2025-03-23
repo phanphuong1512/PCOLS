@@ -5,8 +5,6 @@ import fpt.swp.pcols.entity.Product;
 import fpt.swp.pcols.service.CategoryService;
 import fpt.swp.pcols.service.ProductService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,10 +19,20 @@ public class ProductController {
     private final ProductService productService;
     private final CategoryService categoryService;
 
-
     @GetMapping("/admin/product")
-    public String getInventoryPage(Model model) {
-        List<Product> products = this.productService.getAllProduct();
+    public String getInventoryPage(Model model,
+                                   @RequestParam(value = "category", required = false) String category,
+                                   @RequestParam(value = "brand", required = false) String brand,
+                                   @RequestParam(value = "search", required = false) String search) {
+        String categoryName = (category != null && !category.isEmpty()) ? category : null;
+        String brandName = (brand != null && !brand.isEmpty()) ? brand : null;
+        String searchTerm = (search != null && !search.isEmpty()) ? search : null;
+        List<Product> products = productService.getFilteredProductsForAdmin(categoryName, brandName, searchTerm);
+        model.addAttribute("searchTerm", search);
+        model.addAttribute("categories", categoryService.getAllCategories());
+        model.addAttribute("brands", productService.getAllBrands());
+        model.addAttribute("selectedCategory", category);
+        model.addAttribute("selectedBrand", brand);
         model.addAttribute("products", products);
         System.out.println("check user" + products);
         return "admin/product/inventory";
@@ -72,6 +80,7 @@ public class ProductController {
                                  @RequestParam(value = "sort", required = false) String sort,
                                  @RequestParam(value = "brand", required = false) String brand,
                                  @RequestParam(value = "category", required = false) String category,
+                                 @RequestParam(value = "imageFiles", required = false) List<MultipartFile> imageFiles,
                                  @RequestParam(value = "minPrice", required = false) Double minPrice,
                                  @RequestParam(value = "maxPrice", required = false) Double maxPrice) {
         List<Category> listCategories = categoryService.getAllCategories();
@@ -88,5 +97,11 @@ public class ProductController {
         model.addAttribute("sort", sort);
 
         return "products";
+    }
+
+    @GetMapping("admin/product/delete/{id}")
+    public String deleteProduct(@PathVariable Long id) {
+        productService.deleteProductById(id);
+        return "redirect:/admin/product"; // Redirect back to inventory after deletion
     }
 }

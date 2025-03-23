@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString(exclude = {"orderDetails", "user"})
 public class Order {
 
     @Id
@@ -63,12 +65,11 @@ public class Order {
     @Column(name = "phone")
     private String phone;
 
-    // Các trường bổ sung cho Shipping và Payment
     @Column(name = "shipping_method")
-    private String shippingMethod; // Ví dụ: FREE, STANDARD,...
+    private String shippingMethod;
 
     @Column(name = "payment_method")
-    private String paymentMethod;  // Ví dụ: BANK, CHEQUE, PAYPAL,...
+    private String paymentMethod;
 
     public enum OrderStatus {
         PENDING, PAID, SHIPPED, CANCELLED

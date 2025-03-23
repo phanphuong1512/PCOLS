@@ -8,10 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,11 +18,16 @@ public class UserController {
     private final UserService userService;
     private final AuthorityRepository authorityRepository;
 
-
     @GetMapping("/admin/user")
-    public String getUserPage(Model model) {
-        List<User> users = this.userService.getAllUser();
+    public String getUserPage(Model model,
+                              @RequestParam(name = "role", required = false) String role,
+                              @RequestParam(name = "email", required = false) String email) {
+        List<User> users = userService.searchUsers(role, email);
+        List<Authority> authorities = authorityRepository.findAll();
         model.addAttribute("users", users);
+        model.addAttribute("role", role);
+        model.addAttribute("authorities", authorities);
+        model.addAttribute("email", email);
         //        System.out.println("check user" + users);
         return "admin/user/user-list";
     }

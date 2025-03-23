@@ -1104,6 +1104,7 @@ textarea.input {
 
 #aside .aside {
     margin-bottom: 30px;
+    overflow: hidden;
 }
 
 #aside .aside:last-child {
@@ -1468,10 +1469,12 @@ textarea.input {
 
 .single-review .review-rating {
     display: inline-block;
+
 }
 
 .single-review .review-rating > i {
     color: #FFB656;
+    margin: 0px 0px 0px 3px; /* Khoảng cách 10px bên trái */
 }
 
 .single-review .review-rating > i.empty {

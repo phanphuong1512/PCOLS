@@ -1,17 +1,18 @@
 <!--Website: wwww.codingdung.com-->
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CodingDung | Profile Template</title>
+    <title>PCOLS | Profile</title>
     <link rel="stylesheet" th:href="@{/css/profile.css}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
-<form th:object="${user}" th:action="@{/profile/update}" method="post">
+<form th:object="${updateProfileDTO}" th:action="@{/profile/update}" method="post" enctype="multipart/form-data">
+    <input type="hidden" th:field="*{id}"/>
     <div class="container light-style flex-grow-1 container-p-y">
         <h4 class="font-weight-bold py-3 mb-4">
             Account settings
@@ -38,12 +39,12 @@
                     <div class="tab-content">
                         <div class="tab-pane fade active show" id="account-general">
                             <div class="card-body media align-items-center">
-                                <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt
+                                <img th:src="${user.avatar}" alt
                                      class="d-block ui-w-80">
                                 <div class="media-body ml-4">
                                     <label class="btn btn-outline-primary">
                                         Upload new photo
-                                        <input type="file" class="account-settings-fileinput">
+                                        <input type="file" class="account-settings-file-input" name="avatarFile">
                                     </label> &nbsp;
                                     <button type="button" class="btn btn-default md-btn-flat">Reset</button>
                                     <div class="text-secondary small mt-1">Allowed JPG, GIF or PNG. Max size of 800K
@@ -57,21 +58,21 @@
                                     <input type="text" class="form-control mb-1" th:field="*{username}"/>
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-label">Name</label>
-                                    <input type="text" class="form-control" />
-                                </div>
-                                <div class="form-group">
                                     <label class="form-label">E-mail</label>
-                                    <input type="email" class="form-control mb-1" />
+                                    <input type="email" class="form-control mb-1" th:field="*{email}"/>
                                     <!-- Nếu email chưa được xác nhận, bạn có thể hiển thị alert -->
-                                    <div class="alert alert-warning mt-3" th:if="${!user.emailConfirmed}">
+                                    <div class="alert alert-warning mt-3" th:if="${!user.enabled}">
                                         Your email is not confirmed. Please check your inbox.<br>
                                         <a href="javascript:void(0)">Resend confirmation</a>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-label">Company</label>
-                                    <input type="text" class="form-control" />
+                                    <label class="form-label">Phone</label>
+                                    <input type="text" class="form-control mb-1" th:field="*{phone}">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Address</label>
+                                    <input type="text" class="form-control mb-1" th:field="*{address}">
                                 </div>
                             </div>
                         </div>
@@ -96,7 +97,7 @@
                                 <div class="form-group">
                                     <label class="form-label">Bio</label>
                                     <textarea class="form-control"
-                                              rows="5">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris nunc arcu, dignissim sit amet sollicitudin iaculis, vehicula id urna. Sed luctus urna nunc. Donec fermentum, magna sit amet rutrum pretium, turpis dolor molestie diam, ut lacinia diam risus eleifend sapien. Curabitur ac nibh nulla. Maecenas nec augue placerat, viverra tellus non, pulvinar risus.</textarea>
+                                              rows="5">bio.</textarea>
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">Birthday</label>
@@ -253,7 +254,7 @@
         </div>
         <div class="text-right mt-3">
             <button type="submit" class="btn btn-primary">Save changes</button>&nbsp;
-            <button type="button" class="btn btn-default">Cancel</button>
+            <button type="button" class="btn btn-default" onclick="window.location.href='/'">Cancel</button>
         </div>
     </div>
 </form>

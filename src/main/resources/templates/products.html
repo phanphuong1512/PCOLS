@@ -44,7 +44,7 @@
 <div id="breadcrumb">
     <div class="container">
         <ul class="breadcrumb">
-            <li><a th:href="@{/}">Home</a></li>
+            <li><a th:href="@{/home}">Home</a></li>
             <li class="active">Products</li>
         </ul>
     </div>
@@ -81,7 +81,8 @@
                     <h3 class="aside-title">Filter by Category</h3>
                     <ul class="list-links">
                         <li th:each="category : ${listCategories}">
-                            <a href="#" class="category-filter" th:data-category="${category.name}" th:text="${category.name}"></a>
+                            <a href="#" class="category-filter" th:data-category="${category.name}"
+                               th:text="${category.name}"></a>
                         </li>
                     </ul>
                 </div>
@@ -115,7 +116,7 @@
                     <!-- widget product -->
                     <div class="product product-widget">
                         <div class="product-thumb">
-                            <img src="./img/thumb-product01.jpg" alt="">
+                            <img src="" alt="">
                         </div>
                         <div class="product-body">
                             <h2 class="product-name"><a href="#">Product Name Goes Here</a></h2>
@@ -136,7 +137,7 @@
                     <!-- widget product -->
                     <div class="product product-widget">
                         <div class="product-thumb">
-                            <img src="./img/thumb-product01.jpg" alt="">
+                            <img src="" alt="">
                         </div>
                         <div class="product-body">
                             <h2 class="product-name"><a href="#">Product Name Goes Here</a></h2>
@@ -169,10 +170,10 @@
                             <span class="text-uppercase">Sort By:</span>
                             <label for="sortByPrice">
                                 <select class="input" id="sortByPrice">
-                                <option value="">Price</option>
-                                <option value="asc">Price (Ascending)</option>
-                                <option value="desc">Price (Descending)</option>
-                            </select>
+                                    <option value="">Price</option>
+                                    <option value="asc">Price (Ascending)</option>
+                                    <option value="desc">Price (Descending)</option>
+                                </select>
                             </label>
                         </div>
                     </div>
@@ -189,7 +190,9 @@
                                     <button class="main-btn quick-view">
                                         <i class="fa fa-search-plus"></i> Quick view
                                     </button>
-                                    <img th:src="@{${product.image}}" alt="">
+                                    <img th:if="${#lists.size(product.images) > 0}"
+                                         th:src="@{${product.images[0].url}}"
+                                         alt="Product Image" />
                                 </div>
                                 <div class="product-body">
                                     <h3 class="product-price">
@@ -201,13 +204,15 @@
                                     <div class="product-btns">
                                         <button class="main-btn icon-btn"><i class="fa fa-heart"></i></button>
                                         <button class="main-btn icon-btn"><i class="fa fa-exchange"></i></button>
-                                        <button class="primary-btn add-to-cart"><i class="fa fa-shopping-cart"></i> Add to Cart</button>
+                                        <button class="primary-btn add-to-cart"><i class="fa fa-shopping-cart"></i> Add
+                                            to Cart
+                                        </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-            </div>
+                </div>
 
                 <!-- Loading Indicator for Infinite Scroll -->
                 <div id="loading" style="display: none;">
@@ -234,7 +239,7 @@
                         </div>
                     </div>
 
-                    </div>
+                </div>
                 <!-- /store bottom filter -->
             </div>
             <!-- /MAIN -->

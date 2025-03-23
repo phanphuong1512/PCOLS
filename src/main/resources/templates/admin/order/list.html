@@ -2,8 +2,9 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Inventory</title>
+    <title>Admin - Orders</title>
     <link rel="stylesheet" th:href="@{/admin_assets/css/style.css}">
     <style>
         .filter-form {
@@ -57,7 +58,7 @@
             </div>
             <div class="search">
                 <label>
-                    <input type="text" placeholder="Search products">
+                    <input type="text" placeholder="Search orders">
                     <ion-icon name="search-outline"></ion-icon>
                 </label>
             </div>
@@ -69,58 +70,57 @@
         <div class="details">
             <div class="recentOrders">
                 <div class="cardHeader">
-                    <h2>Product Inventory</h2>
-                    <a href="/admin/product/ProductCreatePage" class="btn btn-primary">Add a product</a>
+                    <h2>Order List</h2>
                 </div>
 
-                <!-- Filter & Sort Form -->
-                <form th:action="@{/admin/product}" method="get" class="filter-form">
+                <!-- Styled Filter & Sort Form -->
+                <form th:action="@{/admin/orders}" method="get" class="filter-form">
                     <div>
-                        <label for="category">Filter by Category:</label>
-                        <select name="category" id="category">
-                            <option value="">All Categories</option>
-                            <th:block th:each="cat : ${categories}">
-                                <option th:value="${cat.name}" th:text="${cat.name}" th:selected="${cat.name == selectedCategory}"></option>
-                            </th:block>
+                        <label for="sort">Sort by Creation Date:</label>
+                        <select name="sort" id="sort">
+                            <option value="desc" th:selected="${sort == 'desc'}">Descending</option>
+                            <option value="asc" th:selected="${sort == 'asc'}">Ascending</option>
                         </select>
                     </div>
                     <div>
-                        <label for="brand">Filter by Brand:</label>
-                        <select name="brand" id="brand">
-                            <option value="">All Brands</option>
-                            <th:block th:each="brand : ${brands}">
-                                <option th:value="${brand}" th:text="${brand}" th:selected="${brand == selectedBrand}"></option>
-                            </th:block>
+                        <label for="status">Filter by Status:</label>
+                        <select name="status" id="status">
+                            <option value="" th:selected="${status == null or status == ''}">All</option>
+                            <option value="PENDING" th:selected="${status == 'PENDING'}">Pending</option>
+                            <option value="PAID" th:selected="${status == 'PAID'}">Paid</option>
+                            <option value="SHIPPED" th:selected="${status == 'SHIPPED'}">Shipped</option>
+                            <option value="CANCELLED" th:selected="${status == 'CANCELLED'}">Cancelled</option>
                         </select>
                     </div>
                     <div>
-                        <label for="search">Search by Name:</label>
-                        <input type="text" name="search" id="search" th:value="${searchTerm}"/>
+                        <label for="email">Search by Email:</label>
+                        <input type="text" name="email" id="email" th:value="${email}"/>
                     </div>
+                    <div>
                     <button type="submit">Apply Filters</button>
+                    </div>
                 </form>
-                <!-- /Filter & Sort Form -->
+                <!-- /Styled Filter & Sort Form -->
 
                 <table>
                     <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Category</th>
-                        <th>Description</th>
+                        <th>Order ID</th>
+                        <th>Customer Name</th>
+                        <th>Email</th>
+                        <th>Order Date</th>
+                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="product : ${products}">
-                        <td th:text="${product.id}"></td>
-                        <td th:text="${product.name}"></td>
-                        <td th:text="${product.category != null ? product.category.name : 'No Category'}"></td>
-                        <td th:text="${product.description}"></td>
-                        <td>
-                            <a th:href="@{/admin/product/delete/{id}(id=${product.id})}" class="btn btn-warning btn-sm">Delete</a>
-                            <a th:href="@{/admin/product/detail/{id}(id=${product.id})}" class="btn btn-danger btn-sm">Detail</a>
-                        </td>
+                    <tr th:each="order : ${orders}">
+                        <td th:text="${order.id}"></td>
+                        <td th:text="${order.firstName} + ' ' + ${order.lastName}"></td>
+                        <td th:text="${order.email}"></td>
+                        <td th:text="${#temporals.format(order.orderDate, 'yyyy-MM-dd HH:mm')}"></td>
+                        <td th:text="${order.status}"></td>
+                        <td><a th:href="@{/admin/order/detail/{id}(id=${order.id})}">View Details</a></td>
                     </tr>
                     </tbody>
                 </table>
@@ -135,3 +135,4 @@
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </body>
 </html>
+

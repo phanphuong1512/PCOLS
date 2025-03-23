@@ -58,16 +58,16 @@ public class SecurityConfig {
                         .permitAll()
                 )
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers(
-                                        "/auth/login",
-                                        "/auth/register",
-                                        "/auth/forgot-password/**",
-                                        "/css/**",
-                                        "/js/**",
-                                        "/img/**").permitAll()
-                                .requestMatchers("/admin/**").hasRole("ADMIN")
-                                .anyRequest().authenticated()
-                        // .anyRequest().permitAll()
+                        .requestMatchers(
+                                "/products/**",
+                                "/", "/home",
+                                "/auth/**",
+                                "/css/**",
+                                "/js/**",
+                                "/img/**",
+                                "/fonts/**").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .anyRequest().authenticated()
                 )
                 .exceptionHandling(exception -> exception
                         .accessDeniedHandler((request, response, accessDeniedException) -> {

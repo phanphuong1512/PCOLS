@@ -17,8 +17,6 @@ public interface UserService {
 
     void regenerateOtp(String email);
 
-    void updatePassword(String name, String currentPassword, String newPassword, String confirmNewPassword) throws Exception;
-
     void forgotPassword(String email);
 
     List<User> getAllUser();
@@ -33,4 +31,11 @@ public interface UserService {
 
     User save(User user);
 
+    void updateUser(User updatedUser);
+
+    boolean checkPassword(String username, String rawPassword);
+
+    void changePassword(String username, String newPassword);
+
+   List<User> searchUsers(String role, String email);
 }

@@ -68,59 +68,9 @@ UNLOCK TABLES;
 -- Table structure for table `order_details`
 --
 
-DROP TABLE IF EXISTS `order_details`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `order_details` (
-                                 `id` bigint NOT NULL AUTO_INCREMENT,
-                                 `price` decimal(38,2) NOT NULL,
-                                 `product_name` varchar(255) NOT NULL,
-                                 `quantity` int NOT NULL,
-                                 `order_id` bigint NOT NULL,
-                                 `product_id` bigint NOT NULL,
-                                 PRIMARY KEY (`id`),
-                                 KEY `FKjyu2qbqt8gnvno9oe9j2s2ldk` (`order_id`),
-                                 KEY `FK4q98utpd73imf4yhttm3w0eax` (`product_id`),
-                                 CONSTRAINT `FK4q98utpd73imf4yhttm3w0eax` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`),
-                                 CONSTRAINT `FKjyu2qbqt8gnvno9oe9j2s2ldk` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
 --
 -- Dumping data for table `order_details`
 --
-
-LOCK TABLES `order_details` WRITE;
-/*!40000 ALTER TABLE `order_details` DISABLE KEYS */;
-/*!40000 ALTER TABLE `order_details` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `orders`
---
-
-DROP TABLE IF EXISTS `orders`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `orders` (
-                          `id` bigint NOT NULL AUTO_INCREMENT,
-                          `order_date` datetime(6) NOT NULL,
-                          `status` enum('CANCELLED','PAID','PENDING','SHIPPED') NOT NULL,
-                          `user_id` bigint NOT NULL,
-                          PRIMARY KEY (`id`),
-                          KEY `FK32ql8ubntj5uh44ph9659tiih` (`user_id`),
-                          CONSTRAINT `FK32ql8ubntj5uh44ph9659tiih` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `orders`
---
-
-LOCK TABLES `orders` WRITE;
-/*!40000 ALTER TABLE `orders` DISABLE KEYS */;
-/*!40000 ALTER TABLE `orders` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `products`
@@ -194,31 +144,31 @@ INSERT INTO `user_authority` VALUES (1,1),(2,2);
 /*!40000 ALTER TABLE `user_authority` ENABLE KEYS */;
 UNLOCK TABLES;
 
-CREATE TABLE `image` (
+CREATE TABLE `images` (
                          `id` bigint NOT NULL AUTO_INCREMENT,
                          `product_id` bigint NOT NULL,
-                         `image_url` varchar(255) NOT NULL,
+                         `url` varchar(255) NOT NULL,
                          PRIMARY KEY (`id`),
                          KEY `FK_image_product` (`product_id`),
                          CONSTRAINT `FK_image_product` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-INSERT INTO `image` (`product_id`, `image_url`) VALUES
-                                              (1, 'https://www.tncstore.vn/media/product/250-11383-cpu-core-ultra-9-285k--1-.jpg'),
-                                              (2, 'https://www.tncstore.vn/media/product/250-12004-tnc-store-card-man-hinh-msi-geforce-rtx-5070-12g-vanguard-soc--2-.jpg'),
-                                              (3, 'https://www.tncstore.vn/media/product/250-11384-cpu-core-ultra-7-265k--1-.jpg'),
-                                              (4, 'https://www.tncstore.vn/media/product/250-11386-cpu-core-ultra-5-245k--1-.jpg'),
-                                              (5, 'https://www.tncstore.vn/media/product/250-4625-card-man-hinh-galax-gtx-1650-super-ex-1-click-oc-01.jpg'),
-                                              (6, '/uploads/79a55e32-d66e-4f74-8481-207f3f5b90d8_pc1.jpg'),
-                                              (7, 'https://www.tncstore.vn/media/product/250-11335-tnc-store-card-card-man-hinh-gigabyte-geforce-gt-1030-oc-2g-gv-n1030oc-2gi--2-.jpg'),
-                                              (8, 'https://www.tncstore.vn/media/product/250-11617-card-man-hinh-asus-rog-astral-geforce-rtx-5090-32gb-gddr7-oc-edition--5-.jpg'),
-                                              (9, 'https://www.tncstore.vn/media/product/250-9247-man-asus-4.jpg'),
-                                              (10, 'https://www.tncstore.vn/media/product/250-9073-man-hinh-gaming-lg-uttra-gear-27-gr75q-b-5.jpg'),
-                                              (11, 'https://www.tncstore.vn/media/product/250-11465-man-hinh-gaming-lg-24gs65f-b--6-.jpg'),
-                                              (12, 'https://www.tncstore.vn/media/product/250-8340-razer-deathadder-v3-pro-ergonomic-white.jpg'),
-                                              (13, 'https://www.tncstore.vn/media/product/250-4854-ban-phim-co-e-dra-ek387-v2-brown-switch-1a.jpg'),
-                                              (14, 'https://www.tncstore.vn/media/product/250-2316-tai-nghe-steelseries-arctis-pro-gamedac-11.jpg'),
-                                              (15, 'https://www.tncstore.vn/media/product/250-9979-pc-gaming-sentinel-i4090-wh--16-.jpg'),
-                                              (16, 'https://www.tncstore.vn/media/product/250-9835-tnc-store-pc-gaming-nova-i4080-super-bl-15-.jpg');
+INSERT INTO `images` (`product_id`, `url`) VALUES
+                                                    (1, 'https://www.tncstore.vn/media/product/250-11383-cpu-core-ultra-9-285k--1-.jpg'),
+                                                    (2, 'https://www.tncstore.vn/media/product/250-12004-tnc-store-card-man-hinh-msi-geforce-rtx-5070-12g-vanguard-soc--2-.jpg'),
+                                                    (3, 'https://www.tncstore.vn/media/product/250-11384-cpu-core-ultra-7-265k--1-.jpg'),
+                                                    (4, 'https://www.tncstore.vn/media/product/250-11386-cpu-core-ultra-5-245k--1-.jpg'),
+                                                    (5, 'https://www.tncstore.vn/media/product/250-4625-card-man-hinh-galax-gtx-1650-super-ex-1-click-oc-01.jpg'),
+                                                    (6, '/uploads/79a55e32-d66e-4f74-8481-207f3f5b90d8_pc1.jpg'),
+                                                    (7, 'https://www.tncstore.vn/media/product/250-11335-tnc-store-card-card-man-hinh-gigabyte-geforce-gt-1030-oc-2g-gv-n1030oc-2gi--2-.jpg'),
+                                                    (8, 'https://www.tncstore.vn/media/product/250-11617-card-man-hinh-asus-rog-astral-geforce-rtx-5090-32gb-gddr7-oc-edition--5-.jpg'),
+                                                    (9, 'https://www.tncstore.vn/media/product/250-9247-man-asus-4.jpg'),
+                                                    (10, 'https://www.tncstore.vn/media/product/250-9073-man-hinh-gaming-lg-uttra-gear-27-gr75q-b-5.jpg'),
+                                                    (11, 'https://www.tncstore.vn/media/product/250-11465-man-hinh-gaming-lg-24gs65f-b--6-.jpg'),
+                                                    (12, 'https://www.tncstore.vn/media/product/250-8340-razer-deathadder-v3-pro-ergonomic-white.jpg'),
+                                                    (13, 'https://www.tncstore.vn/media/product/250-4854-ban-phim-co-e-dra-ek387-v2-brown-switch-1a.jpg'),
+                                                    (14, 'https://www.tncstore.vn/media/product/250-2316-tai-nghe-steelseries-arctis-pro-gamedac-11.jpg'),
+                                                    (15, 'https://www.tncstore.vn/media/product/250-9979-pc-gaming-sentinel-i4090-wh--16-.jpg'),
+                                                    (16, 'https://www.tncstore.vn/media/product/250-9835-tnc-store-pc-gaming-nova-i4080-super-bl-15-.jpg');
 --
 -- Table structure for table `users`
 --
@@ -247,7 +197,12 @@ CREATE TABLE `users` (
 --
 -- Dumping data for table `users`
 --
-
+INSERT INTO reviews (product_id, user_id, rating, comment, created_at) VALUES
+                                                                           (1, 1, 5, 'Sản phẩm tuyệt vời! Hiệu năng mạnh mẽ, chạy mượt mà mọi tác vụ.', '2025-03-21 10:00:00'),
+                                                                           (2, 2, 4, 'Card đồ họa rất tốt, chơi game mượt, nhưng giá hơi cao.', '2025-03-21 11:00:00'),
+                                                                           (6, 1, 5, 'PC này quá đỉnh! Đồ họa đẹp, chơi game 4K không giật lag.', '2025-03-21 12:00:00'),
+                                                                           (12, 2, 3, 'Chuột dùng ổn, nhưng cảm giác không thoải mái lắm khi cầm lâu.', '2025-03-21 13:00:00'),
+                                                                           (15, 1, 4, 'Cấu hình mạnh, nhưng cần cải thiện hệ thống tản nhiệt.', '2025-03-21 14:00:00');
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` VALUES (_binary '',0,'2025-03-12 16:42:41.436144',1,NULL,NULL,'phuongandphan@gmail.com','901212','$2a$10$qhiafOCSYSgXBX/PGDRUv.8.P1RbHL.HivbUrYS.uUzV4YqW8sgBy','user'),(_binary '',0,'2025-03-12 16:43:34.945308',2,NULL,NULL,'fanphuong215@gmail.com','261995','$2a$10$L.Wcd0tD01tBWwE5/TpYruqhv.UNHaTHZO/M6DG8C4CMUPJxT/dwe','admin');

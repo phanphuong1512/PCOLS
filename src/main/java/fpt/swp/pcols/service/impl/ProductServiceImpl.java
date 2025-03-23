@@ -3,14 +3,11 @@ package fpt.swp.pcols.service.impl;
 import fpt.swp.pcols.entity.Category;
 import fpt.swp.pcols.entity.Image;
 import fpt.swp.pcols.entity.Product;
+import fpt.swp.pcols.repository.CategoryRepository;
 import fpt.swp.pcols.repository.ImageRepository;
 import fpt.swp.pcols.repository.ProductRepository;
 import fpt.swp.pcols.service.ProductService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,8 +16,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +26,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final CategoryServiceImpl categoryService;
     private final ImageRepository imageRepository;
+    private final CategoryRepository categoryRepository;
 
 
     @Override
@@ -51,7 +47,7 @@ public class ProductServiceImpl implements ProductService {
                         Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
 
                         Image image = new Image();
-                        image.setImageUrl("/uploads/" + fileName);
+                        image.setUrl("/uploads/" + fileName);
                         image.setProduct(product);
                         imageRepository.save(image); // Save image to DB
 
@@ -64,11 +60,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getAllProduct() {
-        return this.productRepository.findAll();
-    }
-
-    @Override
     public void handleSaveProduct(Product product) {
         this.productRepository.save(product);
     }
@@ -78,20 +69,25 @@ public class ProductServiceImpl implements ProductService {
         return this.productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
     }
 
-    @Override
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<Product> getProductsByCategoryWithImages(String categoryName) {
+        Category category = categoryRepository.findByName(categoryName)
+                .orElseThrow(() -> new RuntimeException("Category not found: " + categoryName));
+        return productRepository.findByCategoryWithImages(category);
+    }
+
+    public List<Product> getProductsByCategory(String categoryName) {
+        Category category = categoryRepository.findByName(categoryName)
+                .orElseThrow(() -> new RuntimeException("Category not found: " + categoryName));
+        return productRepository.findByCategoryWithImages(category);
     }
 
     @Override
-    public Page<Product> getAllProductsSortedByPrice(int page, int pageSize, Sort.Direction direction) {
-        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by(direction, "price"));
-        return productRepository.findAll(pageable);
-    }
-
-    @Override
-    public Collection<Product> getProductsByCategory(String categoryName) {
-        return productRepository.findByCategory_Name(categoryName);
+    public List<Product> getRelatedProducts(Product product, int limit) {
+        return getProductsByCategory(product.getCategory().getName())
+                .stream()
+                .filter(p -> !p.getId().equals(product.getId()))
+                .limit(limit)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -105,23 +101,18 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<Product> getFilteredProductsForAdmin(String categoryName, String brandName, String searchTerm) {
+        return productRepository.findProducts(categoryName, brandName, searchTerm);
+    }
+
+    @Override
     public void deleteImagesByProductId(Long id) {
         this.imageRepository.deleteByProductId(id);
     }
 
     @Override
-    public List<Product> getProductsWithFirstImageByCategory(String categoryName, int limit) {
-        List<Product> products = productRepository.findByCategory_Name(categoryName).stream()
-                .limit(limit)
-                .collect(Collectors.toList());
-
-        // Gán ảnh có id nhỏ nhất vào từng sản phẩm
-        for (Product product : products) {
-            Image firstImage = productRepository.findFirstImageByProductId(product.getId());
-            product.setImages(firstImage != null ? List.of(firstImage) : new ArrayList<>());
-        }
-        return products;
+    public void deleteProductById(Long id) {
+        this.productRepository.deleteById(id);
     }
-
 
 }

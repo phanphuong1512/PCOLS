@@ -58,7 +58,6 @@
     <div class="container">
         <!-- row -->
         <div class="row">
-
             <div class="col-md-12">
                 <div class="order-summary clearfix">
                     <div class="section-title">
@@ -79,7 +78,8 @@
                         <tr class="order-detail-row" id="row-[[${detail.id}]]">
                             <!-- Ảnh sản phẩm -->
                             <td class="thumb">
-                                <img th:src="${detail.product.image}" alt="Product Image"/>
+                                <img th:src="${detail.product.images != null && !detail.product.images.isEmpty() ? detail.product.images[0].url : '/default-image.jpg'}"
+                                     alt="Product Image"/>
                             </td>
                             <!-- Tên sản phẩm và thông tin bổ sung -->
                             <td class="details">

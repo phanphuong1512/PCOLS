@@ -6,8 +6,10 @@ import fpt.swp.pcols.entity.User;
 import fpt.swp.pcols.repository.OrderDetailRepository;
 import fpt.swp.pcols.repository.OrderRepository;
 import fpt.swp.pcols.service.OrderService;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -50,4 +52,21 @@ public class OrderServiceImpl implements OrderService {
     public void saveDetail(OrderDetail detail) {
         orderDetailRepository.save(detail);
     }
+
+    @Override
+    public List<Order> getFilteredOrders(String sort, Order.OrderStatus status, String email) {
+        Sort sortOrder = Sort.by("orderDate");
+        if ("asc".equalsIgnoreCase(sort)) {
+            sortOrder = sortOrder.ascending();
+        } else {
+            sortOrder = sortOrder.descending();
+        }
+        return orderRepository.findOrders(status, email, sortOrder);
+    }
+
+    @Override
+    public Order getOrderById(Long id) {
+        return this.orderRepository.findById(id).orElse(null);
+    }
+
 }
