@@ -2,6 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - User List</title>
     <link rel="stylesheet" th:href="@{/admin_assets/css/style.css}">
@@ -78,9 +79,9 @@
                         <label for="role">Filter by Role:</label>
                         <select name="role" id="role">
                             <option value="">All Roles</option>
-                            <option value="ADMIN" th:selected="${authorities == 'ADMIN'}">Admin</option>
-                            <option value="SALE" th:selected="${authorities == 'SALE'}">Sale</option>
-                            <option value="USER" th:selected="${authorities == 'CUSTOMER'}">Customer</option>
+                            <th:block th:each="auth : ${authorities}">
+                                <option th:value="${auth.authority}" th:text="${auth.authority}" th:selected="${auth.authority == role}"></option>
+                            </th:block>
                         </select>
                     </div>
                     <div>

@@ -174,4 +174,36 @@ public class OrderController {
 
         return "redirect:/home";
     }
+
+    @GetMapping("admin/orders")
+    public String listOrders(Model model,
+                             @RequestParam(value = "sort", required = false, defaultValue = "desc") String sort,
+                             @RequestParam(value = "status", required = false) String status,
+                             @RequestParam(value = "email", required = false) String email) {
+        Order.OrderStatus orderStatus = null;
+        if (status != null && !status.isEmpty()) {
+            try {
+                orderStatus = Order.OrderStatus.valueOf(status.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                // Handle invalid status gracefully (e.g., log it or ignore)
+                orderStatus = null;
+            }
+        }
+        List<Order> orders = orderService.getFilteredOrders(sort, orderStatus, email);
+        model.addAttribute("orders", orders);
+        model.addAttribute("sort", sort);
+        model.addAttribute("status", status);
+        model.addAttribute("email", email);
+        return "admin/order/list"; // Maps to src/main/resources/templates/orders/list.html
+    }
+
+    @GetMapping("admin/order/detail/{id}")
+    public String orderDetail(@PathVariable Long id, Model model) {
+        Order order = orderService.getOrderById(id);
+        if (order == null) {
+            return "redirect:/orders?error=Order not found";
+        }
+        model.addAttribute("order", order);
+        return "admin/order/details"; // Maps to src/main/resources/templates/orders/detail.html
+    }
 }

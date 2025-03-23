@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Order Detail</title>
+    <!-- Optional: Add CSS for styling -->
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+<h1>Order Detail</h1>
+
+<div class="section">
+    <h2>Order Information</h2>
+    <p><strong>Order ID:</strong> <span th:text="${order.id}"></span></p>
+    <p><strong>Customer Name:</strong> <span th:text="${order.firstName} + ' ' + ${order.lastName}"></span></p>
+    <p><strong>Email:</strong> <span th:text="${order.email}"></span></p>
+    <p><strong>Order Date:</strong> <span th:text="${#temporals.format(order.orderDate, 'yyyy-MM-dd HH:mm')}"></span></p>
+    <p><strong>Status:</strong> <span th:text="${order.status}"></span></p>
+    <p><strong>Shipping Address:</strong> <span th:text="${order.address} + ', ' + ${order.city} + ', ' + ${order.country} + ' ' + ${order.zipCode}"></span></p>
+    <p><strong>Phone:</strong> <span th:text="${order.phone}"></span></p>
+    <p><strong>Shipping Method:</strong> <span th:text="${order.shippingMethod}"></span></p>
+    <p><strong>Payment Method:</strong> <span th:text="${order.paymentMethod}"></span></p>
+</div>
+
+<div class="section">
+    <h2>Order Details</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="detail : ${order.orderDetails}">
+            <td th:text="${detail.productName}"></td>
+            <td th:text="${detail.quantity}"></td>
+            <td th:text="${detail.price}"></td>
+            <td th:text="${detail.getTotalPrice()}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <p><strong>Total Amount:</strong> <span th:text="${#aggregates.sum(order.orderDetails.![getTotalPrice()])}"></span></p>
+</div>
+
+<a th:href="@{/admin/orders}">Back to List</a>
+</body>
+</html>

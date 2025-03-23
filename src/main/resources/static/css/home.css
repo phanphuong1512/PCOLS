@@ -1104,6 +1104,7 @@ textarea.input {
 
 #aside .aside {
     margin-bottom: 30px;
+    overflow: hidden;
 }
 
 #aside .aside:last-child {

@@ -132,6 +132,10 @@ public class HomeController {
         return "redirect:/product-detail?id=" + productId;
     }
 
+    @GetMapping("/admin/dashboard")
+    public String dashboard() {
+        return "admin/admin-home";
+    }
 
 }
 
