@@ -11,7 +11,7 @@
 </head>
 
 <body>
-<form th:object="${user}" th:action="@{/profile/update}" method="post">
+<form th:object="${updateProfileDTO}" th:action="@{/profile/update}" method="post" enctype="multipart/form-data">
     <input type="hidden" th:field="*{id}"/>
     <div class="container light-style flex-grow-1 container-p-y">
         <h4 class="font-weight-bold py-3 mb-4">
@@ -39,12 +39,12 @@
                     <div class="tab-content">
                         <div class="tab-pane fade active show" id="account-general">
                             <div class="card-body media align-items-center">
-                                <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt
+                                <img th:src="${user.avatar}" alt
                                      class="d-block ui-w-80">
                                 <div class="media-body ml-4">
                                     <label class="btn btn-outline-primary">
                                         Upload new photo
-                                        <input type="file" class="account-settings-file-input">
+                                        <input type="file" class="account-settings-file-input" name="avatarFile">
                                     </label> &nbsp;
                                     <button type="button" class="btn btn-default md-btn-flat">Reset</button>
                                     <div class="text-secondary small mt-1">Allowed JPG, GIF or PNG. Max size of 800K
@@ -254,7 +254,7 @@
         </div>
         <div class="text-right mt-3">
             <button type="submit" class="btn btn-primary">Save changes</button>&nbsp;
-            <button type="button" class="btn btn-default">Cancel</button>
+            <button type="button" class="btn btn-default" onclick="window.location.href='/'">Cancel</button>
         </div>
     </div>
 </form>
