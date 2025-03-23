@@ -92,6 +92,7 @@ public class ProductController {
         model.addAttribute("listCategories", listCategories);
         model.addAttribute("listBrands", listBrands);
         model.addAttribute("brands", brand);
+        model.addAttribute("imageFiles", imageFiles);
         model.addAttribute("minPrice", minPrice);
         model.addAttribute("maxPrice", maxPrice);
         model.addAttribute("sort", sort);

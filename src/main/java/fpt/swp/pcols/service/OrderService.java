@@ -21,7 +21,6 @@ public interface OrderService {
 
     void saveDetail(OrderDetail detail);
 
-
     List<Order> getFilteredOrders(String sort, Order.OrderStatus status, String email);
 
     Order getOrderById(Long id);

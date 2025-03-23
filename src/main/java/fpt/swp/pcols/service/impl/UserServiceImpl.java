@@ -10,8 +10,6 @@ import fpt.swp.pcols.util.OtpUtil;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -32,9 +30,6 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final OtpUtil otpUtil;
     private final EmailUtil emailUtil;
-
-    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
-
 
     @Override
     public void register(RegisterDTO registerDTO) {
@@ -109,11 +104,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAllUser() {
-        return this.userRepository.findAll();
-    }
-
-    @Override
     public User getUserById(Long id) {
         return this.userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
     }
@@ -135,36 +125,24 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     public void updateUser(User updatedUser) {
-        logger.debug("Starting updateUser for user with id: {}", updatedUser.getId());
 
-        // Tìm user hiện tại trong cơ sở dữ liệu
         User existingUser = userRepository.findById(updatedUser.getId())
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + updatedUser.getId()));
 
-        logger.debug("Current user state: {}", existingUser);
-
-        // Cập nhật các trường từ updatedUser
         existingUser.setUsername(updatedUser.getUsername());
         existingUser.setEmail(updatedUser.getEmail());
         existingUser.setPhone(updatedUser.getPhone());
         existingUser.setAddress(updatedUser.getAddress());
-        existingUser.setAvatar(updatedUser.getAvatar()); // Thêm để cập nhật avatar
+        existingUser.setAvatar(updatedUser.getAvatar());
 
-        // Chỉ đặt enabled = true nếu cần thiết (bỏ nếu không cần)
-        // existingUser.setEnabled(true);
-
-        logger.debug("User state after update: {}", existingUser);
-
-        // Lưu thay đổi
         userRepository.save(existingUser);
-        logger.info("User updated successfully with id: {}", existingUser.getId());
     }
 
     public boolean checkPassword(String username, String rawPassword) {
         Optional<User> userOptional = findByUsername(username);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            return passwordEncoder.matches(rawPassword, user.getPassword()); // So sánh mật khẩu mã hóa
+            return passwordEncoder.matches(rawPassword, user.getPassword());
         }
         return false;
     }
@@ -173,7 +151,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> userOptional = findByUsername(username);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            user.setPassword(passwordEncoder.encode(newPassword)); // Mã hóa mật khẩu mới
+            user.setPassword(passwordEncoder.encode(newPassword));
             userRepository.save(user);
         } else {
             throw new RuntimeException("User not found");
@@ -186,7 +164,7 @@ public class UserServiceImpl implements UserService {
             return userRepository.findAll();
         } else if (role != null && !role.isEmpty() && (email == null || email.isEmpty())) {
             return userRepository.findByAuthorities_Authority(role);
-        } else if ((role == null || role.isEmpty()) && email != null && !email.isEmpty()) {
+        } else if (role == null || role.isEmpty()) {
             return userRepository.findByEmailContaining(email);
         } else {
             return userRepository.findByAuthorities_AuthorityAndEmailContaining(role, email);
