@@ -40,7 +40,7 @@ public class OAuth2UserServiceImpl implements OAuth2UserService<OAuth2UserReques
         // Tìm kiếm user theo email; nếu không có, tự đăng ký mới
         userService.findByEmail(email).orElseGet(() -> {
             User newUser = new User();
-            newUser.setUsername(googleName);  // Sử dụng tên tài khoản Google làm username
+            newUser.setUsername(googleName);
             newUser.setEmail(email);
             newUser.setEnabled(true);
             // Gán role mặc định ROLE_USER; truyền null cho id vì nó được auto-generate

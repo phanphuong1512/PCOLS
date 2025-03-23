@@ -33,4 +33,10 @@ public interface UserService {
 
     User save(User user);
 
+    void updateUser(User updatedUser);
+
+    boolean checkPassword(String username, String rawPassword);
+
+    void changePassword(String username, String newPassword);
+
 }

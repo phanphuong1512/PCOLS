@@ -31,7 +31,7 @@ public class HomeController {
 
     private final ProductService productService;
     private final CategoryService categoryService;
-    private final ReviewService reviewService;
+
 
     @GetMapping({"/", "/home"})
     public String getHomePage(Model model) {
@@ -59,7 +59,7 @@ public class HomeController {
                     .collect(Collectors.toList());
             categoryProductsMap.put(category.getName(), products);
         }
-        model.addAttribute("categoryProductsMap", categoryProductsMap);
+            model.addAttribute("categoryProductsMap", categoryProductsMap);
         System.out.println("categoryProductsMap = " + categoryProductsMap);
 
         return "home";
@@ -68,68 +68,6 @@ public class HomeController {
     @GetMapping("/chatbot")
     public String chatBot() {
         return "/fragments/chatbot";
-    }
-
-    @GetMapping("/product-detail")
-    public String getProductDetail(@RequestParam("id") Long productId,
-                                   @RequestParam(defaultValue = "0") int page,
-                                   @RequestParam(defaultValue = "3") int size,
-                                   Model model) {
-        Product product = productService.getProductById(productId);
-        Category category = product.getCategory();
-        model.addAttribute("product", product);
-        model.addAttribute("category", category);
-
-        model.addAttribute("relatedProducts", productService.getRelatedProducts(product, 4));
-
-        Page<Review> reviewPage = reviewService.getReviewsByProduct(product, page, size);
-        model.addAttribute("reviews", reviewPage.getContent());
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", reviewPage.getTotalPages());
-
-        model.addAttribute("reviewForm", new ReviewFormDTO("", null));
-
-        return "product-detail";
-    }
-
-    @PostMapping("/product-detail/review")
-    public String submitReview(@RequestParam Long productId,
-                               @ModelAttribute("reviewForm") ReviewFormDTO reviewForm,
-                               @AuthenticationPrincipal User user,
-                               Model model,
-                               RedirectAttributes redirectAttributes) {
-        Product product = productService.getProductById(productId);
-
-        ValidationResult validationResult = reviewService.validateReviewForm(reviewForm);
-        if (validationResult.isHasErrors()) {
-            model.addAllAttributes(validationResult.getErrors());
-
-            Category category = product.getCategory();
-            model.addAttribute("product", product);
-            model.addAttribute("category", category);
-            model.addAttribute("relatedProducts", productService.getRelatedProducts(product, 4));
-
-            Page<Review> reviewPage = reviewService.getReviewsByProduct(product, 0, 3);
-            model.addAttribute("reviews", reviewPage.getContent());
-            model.addAttribute("currentPage", 0);
-            model.addAttribute("totalPages", reviewPage.getTotalPages());
-
-            return "product-detail";
-        }
-
-        if (user == null) {
-            return "redirect:/auth/login";
-        }
-
-        Review review = new Review();
-        review.setProduct(product);
-        review.setUser(user);
-        review.setRating(reviewForm.rating());
-        review.setComment(reviewForm.comment());
-        reviewService.saveReview(review);
-
-        redirectAttributes.addFlashAttribute("successMessage", "Review submitted successfully");
-        return "redirect:/product-detail?id=" + productId;
     }
 
 

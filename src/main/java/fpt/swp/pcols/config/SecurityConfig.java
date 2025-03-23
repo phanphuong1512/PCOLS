@@ -59,15 +59,14 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/auth/login",
-                                "/auth/register",
-                                "/auth/forgot-password/**",
+                                "/products/**",
+                                "/", "/home",
+                                "/auth/**",
                                 "/css/**",
                                 "/js/**",
                                 "/img/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        //                                .anyRequest().authenticated()
-                        .anyRequest().permitAll()
+                        .anyRequest().authenticated()
                 )
                 .exceptionHandling(exception -> exception
                         .accessDeniedHandler((request, response, accessDeniedException) -> {

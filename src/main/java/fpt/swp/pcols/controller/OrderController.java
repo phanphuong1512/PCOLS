@@ -26,9 +26,8 @@ import java.util.*;
 public class OrderController {
 
     private final OrderService orderService;
-    private final UserService userService; // Service để lấy thông tin User
+    private final UserService userService;
     private final ProductService productService;
-
 
     @GetMapping("/checkout")
     public String checkoutPage(Model model, Principal principal) {
@@ -67,7 +66,6 @@ public class OrderController {
         model.addAttribute("orderDetails", cart.getOrderDetails());
         return "checkout";
     }
-
 
     @PostMapping("/cart/add")
     @ResponseBody

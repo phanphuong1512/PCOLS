@@ -5,8 +5,6 @@ import fpt.swp.pcols.entity.Product;
 import fpt.swp.pcols.service.CategoryService;
 import fpt.swp.pcols.service.ProductService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,11 +19,10 @@ public class ProductController {
     private final ProductService productService;
     private final CategoryService categoryService;
 
-
     @GetMapping("/admin/product")
     public String getInventoryPage(Model model,
                                    @RequestParam(value = "category", required = false) String category,
-                                      @RequestParam(value = "brand", required = false) String brand,
+                                   @RequestParam(value = "brand", required = false) String brand,
                                    @RequestParam(value = "search", required = false) String search) {
         String categoryName = (category != null && !category.isEmpty()) ? category : null;
         String brandName = (brand != null && !brand.isEmpty()) ? brand : null;

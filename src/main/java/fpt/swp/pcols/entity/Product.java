@@ -36,7 +36,6 @@ public class Product {
     @Column(name = "stock")
     private int stock;
 
-
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JsonIgnore
     private List<Image> images = new ArrayList<>();

@@ -21,7 +21,6 @@ public class UserController {
     private final UserService userService;
     private final AuthorityRepository authorityRepository;
 
-
     @GetMapping("/admin/user")
     public String getUserPage(Model model) {
         List<User> users = this.userService.getAllUser();

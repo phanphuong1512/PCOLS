@@ -144,4 +144,39 @@ public class UserServiceImpl implements UserService {
     public User save(User user) {
         return userRepository.save(user);
     }
+
+    public void updateUser(User updatedUser) {
+        // Tìm user hiện tại trong cơ sở dữ liệu
+        User existingUser = userRepository.findById(updatedUser.getId())
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + updatedUser.getId()));
+
+        // Cập nhật các trường từ updatedUser
+        existingUser.setUsername(updatedUser.getUsername());
+        existingUser.setEmail(updatedUser.getEmail());
+        existingUser.setPhone(updatedUser.getPhone());
+        existingUser.setAddress(updatedUser.getAddress());
+        existingUser.setEnabled(true);
+
+        userRepository.save(existingUser);
+    }
+
+    public boolean checkPassword(String username, String rawPassword) {
+        Optional<User> userOptional = findByUsername(username);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            return passwordEncoder.matches(rawPassword, user.getPassword()); // So sánh mật khẩu mã hóa
+        }
+        return false;
+    }
+
+    public void changePassword(String username, String newPassword) {
+        Optional<User> userOptional = findByUsername(username);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.setPassword(passwordEncoder.encode(newPassword)); // Mã hóa mật khẩu mới
+            userRepository.save(user);
+        } else {
+            throw new RuntimeException("User not found");
+        }
+    }
 }

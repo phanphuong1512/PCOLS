@@ -12,13 +12,9 @@ import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    List<Product> findByCategory_Name(String categoryName);
 
     @Query("SELECT p FROM Product p LEFT JOIN FETCH p.images WHERE p.category = :category")
     List<Product> findByCategoryWithImages(@Param("category") Category category);
-
-    @Query("SELECT p FROM Product p LEFT JOIN FETCH p.images WHERE p.id = :id")
-    Optional<Product> findByIdWithImages(@Param("id") Long id);
 
     @Query("SELECT p FROM Product p WHERE " +
             "(:brand IS NULL OR p.brand = :brand) " +
@@ -30,6 +26,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                                        @Param("minPrice") Double minPrice,
                                        @Param("maxPrice") Double maxPrice,
                                        String sort);
+
     @Query("SELECT DISTINCT p.brand FROM Product p WHERE p.brand IS NOT NULL")
     List<String> findAllBrands();
 

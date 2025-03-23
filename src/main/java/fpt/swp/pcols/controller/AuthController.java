@@ -70,8 +70,6 @@ public class AuthController {
         ra.addFlashAttribute("message", "Password reset successfully. Please login again.");
         return "redirect:/auth/login";
     }
-
-
 }
 
 
