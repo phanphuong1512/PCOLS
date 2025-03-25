@@ -44,7 +44,6 @@
                                                                                               class="text-uppercase">Join</a>
                             <ul class="custom-menu">
                                 <form id="logoutForm" th:action="@{/logout}" method="post" style="display: none;">
-                                    <input type="hidden" name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                                 </form>
                                 <li><a th:href="@{/profile}"><i class="fa fa-user-o"></i> My Account</a></li>
                                 <li><a th:href="@{/checkout}"><i class="fa fa-heart-o"></i> My Wishlist</a></li>

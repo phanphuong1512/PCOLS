@@ -129,10 +129,11 @@
                             <div class="qty-input">
                                 <span class="text-uppercase">QTY: </span>
                                 <label>
-                                    <input class="input" type="number">
+                                    <input class="input" type="number" value="1">
                                 </label>
                             </div>
-                            <button class="primary-btn add-to-cart"><i class="fa fa-shopping-cart"></i> Add to Cart
+                            <button th:attr="data-product-id=${product.id}" class="primary-btn add-to-cart"><i
+                                    class="fa fa-shopping-cart"></i> Add to Cart
                             </button>
                             <div class="pull-right">
                                 <button class="main-btn icon-btn"><i class="fa fa-heart"></i></button>
@@ -287,7 +288,9 @@
 <script th:src="@{/js/nouislider.min.js}" src="/js/nouislider.min.js"></script>
 <script th:src="@{/js/jquery.zoom.min.js}" src="/js/jquery.zoom.min.js"></script>
 <script th:src="@{/js/main.js}" src="/js/main.js"></script>
+<script th:src="@{/js/add-to-cart.js}" src="/js/main.js"></script>
+<script th:src="@{/js/chat-fragment.js}" defer></script>
+
 
 </body>
-
 </html>
