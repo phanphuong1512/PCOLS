@@ -27,8 +27,20 @@
 
     <!-- Custom style sheet -->
     <link type="text/css" rel="stylesheet" th:href="@{/css/home.css}"/>
+
+    <!-- jQuery Plugins -->
+    <script th:src="@{/js/jquery.min.js}" src="/js/jquery.min.js" defer></script>
+    <script th:src="@{/js/bootstrap.min.js}" src="/js/bootstrap.min.js" defer></script>
+    <script th:src="@{/js/slick.min.js}" src="/js/slick.min.js" defer></script>
+    <script th:src="@{/js/nouislider.min.js}" src="/js/nouislider.min.js" defer></script>
+    <script th:src="@{/js/jquery.zoom.min.js}" src="/js/jquery.zoom.min.js" defer></script>
+    <script th:src="@{/js/main.js}" src="/js/main.js" defer></script>
+    <script th:src="@{/js/add-to-cart.js}" src="/js/main.js" defer></script>
+    <script th:src="@{/js/chat-fragment.js}" defer></script>
+
+
     <!--    chat bot-->
-<!--    <link rel="stylesheet" th:href="@{/css/chatbot.css}">-->
+    <!--    <link rel="stylesheet" th:href="@{/css/chatbot.css}">-->
 
 
 </head>
@@ -149,7 +161,7 @@
 
             <!-- Product Single -->
             <div th:each="product : ${gearProducts}">
-                <div th:replace="~{fragments/product :: productCard(product=${product})}"></div>
+                <div th:replace="~{fragments/product :: productCard(product=${product}, averageRating=${averageRating[product.id]})}"></div>
             </div>
             <!-- /Product Single -->
         </div>
@@ -174,7 +186,7 @@
             <!-- /banner -->
             <!-- Product Single -->
             <div th:each="product : ${pcProducts}">
-                <div th:replace="~{fragments/product :: productCard(product=${product})}"></div>
+                <div th:replace="~{fragments/product :: productCard(product=${product}, averageRating=${averageRating[product.id]})}"></div>
             </div>
             <!-- /Product Single -->
         </div>
@@ -199,7 +211,7 @@
             <!-- /banner -->
             <!-- Product Single -->
             <div th:each="product : ${monitorProducts}">
-                <div th:replace="~{fragments/product :: productCard(product=${product})}"></div>
+                <div th:replace="~{fragments/product :: productCard(product=${product}, averageRating=${averageRating[product.id]})}"></div>
             </div>
             <!-- /Product Single -->
         </div>
@@ -257,18 +269,5 @@
 <!-- FOOTER -->
 <div th:replace="fragments/footer :: footer"></div>
 <!-- /FOOTER -->
-
-<!-- jQuery Plugins -->
-<script th:src="@{/js/jquery.min.js}" src="/js/jquery.min.js"></script>
-<script th:src="@{/js/bootstrap.min.js}" src="/js/bootstrap.min.js"></script>
-<script th:src="@{/js/slick.min.js}" src="/js/slick.min.js"></script>
-<script th:src="@{/js/nouislider.min.js}" src="/js/nouislider.min.js"></script>
-<script th:src="@{/js/jquery.zoom.min.js}" src="/js/jquery.zoom.min.js"></script>
-<script th:src="@{/js/main.js}" src="/js/main.js"></script>
-<script th:src="@{/js/add-to-cart.js}" src="/js/main.js"></script>
-<script th:src="@{/js/chat-fragment.js}" defer></script>
-
-
 </body>
-
 </html>

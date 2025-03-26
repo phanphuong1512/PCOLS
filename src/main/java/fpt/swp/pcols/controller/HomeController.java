@@ -4,6 +4,7 @@ import fpt.swp.pcols.entity.Category;
 import fpt.swp.pcols.entity.Product;
 import fpt.swp.pcols.service.CategoryService;
 import fpt.swp.pcols.service.ProductService;
+import fpt.swp.pcols.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +21,7 @@ public class HomeController {
 
     private final ProductService productService;
     private final CategoryService categoryService;
+    private final ReviewService reviewService;
 
 
     @GetMapping({"/", "/home"})
@@ -33,9 +35,27 @@ public class HomeController {
         List<Product> pcProducts = productService.getProductsByCategoryWithImages("PC")
                 .stream().limit(3)
                 .collect(Collectors.toList());
+
         model.addAttribute("gearProducts", gearProducts);
         model.addAttribute("monitorProducts", monitorProducts);
         model.addAttribute("pcProducts", pcProducts);
+
+        Map<Long, Double> averageRatingMap = new HashMap<>();
+        for (Product product : gearProducts) {
+            double avgRating = reviewService.calculateAverageRating(product.getId());
+            averageRatingMap.put(product.getId(), avgRating);
+        }
+        for (Product product : monitorProducts) {
+            double avgRating = reviewService.calculateAverageRating(product.getId());
+            averageRatingMap.put(product.getId(), avgRating);
+        }
+        for (Product product : pcProducts) {
+            double avgRating = reviewService.calculateAverageRating(product.getId());
+            averageRatingMap.put(product.getId(), avgRating);
+        }
+
+        model.addAttribute("averageRating", averageRatingMap);
+
 
         // New code: Load all categories dynamically and prepare a map of category name to up to 3 products
         List<Category> allCategories = categoryService.getAllCategories();

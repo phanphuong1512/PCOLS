@@ -1,4 +1,4 @@
-<!-- Fragment: productCard -->
+=<!-- Fragment: productCard -->
 <div th:fragment="productCard (product)" class="col-md-3 col-sm-6 col-xs-6">
     <div class="product product-single">
         <a th:href="@{/product-detail(id=${product.id})}">
@@ -11,11 +11,11 @@
                 $<span th:text="${product.price}"></span>
             </h3>
             <div class="product-rating">
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star-o empty"></i>
+                <i th:classappend="${averageRating >= 1 ? 'fa fa-star' : 'fa fa-star-o empty'}"></i>
+                <i th:classappend="${averageRating >= 2 ? 'fa fa-star' : 'fa fa-star-o empty'}"></i>
+                <i th:classappend="${averageRating >= 3 ? 'fa fa-star' : 'fa fa-star-o empty'}"></i>
+                <i th:classappend="${averageRating >= 4 ? 'fa fa-star' : 'fa fa-star-o empty'}"></i>
+                <i th:classappend="${averageRating >= 5 ? 'fa fa-star' : 'fa fa-star-o empty'}"></i>
             </div>
             <h2 class="product-name">
                 <a th:text="${product.name}" href="#">Product Name Goes Here</a>
