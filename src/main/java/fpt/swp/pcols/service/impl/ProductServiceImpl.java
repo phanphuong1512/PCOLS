@@ -90,10 +90,10 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public List<String> getAllBrands() {
-        return this.productRepository.findAllBrands();
-    }
+//    @Override
+//    public List<String> getAllBrands() {
+//        return this.productRepository.findAllBrands();
+//    }
 
     @Override
     public List<Product> getFilteredProducts(String brand, String category, Double minPrice, Double maxPrice, String sort) {

@@ -113,7 +113,8 @@
                     <h3 class="aside-title">Filter by Brand</h3>
                     <ul class="list-links">
                         <li th:each="brand : ${listBrands}">
-                            <a href="#" class="brand-filter" th:data-brand="${brand}" th:text="${brand}"></a>
+                            <a href="#" class="brand-filter" th:data-brand="${brand.name}"
+                               th:text="${brand.name}"></a>
                         </li>
                     </ul>
                 </div>
