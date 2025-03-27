@@ -13,6 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ReviewServiceImpl implements ReviewService {
@@ -48,5 +50,18 @@ public class ReviewServiceImpl implements ReviewService {
         }
 
         return result;
+    }
+
+    @Override
+    public double calculateAverageRating(Long productId) {
+        List<Review> reviews = reviewRepository.findByProductId(productId);
+        if (reviews.isEmpty()) {
+            return 0; // Nếu không có đánh giá nào, trả về 0
+        }
+        double totalRating = 0;
+        for (Review review : reviews) {
+            totalRating += review.getRating();
+        }
+        return totalRating / reviews.size(); // Tính trung bình
     }
 }

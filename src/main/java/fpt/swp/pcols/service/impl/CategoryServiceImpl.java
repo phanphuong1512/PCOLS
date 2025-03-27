@@ -20,12 +20,6 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category handleSaveCategory(Category category) {
-        this.categoryRepository.save(category);
-        return category;
-    }
-
-    @Override
     public Category getCategoryById(Long id) {
         return this.categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
     }

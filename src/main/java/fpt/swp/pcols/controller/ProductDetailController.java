@@ -19,6 +19,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @Controller
 @RequiredArgsConstructor
 public class ProductDetailController {
@@ -35,14 +39,21 @@ public class ProductDetailController {
         model.addAttribute("product", product);
         model.addAttribute("category", category);
 
-        model.addAttribute("relatedProducts", productService.getRelatedProducts(product, 4));
+        List<Product> relatedProducts = productService.getRelatedProducts(product, 4);
+        model.addAttribute("relatedProducts", relatedProducts);
 
         Page<Review> reviewPage = reviewService.getReviewsByProduct(product, page, size);
         model.addAttribute("reviews", reviewPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", reviewPage.getTotalPages());
-
         model.addAttribute("reviewForm", new ReviewFormDTO("", null));
+
+        Map<Long, Double> averageRatings = new HashMap<>();
+        averageRatings.put(product.getId(), reviewService.calculateAverageRating(productId));
+        for (Product relatedProduct : relatedProducts) {
+            averageRatings.put(relatedProduct.getId(), reviewService.calculateAverageRating(relatedProduct.getId()));
+        }
+        model.addAttribute("averageRating", averageRatings);
 
         return "product-detail";
     }

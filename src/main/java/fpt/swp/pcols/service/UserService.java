@@ -19,8 +19,6 @@ public interface UserService {
 
     void forgotPassword(String email);
 
-    List<User> getAllUser();
-
     void resetPassword(String email, String newPassword);
 
     User getUserById(Long id);
@@ -37,5 +35,5 @@ public interface UserService {
 
     void changePassword(String username, String newPassword);
 
-   List<User> searchUsers(String role, String email);
+    List<User> searchUsers(String role, String email);
 }

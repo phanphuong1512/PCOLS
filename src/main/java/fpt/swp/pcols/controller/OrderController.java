@@ -54,7 +54,6 @@ public class OrderController {
                     return orderService.save(newCart);
                 });
 
-        // Thêm log để kiểm tra
         System.out.println("Cart: " + cart);
         System.out.println("Order Details: " + cart.getOrderDetails());
         cart.getOrderDetails().forEach(detail -> {
@@ -73,7 +72,7 @@ public class OrderController {
                                        @RequestParam(value = "quantity", defaultValue = "1") int quantity,
                                        Principal principal) {
         User user = userService.findByUsername(principal.getName()).orElseThrow(() -> new RuntimeException("User not found"));
-        // Lấy giỏ hàng hiện tại của user
+        // get current cart for user
         Order cart = orderService.getCurrentCartForUser(user).orElseThrow(() -> new RuntimeException("Cart not found"));
         if (cart == null) {
             cart = new Order();
@@ -83,7 +82,7 @@ public class OrderController {
             cart.setOrderDetails(new ArrayList<>());
             cart = orderService.save(cart);
         }
-        // Kiểm tra xem sản phẩm đã có trong giỏ chưa
+        // check if product already exists in cart
         OrderDetail existingDetail = orderService.findOrderDetailByOrderAndProduct(cart, productId);
         if (existingDetail != null) {
             existingDetail.setQuantity(existingDetail.getQuantity() + quantity);
@@ -105,29 +104,27 @@ public class OrderController {
     @ResponseBody
     public ResponseEntity<Map<String, String>> updateCartDetail(@RequestParam Long detailId,
                                                                 @RequestParam int quantity) {
-        // Tìm OrderDetail theo ID
+        // find order by id
         Optional<OrderDetail> optionalDetail = orderService.findDetailById(detailId);
         if (optionalDetail.isEmpty()) {
-            // Nếu không tìm thấy, trả về 404 NOT FOUND kèm thông báo lỗi
+            // if order not found, return 404 NOT FOUND with error message
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(Collections.singletonMap("error", "Order detail not found for id: " + detailId));
         }
 
         OrderDetail detail = optionalDetail.get();
-        // Cập nhật số lượng
         detail.setQuantity(quantity);
-        // Lưu thay đổi
         orderService.saveDetail(detail);
 
-        // Tính lại tổng tiền cho dòng này
+        // Recalculate to get new line total
         BigDecimal lineTotal = detail.getPrice().multiply(BigDecimal.valueOf(quantity));
 
-        // Tạo response
+        // create response
         Map<String, String> response = new HashMap<>();
         response.put("status", "ok");
         response.put("lineTotal", lineTotal.toString());
 
-        // Trả về JSON với mã 200 OK
+        // Return JSON with status 200 OK
         return ResponseEntity.ok(response);
     }
 
@@ -150,8 +147,7 @@ public class OrderController {
     }
 
     @PostMapping("/checkout/confirm")
-    public String confirmCheckout(@ModelAttribute BillDTO billDTO, Model model, Principal principal) {
-        // Lấy user đã đăng nhập
+    public String confirmCheckout(@ModelAttribute BillDTO billDTO, Principal principal) {
         User user = userService.findByUsername(principal.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -183,8 +179,7 @@ public class OrderController {
             try {
                 orderStatus = Order.OrderStatus.valueOf(status.toUpperCase());
             } catch (IllegalArgumentException e) {
-                // Handle invalid status gracefully (e.g., log it or ignore)
-                orderStatus = null;
+                throw new RuntimeException("Invalid order status: " + status);
             }
         }
         List<Order> orders = orderService.getFilteredOrders(sort, orderStatus, email);
@@ -192,7 +187,7 @@ public class OrderController {
         model.addAttribute("sort", sort);
         model.addAttribute("status", status);
         model.addAttribute("email", email);
-        return "admin/order/list"; // Maps to src/main/resources/templates/orders/list.html
+        return "admin/order/list";
     }
 
     @GetMapping("admin/order/detail/{id}")
@@ -202,6 +197,6 @@ public class OrderController {
             return "redirect:/orders?error=Order not found";
         }
         model.addAttribute("order", order);
-        return "admin/order/details"; // Maps to src/main/resources/templates/orders/detail.html
+        return "admin/order/details";
     }
 }

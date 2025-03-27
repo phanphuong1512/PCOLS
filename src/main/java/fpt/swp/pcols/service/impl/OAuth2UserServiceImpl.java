@@ -28,30 +28,28 @@ public class OAuth2UserServiceImpl implements OAuth2UserService<OAuth2UserReques
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        // Sử dụng default OAuth2UserService để load thông tin user từ Google
+        // use default OAuth2UserService to load data user from Google
         OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
         OAuth2User oauth2User = delegate.loadUser(userRequest);
 
-        // Lấy các thuộc tính trả về từ Google
         Map<String, Object> attributes = oauth2User.getAttributes();
         String email = (String) attributes.get("email");
-        String googleName = (String) attributes.get("name");  // Lấy tên tài khoản Google
+        String googleName = (String) attributes.get("name");
 
-        // Tìm kiếm user theo email; nếu không có, tự đăng ký mới
+        // find user by email, if not exist, create new user
         userService.findByEmail(email).orElseGet(() -> {
             User newUser = new User();
             newUser.setUsername(googleName);
             newUser.setEmail(email);
             newUser.setEnabled(true);
-            // Gán role mặc định ROLE_USER; truyền null cho id vì nó được auto-generate
             newUser.setAuthorities(List.of(new Authority(null, "ROLE_USER")));
             return userService.save(newUser);
         });
 
-        // Lấy authorities từ oauth2User
+        // get authorities from oauth2User
         Collection<? extends GrantedAuthority> authorities = oauth2User.getAuthorities();
 
-        // Trả về OAuth2User, sử dụng "name" làm identifier để hiển thị tên tài khoản Google
+        // return OAuth2User, using "name" for identifier to display Google Account's name
         return new DefaultOAuth2User(authorities, attributes, "name");
     }
 }

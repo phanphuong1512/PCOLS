@@ -13,4 +13,6 @@ public interface ReviewService {
     void saveReview(Review review);
 
     ValidationResult validateReviewForm(ReviewFormDTO reviewForm);
+
+    double calculateAverageRating(Long productId);
 }

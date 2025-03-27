@@ -1,41 +1,6 @@
 <div th:fragment="header" xmlns:sec="">
     <!-- Bắt đầu code header của bạn -->
     <header>
-        <!-- top Header -->
-        <div id="top-header">
-            <div class="container">
-                <div class="pull-left">
-                    <span>Welcome to E-shop!</span>
-                </div>
-                <div class="pull-right">
-                    <ul class="header-top-links">
-                        <li><a href="#">Store</a></li>
-                        <li><a href="#">Newsletter</a></li>
-                        <li><a href="#">Anh</a></li>
-                        <li class="dropdown default-dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">ENG <i
-                                    class="fa fa-caret-down"></i></a>
-                            <ul class="custom-menu">
-                                <li><a href="#">English (ENG)</a></li>
-                                <li><a href="#">Russian (Ru)</a></li>
-                                <li><a href="#">French (FR)</a></li>
-                                <li><a href="#">Spanish (Es)</a></li>
-                            </ul>
-                        </li>
-                        <li class="dropdown default-dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">USD <i
-                                    class="fa fa-caret-down"></i></a>
-                            <ul class="custom-menu">
-                                <li><a href="#">USD ($)</a></li>
-                                <li><a href="#">EUR (€)</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <!-- /top Header -->
-
         <!-- header -->
         <div id="header">
             <div class="container">
@@ -78,12 +43,19 @@
                             <a th:href="@{/auth/login}" class="text-uppercase">Login</a> / <a th:href="@{/auth/login}"
                                                                                               class="text-uppercase">Join</a>
                             <ul class="custom-menu">
+                                <form id="logoutForm" th:action="@{/logout}" method="post" style="display: none;">
+                                </form>
                                 <li><a th:href="@{/profile}"><i class="fa fa-user-o"></i> My Account</a></li>
-                                <li><a href="#"><i class="fa fa-heart-o"></i> My Wishlist</a></li>
-                                <li><a href="#"><i class="fa fa-check"></i> Checkout</a></li>
-                                <li><a href="#"><i class="fa fa-unlock-alt"></i> Login</a></li>
-                                <li><a href="#"><i class="fa fa-user-plus"></i>Sign up</a></li>
-                                <li><a th:href="@{/logout}"><i class="fa fa-exchange"></i> Logout</a></li>
+                                <li><a th:href="@{/checkout}"><i class="fa fa-heart-o"></i> My Wishlist</a></li>
+                                <li><a th:href="@{/checkout}"><i class="fa fa-check"></i> Checkout</a></li>
+                                <li><a th:href="@{/auth/login}"><i class="fa fa-unlock-alt"></i> Login</a></li>
+                                <li><a th:href="@{/auth/login}"><i class="fa fa-user-plus"></i>Sign up</a></li>
+
+                                <li>
+                                    <a href="#" onclick="document.getElementById('logoutForm').submit(); return false;">
+                                        <i class="fa fa-exchange"></i> Logout
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                         <!-- /Account -->

@@ -28,6 +28,16 @@
     <!-- Custom stylesheet -->
     <link type="text/css" rel="stylesheet" th:href="@{/css/home.css}"/>
 
+
+    <!-- jQuery Plugins -->
+    <script th:src="@{/js/jquery.min.js}" src="/js/jquery.min.js" defer></script>
+    <script th:src="@{/js/bootstrap.min.js}" src="/js/bootstrap.min.js" defer></script>
+    <script th:src="@{/js/slick.min.js}" src="/js/slick.min.js" defer></script>
+    <script th:src="@{/js/nouislider.min.js}" src="/js/nouislider.min.js" defer></script>
+    <script th:src="@{/js/jquery.zoom.min.js}" src="/js/jquery.zoom.min.js" defer></script>
+    <script th:src="@{/js/main.js}" src="/js/main.js" defer></script>
+    <script th:src="@{/js/add-to-cart.js}" src="/js/main.js" defer></script>
+
 </head>
 
 <body>
@@ -98,11 +108,11 @@
                         </h3>
                         <div>
                             <div class="product-rating">
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star-o empty"></i>
+                                <i th:classappend="${averageRating[product.id] >= 1 ? 'fa fa-star' : 'fa fa-star-o empty'}"></i>
+                                <i th:classappend="${averageRating[product.id] >= 2 ? 'fa fa-star' : 'fa fa-star-o empty'}"></i>
+                                <i th:classappend="${averageRating[product.id] >= 3 ? 'fa fa-star' : 'fa fa-star-o empty'}"></i>
+                                <i th:classappend="${averageRating[product.id] >= 4 ? 'fa fa-star' : 'fa fa-star-o empty'}"></i>
+                                <i th:classappend="${averageRating[product.id] >= 5 ? 'fa fa-star' : 'fa fa-star-o empty'}"></i>
                             </div>
                             <a href="#">3 Review(s) / Add Review</a>
                         </div>
@@ -129,10 +139,11 @@
                             <div class="qty-input">
                                 <span class="text-uppercase">QTY: </span>
                                 <label>
-                                    <input class="input" type="number">
+                                    <input class="input" type="number" value="1">
                                 </label>
                             </div>
-                            <button class="primary-btn add-to-cart"><i class="fa fa-shopping-cart"></i> Add to Cart
+                            <button th:attr="data-product-id=${product.id}" class="primary-btn add-to-cart"><i
+                                    class="fa fa-shopping-cart"></i> Add to Cart
                             </button>
                             <div class="pull-right">
                                 <button class="main-btn icon-btn"><i class="fa fa-heart"></i></button>
@@ -238,8 +249,6 @@
                         </div>
                     </div>
                 </div>
-
-
             </div>
             <!-- /Product Details -->
         </div>
@@ -265,8 +274,9 @@
 
             <!-- Product Single -->
             <div th:each="product : ${relatedProducts}">
-                <div th:replace="~{fragments/product :: productCard(product=${product})}"></div>
+                <div th:replace="~{fragments/product :: productCard(product=${product}, averageRating=${averageRating[product.id]})}"></div>
             </div>
+
             <!-- /Product Single -->
         </div>
         <!-- /row -->
@@ -279,15 +289,5 @@
 <div th:replace="fragments/footer :: footer"></div>
 <!-- /FOOTER -->
 
-
-<!-- jQuery Plugins -->
-<script th:src="@{/js/jquery.min.js}" src="/js/jquery.min.js"></script>
-<script th:src="@{/js/bootstrap.min.js}" src="/js/bootstrap.min.js"></script>
-<script th:src="@{/js/slick.min.js}" src="/js/slick.min.js"></script>
-<script th:src="@{/js/nouislider.min.js}" src="/js/nouislider.min.js"></script>
-<script th:src="@{/js/jquery.zoom.min.js}" src="/js/jquery.zoom.min.js"></script>
-<script th:src="@{/js/main.js}" src="/js/main.js"></script>
-
 </body>
-
 </html>
