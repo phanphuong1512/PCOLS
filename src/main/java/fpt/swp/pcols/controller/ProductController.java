@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -92,6 +93,7 @@ public class ProductController {
         model.addAttribute("listCategories", listCategories);
         model.addAttribute("listBrands", listBrands);
         model.addAttribute("brands", brand);
+        model.addAttribute("imageFiles", imageFiles);
         model.addAttribute("minPrice", minPrice);
         model.addAttribute("maxPrice", maxPrice);
         model.addAttribute("sort", sort);
@@ -100,8 +102,9 @@ public class ProductController {
     }
 
     @GetMapping("admin/product/delete/{id}")
-    public String deleteProduct(@PathVariable Long id) {
+    public String deleteProduct(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         productService.deleteProductById(id);
+        redirectAttributes.addFlashAttribute("message", "Delete Successfully!");
         return "redirect:/admin/product"; // Redirect back to inventory after deletion
     }
 }

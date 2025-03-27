@@ -20,6 +20,7 @@
         .filter-form div {
             display: flex;
             flex-direction: column;
+            height: max-content;
         }
         .filter-form label {
             font-weight: bold;
@@ -88,7 +89,9 @@
                         <label for="email">Search by Email:</label>
                         <input type="text" name="email" id="email" th:value="${email}"/>
                     </div>
-                    <button type="submit">Apply Filters</button>
+                    <div>
+                        <button type="submit">Apply Filters</button>
+                    </div>
                 </form>
                 <!-- /Filter & Sort Form -->
 

@@ -52,3 +52,5 @@ logging:
     org.springframework.security: DEBUG
     org.springframework.web: DEBUG
 #    root: DEBUG
+upload:
+  dir: uploads

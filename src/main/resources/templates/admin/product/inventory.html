@@ -50,6 +50,10 @@
 <!-- /NAVIGATION -->
 
 <div class="container">
+    <div th:if="${message}" class="alert alert-success">
+        <span th:text="${message}"></span>
+    </div>
+
     <div class="main">
         <div class="topbar">
             <div class="toggle">
@@ -107,7 +111,7 @@
                         <th>ID</th>
                         <th>Name</th>
                         <th>Category</th>
-                        <th>Description</th>
+                        <th>Price</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
@@ -116,9 +120,9 @@
                         <td th:text="${product.id}"></td>
                         <td th:text="${product.name}"></td>
                         <td th:text="${product.category != null ? product.category.name : 'No Category'}"></td>
-                        <td th:text="${product.description}"></td>
+                        <td th:text="${product.price}"></td>
                         <td>
-                            <a th:href="@{/admin/product/delete/{id}(id=${product.id})}" class="btn btn-warning btn-sm">Delete</a>
+                            <a href="#" class="btn btn-warning btn-sm delete-btn" th:data-id="${product.id}">Delete</a>
                             <a th:href="@{/admin/product/detail/{id}(id=${product.id})}" class="btn btn-danger btn-sm">Detail</a>
                         </td>
                     </tr>

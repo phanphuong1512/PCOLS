@@ -70,7 +70,10 @@ public class HomeController {
         return "/fragments/chatbot";
     }
 
-
+    @GetMapping("/admin/dashboard")
+    public String getAdminDashboard() {
+        return "admin/admin-home";
+    }
 }
 
 

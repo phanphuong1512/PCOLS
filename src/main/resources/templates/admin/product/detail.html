@@ -35,6 +35,31 @@
             document.getElementById("imageFiles").style.display = "none";
         }
     </script>
+    <style>
+    .container {
+    padding: 20px;
+    }
+    .card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    }
+    .image-gallery {
+    display: flex;
+    overflow-x: auto;
+    gap: 10px;
+    padding-bottom: 10px;
+    }
+    .image-gallery img {
+    height: 120px;
+    border-radius: 5px;
+    object-fit: cover;
+    }
+    </style>
 </head>
 <body>
 <div class="container mt-5">
@@ -44,7 +69,7 @@
             <div class="row g-0">
 
                 <!-- Product Image -->
-                <div>
+                <div class="image-gallery">
                     <img th:each="img : ${product.images}" th:src="@{${img.url}}" class="img-fluid m-1" alt="Product Image">
                 </div>
                 <!-- Hidden Field to Retain Existing Image -->

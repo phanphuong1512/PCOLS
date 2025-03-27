@@ -8,6 +8,7 @@ import fpt.swp.pcols.repository.ImageRepository;
 import fpt.swp.pcols.repository.ProductRepository;
 import fpt.swp.pcols.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,12 +17,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
+
+    @Value("${upload.dir}")
+    private String uploadDir;
 
     private final ProductRepository productRepository;
     private final CategoryServiceImpl categoryService;
@@ -39,20 +44,36 @@ public class ProductServiceImpl implements ProductService {
 
         // handle upload file if not null
         if (imageFiles != null && !imageFiles.isEmpty()) {
+            Path uploadPath = Paths.get(uploadDir);
+            if (!Files.exists(uploadPath)) {
+                try {
+                    Files.createDirectories(uploadPath);
+                } catch (IOException e) {
+                    throw new RuntimeException("Failed to create upload directory", e);
+                }
+            }
+            // Allowed MIME types for images
+            List<String> allowedTypes = Arrays.asList("image/png", "image/jpeg", "image/jpg", "image/gif");
+
+
             for (MultipartFile imageFile : imageFiles) {
                 if (!imageFile.isEmpty()) {
+                    // Validate file type
+                    if (!allowedTypes.contains(imageFile.getContentType())) {
+                        throw new RuntimeException("Invalid file type! Only images are allowed.");
+                    }
                     try {
-                        String fileName = imageFile.getOriginalFilename();
-                        Path imagePath = Paths.get("src/main/resources/static/uploads/" + fileName);
+                        String fileName = System.currentTimeMillis() + "_" + imageFile.getOriginalFilename();
+                        Path imagePath = uploadPath.resolve(fileName);
                         Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
 
+                        // Save image URL to database (pseudo-code)
                         Image image = new Image();
-                        image.setUrl("/uploads/" + fileName);
+                        image.setUrl("/" + uploadDir + "/" + fileName);
                         image.setProduct(product);
-                        imageRepository.save(image); // Save image to DB
-
+                        imageRepository.save(image);
                     } catch (IOException e) {
-                        throw new RuntimeException("Error uploading image", e);
+                        throw new RuntimeException("Failed to upload image: " + e.getMessage(), e);
                     }
                 }
             }

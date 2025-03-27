@@ -36,6 +36,7 @@ public class UserController {
     public String getEditUserPage(Model model, @PathVariable long id) {
         User user = this.userService.getUserById(id);
         List<Authority> authorities = this.authorityRepository.findAll();
+        user.setPassword(user.getPassword());
         model.addAttribute("user", user);
         model.addAttribute("authorities", authorities);
         model.addAttribute("id", id);
@@ -44,10 +45,11 @@ public class UserController {
     }
 
     @PostMapping("/admin/user/update")
-    public String updateUser(@ModelAttribute("user") User user, BindingResult result) {
-        if (result.hasErrors()) {
-            return "admin/user/edit";
-        }
+    public String updateUser(@ModelAttribute("user") User user) {
+        User existingUser = userService.getUserById(user.getId());
+
+        // Ensure password is never null
+        user.setPassword(existingUser.getPassword());
         userService.save(user);
         return "redirect:/admin/user";
     }

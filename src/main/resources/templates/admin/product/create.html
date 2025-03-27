@@ -5,46 +5,93 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Product</title>
     <link rel="stylesheet" th:href="@{../../admin_assets/css/style.css}">
+    <style>
+        .content {
+            padding: 20px;
+        }
+        .card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .form-label {
+            font-weight: bold;
+            color: #333;
+        }
+        .form-control {
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+        .btn {
+            padding: 10px 15px;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+        .btn-primary {
+            background: var(--blue);
+            border: none;
+        }
+        .btn-primary:hover {
+            background: #1e1a66;
+        }
+        .btn-secondary {
+            background: var(--black2);
+            border: none;
+        }
+        .btn-secondary:hover {
+            background: #777;
+        }
+    </style>
 </head>
 <body>
 <div th:replace="fragments/admin_nav :: admin_nav"></div>
 <div class="main">
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-md-6 col-12 mx-auto">
-                <h3>Add a Product</h3>
-                <hr />
-                <form th:action="@{/admin/product/create}" th:object="${newProduct}" method="post" enctype="multipart/form-data">
-                    <div class="mb-3">
-                        <label class="form-label">Product Name:</label>
-                        <input type="text" class="form-control" th:field="*{name}" />
+    <div class="content">
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-md-6 col-12 mx-auto">
+                    <div class="card">
+                        <h3 class="mb-3 text-center">Add a Product</h3>
+                        <hr />
+                        <form th:action="@{/admin/product/create}" th:object="${newProduct}" method="post" enctype="multipart/form-data">
+                            <div class="mb-3">
+                                <label class="form-label">Product Name:</label>
+                                <input type="text" class="form-control" th:field="*{name}" required />
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Price:</label>
+                                <input type="number" class="form-control" th:field="*{price}" required />
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Description:</label>
+                                <textarea class="form-control" th:field="*{description}" rows="3" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Category:</label>
+                                <select class="form-control" th:field="*{category.id}" required>
+                                    <option value="">Select a category</option>
+                                    <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Upload Product Image:</label>
+                                <input type="file" class="form-control" name="imageFiles" accept="image/*" multiple required />
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <button type="submit" class="btn btn-primary">Add Product</button>
+                                <a th:href="@{/admin/product}" class="btn btn-secondary">Back to Products</a>
+                            </div>
+                        </form>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Price:</label>
-                        <input type="text" class="form-control" th:field="*{price}" />
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Description:</label>
-                        <input type="text" class="form-control" th:field="*{description}" />
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Category:</label>
-                        <select class="form-control" th:field="*{category.id}" required>
-                            <option value="">Select a category</option>
-                            <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Upload Product Image:</label>
-                        <input type="file" class="form-control" name="imageFiles" accept="image/*" multiple required />
-                    </div>
-                    <button type="submit" class="btn btn-primary">Add</button>
-                    <a th:href="@{/admin/product}" class="btn btn-secondary">Back to Products</a>
-                </form>
+                </div>
             </div>
         </div>
     </div>
 </div>
 <script th:src="@{../../admin_assets/js/main.js}"></script>
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </body>
 </html>
