@@ -9,7 +9,7 @@
 
 </head>
 <body>
-<form id="otpForm" th:action="@{/auth/verify-account}" method="get" >
+<form id="otpForm" th:action="@{/auth/verify-account}" method="get">
 
     <div class="otp-box">
         <div class="img">
@@ -25,29 +25,24 @@
 
             <input type="hidden" id="otp" name="otp"/>
 
-            <label>
-                <input type="text" name="digit1" maxlength="1" required/>
-            </label>
 
-            <label>
-                <input type="text" name="digit2" maxlength="1" required/>
-            </label>
+            <input type="text" name="digit1" maxlength="1" required/>
 
-            <label>
-                <input type="text" name="digit3" maxlength="1" required/>
-            </label>
 
-            <label>
-                <input type="text" name="digit4" maxlength="1" required/>
-            </label>
+            <input type="text" name="digit2" maxlength="1" required/>
 
-            <label>
-                <input type="text" name="digit5" maxlength="1" required/>
-            </label>
 
-            <label>
-                <input type="text" name="digit6" maxlength="1" required/>
-            </label>
+            <input type="text" name="digit3" maxlength="1" required/>
+
+
+            <input type="text" name="digit4" maxlength="1" required/>
+
+
+            <input type="text" name="digit5" maxlength="1" required/>
+
+
+            <input type="text" name="digit6" maxlength="1" required/>
+
         </div>
         <div class="verify-btn">
             <button>Verify</button>
