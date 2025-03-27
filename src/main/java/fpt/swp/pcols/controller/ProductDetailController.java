@@ -1,10 +1,7 @@
 package fpt.swp.pcols.controller;
 
 import fpt.swp.pcols.dto.ReviewFormDTO;
-import fpt.swp.pcols.entity.Category;
-import fpt.swp.pcols.entity.Product;
-import fpt.swp.pcols.entity.Review;
-import fpt.swp.pcols.entity.User;
+import fpt.swp.pcols.entity.*;
 import fpt.swp.pcols.service.ProductService;
 import fpt.swp.pcols.service.ReviewService;
 import fpt.swp.pcols.validation.ValidationResult;
@@ -36,8 +33,10 @@ public class ProductDetailController {
                                    Model model) {
         Product product = productService.getProductById(productId);
         Category category = product.getCategory();
+        Brand brand = product.getBrand();
         model.addAttribute("product", product);
         model.addAttribute("category", category);
+        model.addAttribute("brand", brand);
 
         List<Product> relatedProducts = productService.getRelatedProducts(product, 4);
         model.addAttribute("relatedProducts", relatedProducts);

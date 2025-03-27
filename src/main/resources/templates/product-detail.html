@@ -56,7 +56,8 @@
             <li><a th:href="@{/}">Home</a></li>
             <li><a th:href="@{/products}">Products</a></li>
             <li>
-                <a th:text="${product.brand}" th:href="@{/products/brand/{brand}(brand=${product.brand})}">Brand</a>
+                <a th:text="${brand.name}"
+                   th:href="@{/products/brand/{id}/category/{id}(brand=${product.brand}, id=${category.id})}">Brand</a>
             </li>
             <li>
                 <a th:text="${category.name}"
@@ -98,7 +99,7 @@
                 <div class="col-md-6">
                     <div class="product-body">
                         <div class="product-label">
-                            <span class="sale" th:text="${product.brand}">New</span>
+                            <span class="sale" th:text="${brand.name}">New</span>
                             <span class="sale" th:text="${category.name}">-20%</span>
                         </div>
                         <h2 class="product-name" th:text="${product.name}">Product Name Goes Here</h2>
@@ -116,8 +117,9 @@
                             </div>
                             <a href="#">3 Review(s) / Add Review</a>
                         </div>
+                        <p><strong>Availability:</strong> <span th:text="${category.name}">In Stock</span></p>
+                        <p><strong>Brand:</strong> <span th:text="${brand.name}">E-SHOP</span></p>
                         <p><strong>Availability:</strong> <span th:text="${product.stock}">In Stock</span></p>
-                        <p><strong>Brand:</strong> <span th:text="${product.brand}">E-SHOP</span></p>
                         <p th:text="${product.description}">Product description goes here.</p>
                         <div class="product-options">
                             <ul class="size-option">

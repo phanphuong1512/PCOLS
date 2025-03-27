@@ -30,9 +30,6 @@ public class Product {
     @Column(name = "description", length = 2000)
     private String description;
 
-    @Column(name = "brand")
-    private String brand;
-
     @Column(name = "stock")
     private int stock;
 
@@ -43,6 +40,10 @@ public class Product {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "brand_id")
+    private Brand brand;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Review> reviews = new ArrayList<>();

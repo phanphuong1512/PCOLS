@@ -1,7 +1,9 @@
 package fpt.swp.pcols.controller;
 
+import fpt.swp.pcols.entity.Brand;
 import fpt.swp.pcols.entity.Category;
 import fpt.swp.pcols.entity.Product;
+import fpt.swp.pcols.service.BrandService;
 import fpt.swp.pcols.service.CategoryService;
 import fpt.swp.pcols.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ public class ProductController {
 
     private final ProductService productService;
     private final CategoryService categoryService;
+    private final BrandService brandService;
 
     @GetMapping("/admin/product")
     public String getInventoryPage(Model model,
@@ -30,7 +33,6 @@ public class ProductController {
         List<Product> products = productService.getFilteredProductsForAdmin(categoryName, brandName, searchTerm);
         model.addAttribute("searchTerm", search);
         model.addAttribute("categories", categoryService.getAllCategories());
-        model.addAttribute("brands", productService.getAllBrands());
         model.addAttribute("selectedCategory", category);
         model.addAttribute("selectedBrand", brand);
         model.addAttribute("products", products);
@@ -84,7 +86,7 @@ public class ProductController {
                                  @RequestParam(value = "minPrice", required = false) Double minPrice,
                                  @RequestParam(value = "maxPrice", required = false) Double maxPrice) {
         List<Category> listCategories = categoryService.getAllCategories();
-        List<String> listBrands = productService.getAllBrands();
+        List<Brand> listBrands = brandService.getAllBrands();
         List<Product> products = productService.getFilteredProducts(brand, category, minPrice, maxPrice, sort);
 
         model.addAttribute("products", products);
