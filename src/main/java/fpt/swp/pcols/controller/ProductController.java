@@ -33,6 +33,7 @@ public class ProductController {
         List<Product> products = productService.getFilteredProductsForAdmin(categoryName, brandName, searchTerm);
         model.addAttribute("searchTerm", search);
         model.addAttribute("categories", categoryService.getAllCategories());
+        model.addAttribute("brands", brandService.getAllBrands());
         model.addAttribute("selectedCategory", category);
         model.addAttribute("selectedBrand", brand);
         model.addAttribute("products", products);
@@ -90,10 +91,8 @@ public class ProductController {
         List<Product> products = productService.getFilteredProducts(brand, category, minPrice, maxPrice, sort);
 
         model.addAttribute("products", products);
-        model.addAttribute("categories", category);
         model.addAttribute("listCategories", listCategories);
         model.addAttribute("listBrands", listBrands);
-        model.addAttribute("brands", brand);
         model.addAttribute("imageFiles", imageFiles);
         model.addAttribute("minPrice", minPrice);
         model.addAttribute("maxPrice", maxPrice);

@@ -17,7 +17,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByCategoryWithImages(@Param("category") Category category);
 
     @Query("SELECT p FROM Product p WHERE " +
-            "(:brand IS NULL OR p.brand = :brand) " +
+            "(:brand IS NULL OR p.brand.name = :brand) " +
             "AND (:category IS NULL OR p.category.name = :category) " +
             "AND (:minPrice IS NULL OR p.price >= :minPrice) " +
             "AND (:maxPrice IS NULL OR p.price <= :maxPrice)")
@@ -32,7 +32,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("SELECT p FROM Product p WHERE " +
             "(:categoryName IS NULL OR p.category.name = :categoryName) AND " +
-            "(:brandName IS NULL OR p.brand = :brandName) AND " +
+            "(:brandName IS NULL OR p.brand.name = :brandName) AND " +
             "(:name IS NULL OR p.name LIKE %:name%)")
     List<Product> findProducts(@Param("categoryName") String categoryName,
                                @Param("brandName") String brandName,

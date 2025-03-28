@@ -78,8 +78,6 @@ public class HomeController {
     public String chatBot() {
         return "/fragments/chatbot";
     }
-
-
 }
 
 
