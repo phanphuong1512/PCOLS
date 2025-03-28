@@ -48,7 +48,9 @@
             </li>
 
             <li>
-                <a href="#">
+                <form id="logoutForm" th:action="@{/logout}" method="post" style="display: none;">
+                </form>
+                <a href="#" onclick="document.getElementById('logoutForm').submit(); return false;">
                         <span class="icon">
                             <ion-icon name="log-out-outline"></ion-icon>
                         </span>
