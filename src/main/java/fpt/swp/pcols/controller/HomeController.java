@@ -1,20 +1,22 @@
 package fpt.swp.pcols.controller;
 
+import fpt.swp.pcols.dto.DiscountDTO;
 import fpt.swp.pcols.entity.Category;
 import fpt.swp.pcols.entity.Product;
 import fpt.swp.pcols.service.CategoryService;
+import fpt.swp.pcols.service.DiscountService;
 import fpt.swp.pcols.service.ProductService;
 import fpt.swp.pcols.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Controller
 @RequiredArgsConstructor
@@ -23,6 +25,7 @@ public class HomeController {
     private final ProductService productService;
     private final CategoryService categoryService;
     private final ReviewService reviewService;
+    private final DiscountService discountService;
 
 
     @GetMapping({"/", "/home"})
@@ -30,6 +33,20 @@ public class HomeController {
         List<Product> gearProducts = productService.getProductsByCategoryWithImages("Gear").stream().limit(3).collect(Collectors.toList());
         List<Product> monitorProducts = productService.getProductsByCategoryWithImages("Monitor").stream().limit(3).collect(Collectors.toList());
         List<Product> pcProducts = productService.getProductsByCategoryWithImages("PC").stream().limit(3).collect(Collectors.toList());
+
+        // Gộp tất cả sản phẩm
+        List<Product> allProducts = Stream.of(
+                gearProducts,
+                monitorProducts,
+                pcProducts
+        ).flatMap(List::stream).toList();
+
+        // Lấy thông tin giảm giá
+        Map<Long, DiscountDTO> discountMap = discountService.getProductDiscounts(allProducts);
+
+        // Đưa vào model
+        model.addAttribute("discountMap", discountMap);
+        // ... (các attributes khác giữ nguyên)
 
         model.addAttribute("gearProducts", gearProducts);
         model.addAttribute("monitorProducts", monitorProducts);

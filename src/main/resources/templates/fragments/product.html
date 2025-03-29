@@ -1,14 +1,29 @@
 =<!-- Fragment: productCard -->
-<div th:fragment="productCard (product)" class="col-md-3 col-sm-6 col-xs-6">
+<div th:fragment="productCard (product,averageRating)" class="col-md-3 col-sm-6 col-xs-6">
     <div class="product product-single">
+
         <a th:href="@{/product-detail(id=${product.id})}">
             <div class="product-thumb">
+                <div class="product-label" th:if="${discountMap != null && discountMap.containsKey(product.id)}">
+                    <span class="sale" th:text="${discountMap.get(product.id).discountType() == T(fpt.swp.pcols.entity.Discount.DiscountType).PERCENTAGE ?
+                        '-' + discountMap.get(product.id).discountValue.stripTrailingZeros().toPlainString() + '%' :
+                        '$' + discountMap.get(product.id).discountValue}"></span>
+                </div>
                 <img th:src="${!product.images.isEmpty() ? product.images[0].url : '/images/default.jpg'}" alt="">
             </div>
         </a>
         <div class="product-body">
-            <h3 class="product-price">
-                $<span th:text="${product.price}"></span>
+            <h3 class="product-price" th:with="discount=${discountMap?.get(product.id)}">
+                <span th:if="${discount}"
+                      th:text="'$' + ${#numbers.formatDecimal(discount.discountedPrice(), 1, 2)}">
+                    </span>
+                <span th:unless="${discount}"
+                      th:text="'$' + ${#numbers.formatDecimal(product.price, 1, 2)}">
+                    </span>
+                <del th:if="${discount}"
+                     class="product-old-price"
+                     th:text="'$' + ${#numbers.formatDecimal(product.price, 1, 2)}">
+                </del>
             </h3>
             <div class="product-rating">
                 <i th:classappend="${averageRating >= 1 ? 'fa fa-star' : 'fa fa-star-o empty'}"></i>
@@ -18,7 +33,8 @@
                 <i th:classappend="${averageRating >= 5 ? 'fa fa-star' : 'fa fa-star-o empty'}"></i>
             </div>
             <h2 class="product-name">
-                <a th:text="${product.name}" href="#">Product Name Goes Here</a>
+                <a th:href="@{/product-detail(id=${product.id})}"
+                   th:text="${product.name}"></a>
             </h2>
             <div class="product-btns">
                 <button class="main-btn icon-btn"><i class="fa fa-heart"></i></button>

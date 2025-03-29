@@ -47,11 +47,12 @@ public class Discount {
 
     @Column(name = "is_active", columnDefinition = "TINYINT(1) DEFAULT 1")
     private Boolean isActive = true;
-    
-    enum DiscountType {
+
+    public enum DiscountType {
         PERCENTAGE,
         FIXED
     }
+
     // Custom validation for date range
     @AssertTrue(message = "End date must be after the start date")
     public boolean isValidDateRange() {

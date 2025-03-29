@@ -1,7 +1,9 @@
 package fpt.swp.pcols.controller;
 
+import fpt.swp.pcols.dto.DiscountDTO;
 import fpt.swp.pcols.dto.ReviewFormDTO;
 import fpt.swp.pcols.entity.*;
+import fpt.swp.pcols.service.DiscountService;
 import fpt.swp.pcols.service.ProductService;
 import fpt.swp.pcols.service.ReviewService;
 import fpt.swp.pcols.validation.ValidationResult;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +29,7 @@ import java.util.Map;
 public class ProductDetailController {
     private final ProductService productService;
     private final ReviewService reviewService;
+    private final DiscountService discountService;
 
     @GetMapping("/product-detail")
     public String getProductDetail(@RequestParam("id") Long productId,
@@ -35,25 +39,33 @@ public class ProductDetailController {
         Product product = productService.getProductById(productId);
         Category category = product.getCategory();
         Brand brand = product.getBrand();
-        model.addAttribute("product", product);
-        model.addAttribute("category", category);
-        model.addAttribute("brand", brand);
-
         List<Product> relatedProducts = productService.getRelatedProducts(product, 4);
-        model.addAttribute("relatedProducts", relatedProducts);
-
         Page<Review> reviewPage = reviewService.getReviewsByProduct(product, page, size);
-        model.addAttribute("reviews", reviewPage.getContent());
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", reviewPage.getTotalPages());
-        model.addAttribute("reviewForm", new ReviewFormDTO("", null));
+
+        List<Product> allDisplayProducts = new ArrayList<>();
+        allDisplayProducts.add(product);
+        allDisplayProducts.addAll(relatedProducts);
+
+        // 4. Lấy thông tin discount cho tất cả sản phẩm
+        Map<Long, DiscountDTO> discountMap = discountService.getProductDiscounts(allDisplayProducts);
+
 
         Map<Long, Double> averageRatings = new HashMap<>();
         averageRatings.put(product.getId(), reviewService.calculateAverageRating(productId));
         for (Product relatedProduct : relatedProducts) {
             averageRatings.put(relatedProduct.getId(), reviewService.calculateAverageRating(relatedProduct.getId()));
         }
+
         model.addAttribute("averageRating", averageRatings);
+        model.addAttribute("product", product);
+        model.addAttribute("category", category);
+        model.addAttribute("brand", brand);
+        model.addAttribute("relatedProducts", relatedProducts);
+        model.addAttribute("reviews", reviewPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", reviewPage.getTotalPages());
+        model.addAttribute("reviewForm", new ReviewFormDTO("", null));
+        model.addAttribute("discountMap", discountMap); // Thêm discountMap vào model
 
         return "product-detail";
     }

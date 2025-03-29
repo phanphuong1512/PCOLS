@@ -98,14 +98,25 @@
                 </div>
                 <div class="col-md-6">
                     <div class="product-body">
-                        <div class="product-label">
-                            <span class="sale" th:text="${brand.name}">New</span>
-                            <span class="sale" th:text="${category.name}">-20%</span>
+                        <div class="product-label"
+                             th:if="${discountMap != null && discountMap.containsKey(product.id)}">
+                            <span class="sale" th:text="${discountMap.get(product.id).discountType() == T(fpt.swp.pcols.entity.Discount.DiscountType).PERCENTAGE ?
+                            '-' + discountMap.get(product.id).discountValue.stripTrailingZeros().toPlainString() + '%' :
+                            '$' + discountMap.get(product.id).discountValue}"></span>
                         </div>
                         <h2 class="product-name" th:text="${product.name}">Product Name Goes Here</h2>
 
-                        <h3 class="product-price">
-                            $<span th:text="${product.price}">32.50</span>
+                        <h3 class="product-price" th:with="discount=${discountMap?.get(product.id)}">
+                <span th:if="${discount}"
+                      th:text="'$' + ${#numbers.formatDecimal(discount.discountedPrice(), 1, 2)}">
+                    </span>
+                            <span th:unless="${discount}"
+                                  th:text="'$' + ${#numbers.formatDecimal(product.price, 1, 2)}">
+                    </span>
+                            <del th:if="${discount}"
+                                 class="product-old-price"
+                                 th:text="'$' + ${#numbers.formatDecimal(product.price, 1, 2)}">
+                            </del>
                         </h3>
                         <div>
                             <div class="product-rating">
@@ -117,7 +128,7 @@
                             </div>
                             <a href="#">3 Review(s) / Add Review</a>
                         </div>
-                        <p><strong>Availability:</strong> <span th:text="${category.name}">In Stock</span></p>
+                        <p><strong>Category:</strong> <span th:text="${category.name}">In Stock</span></p>
                         <p><strong>Brand:</strong> <span th:text="${brand.name}">E-SHOP</span></p>
                         <p><strong>Availability:</strong> <span th:text="${product.stock}">In Stock</span></p>
                         <p th:text="${product.description}">Product description goes here.</p>
