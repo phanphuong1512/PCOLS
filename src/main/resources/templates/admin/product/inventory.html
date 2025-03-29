@@ -93,7 +93,7 @@
                         <select name="brand" id="brand">
                             <option value="">All Brands</option>
                             <th:block th:each="brand : ${brands}">
-                                <option th:value="${brand}" th:text="${brand}" th:selected="${brand == selectedBrand}"></option>
+                                <option th:value="${brand.name}" th:text="${brand.name}" th:selected="${brand.name == selectedBrand}"></option>
                             </th:block>
                         </select>
                     </div>
