@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Inventory</title>
-    <link rel="stylesheet" th:href="@{/admin_assets/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
     <style>
         .filter-form {
             display: flex;
@@ -14,22 +14,26 @@
             background: #fff;
             padding: 15px;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
         }
+
         .filter-form div {
             display: flex;
             flex-direction: column;
         }
+
         .filter-form label {
             font-weight: bold;
             margin-bottom: 5px;
         }
+
         .filter-form select,
         .filter-form input {
             padding: 8px;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
+
         .filter-form button {
             align-self: flex-end;
             padding: 10px 20px;
@@ -39,6 +43,7 @@
             border-radius: 5px;
             cursor: pointer;
         }
+
         .filter-form button:hover {
             background: #45a049;
         }
@@ -84,7 +89,8 @@
                         <select name="category" id="category">
                             <option value="">All Categories</option>
                             <th:block th:each="cat : ${categories}">
-                                <option th:value="${cat.name}" th:text="${cat.name}" th:selected="${cat.name == selectedCategory}"></option>
+                                <option th:value="${cat.name}" th:text="${cat.name}"
+                                        th:selected="${cat.name == selectedCategory}"></option>
                             </th:block>
                         </select>
                     </div>
@@ -93,7 +99,8 @@
                         <select name="brand" id="brand">
                             <option value="">All Brands</option>
                             <th:block th:each="brand : ${brands}">
-                                <option th:value="${brand.name}" th:text="${brand.name}" th:selected="${brand.name == selectedBrand}"></option>
+                                <option th:value="${brand.name}" th:text="${brand.name}"
+                                        th:selected="${brand.name == selectedBrand}"></option>
                             </th:block>
                         </select>
                     </div>
