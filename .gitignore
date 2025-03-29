@@ -20,9 +20,9 @@ build/
 
 #### Ignore macOS system files ###
 .DS_Store
+
 /src/main/resources/static/uploads/
 
 ### Environment files ###
 .env
-
 
