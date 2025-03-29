@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,15 +27,9 @@ public class HomeController {
 
     @GetMapping({"/", "/home"})
     public String getHomePage(Model model) {
-        List<Product> gearProducts = productService.getProductsByCategoryWithImages("Gear")
-                .stream().limit(3)
-                .collect(Collectors.toList());
-        List<Product> monitorProducts = productService.getProductsByCategoryWithImages("Monitor")
-                .stream().limit(3)
-                .collect(Collectors.toList());
-        List<Product> pcProducts = productService.getProductsByCategoryWithImages("PC")
-                .stream().limit(3)
-                .collect(Collectors.toList());
+        List<Product> gearProducts = productService.getProductsByCategoryWithImages("Gear").stream().limit(3).collect(Collectors.toList());
+        List<Product> monitorProducts = productService.getProductsByCategoryWithImages("Monitor").stream().limit(3).collect(Collectors.toList());
+        List<Product> pcProducts = productService.getProductsByCategoryWithImages("PC").stream().limit(3).collect(Collectors.toList());
 
         model.addAttribute("gearProducts", gearProducts);
         model.addAttribute("monitorProducts", monitorProducts);
@@ -63,9 +58,7 @@ public class HomeController {
 
         Map<String, List<Product>> categoryProductsMap = new HashMap<>();
         for (Category category : allCategories) {
-            List<Product> products = productService.getProductsByCategory(category.getName())
-                    .stream().limit(4)
-                    .collect(Collectors.toList());
+            List<Product> products = productService.getProductsByCategory(category.getName()).stream().limit(4).collect(Collectors.toList());
             categoryProductsMap.put(category.getName(), products);
         }
         model.addAttribute("categoryProductsMap", categoryProductsMap);
@@ -79,10 +72,7 @@ public class HomeController {
         return "/fragments/chatbot";
     }
 
-    @GetMapping("/admin/dashboard")
-    public String getAdminDashboard() {
-        return "admin/admin-home";
-    }
+
 }
 
 

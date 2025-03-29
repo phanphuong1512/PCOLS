@@ -23,6 +23,22 @@ public class ProductController {
     private final CategoryService categoryService;
     private final BrandService brandService;
 
+    @GetMapping("/admin/dashboard")
+    public String getAdminDashboard(Model model, @RequestParam(value = "category", required = false) String category, @RequestParam(value = "brand", required = false) String brand, @RequestParam(value = "search", required = false) String search) {
+        String categoryName = (category != null && !category.isEmpty()) ? category : null;
+        String brandName = (brand != null && !brand.isEmpty()) ? brand : null;
+        String searchTerm = (search != null && !search.isEmpty()) ? search : null;
+        List<Product> products = productService.getFilteredProductsForAdmin(categoryName, brandName, searchTerm);
+        model.addAttribute("searchTerm", search);
+        model.addAttribute("categories", categoryService.getAllCategories());
+        model.addAttribute("brands", brandService.getAllBrands());
+        model.addAttribute("selectedCategory", category);
+        model.addAttribute("selectedBrand", brand);
+        model.addAttribute("products", products);
+        System.out.println("check user" + products);
+        return "admin/admin-home";
+    }
+
     @GetMapping("/admin/product")
     public String getInventoryPage(Model model,
                                    @RequestParam(value = "category", required = false) String category,

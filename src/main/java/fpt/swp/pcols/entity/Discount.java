@@ -42,8 +42,7 @@ public class Discount {
 
     @Column(name = "is_active", columnDefinition = "TINYINT(1) DEFAULT 1")
     private Boolean isActive = true;
-
-
+    
     enum DiscountType {
         PERCENTAGE,
         FIXED
