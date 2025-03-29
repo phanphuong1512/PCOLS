@@ -69,4 +69,9 @@ public class OrderServiceImpl implements OrderService {
         return this.orderRepository.findById(id).orElse(null);
     }
 
+    @Override
+    public List<Order> getAllOrders() {
+        return this.orderRepository.findAll();
+    }
+
 }

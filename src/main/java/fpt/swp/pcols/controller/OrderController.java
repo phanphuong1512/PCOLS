@@ -5,17 +5,23 @@ import fpt.swp.pcols.entity.Order;
 import fpt.swp.pcols.entity.OrderDetail;
 import fpt.swp.pcols.entity.Product;
 import fpt.swp.pcols.entity.User;
+import fpt.swp.pcols.service.ExcelService;
 import fpt.swp.pcols.service.OrderService;
 import fpt.swp.pcols.service.ProductService;
 import fpt.swp.pcols.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.SpringVersion;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.time.LocalDateTime;
@@ -28,6 +34,7 @@ public class OrderController {
     private final OrderService orderService;
     private final UserService userService;
     private final ProductService productService;
+    private final ExcelService excelService;
 
     @GetMapping("/checkout")
     public String checkoutPage(Model model, Principal principal) {
@@ -198,5 +205,19 @@ public class OrderController {
         }
         model.addAttribute("order", order);
         return "admin/order/details";
+    }
+
+    @GetMapping("/admin/orders/export/excel")
+    public ResponseEntity<InputStreamResource> exportToExcel() {
+        List<Order> orders = orderService.getAllOrders();
+        ByteArrayInputStream inStream = excelService.exportOrdersToExcel(orders);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "attachment; filename=orders.xlsx");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(new InputStreamResource(inStream));
     }
 }

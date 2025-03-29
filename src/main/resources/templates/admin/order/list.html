@@ -71,10 +71,12 @@
             <div class="recentOrders">
                 <div class="cardHeader">
                     <h2>Order List</h2>
+                    <a th:href="@{/admin/orders/export/excel}" class="export-btn">Export to Excel</a>
                 </div>
 
                 <!-- Styled Filter & Sort Form -->
                 <form th:action="@{/admin/orders}" method="get" class="filter-form">
+
                     <div>
                         <label for="sort">Sort by Creation Date:</label>
                         <select name="sort" id="sort">

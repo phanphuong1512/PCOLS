@@ -24,4 +24,6 @@ public interface OrderService {
     List<Order> getFilteredOrders(String sort, Order.OrderStatus status, String email);
 
     Order getOrderById(Long id);
+
+    List<Order> getAllOrders();
 }
