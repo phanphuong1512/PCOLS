@@ -59,7 +59,8 @@ public class AuthController {
     }
 
     @GetMapping("/reset-password")
-    public String showResetPasswordPage(@RequestParam String email, Model model) {
+    public String showResetPasswordPage(@RequestParam String email, @RequestParam String otp, Model model) {
+        userService.verifyAccount(email, otp);
         model.addAttribute("email", email);
         return "auth/reset-password";
     }

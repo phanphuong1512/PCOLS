@@ -1,0 +1,45 @@
+
+    <div th:fragment="reviewsList"  id="reviewsContainer" class="product-reviews">
+        <div class="single-review" th:each="review : ${reviews}">
+            <div class="review-heading">
+                <div><a href="#"><i class="fa fa-user-o"></i> <span
+                        th:text="${review.user.username}">John</span></a></div>
+                <div><a href="#"><i class="fa fa-clock-o"></i> <span
+                        th:text="${#temporals.format(review.createdAt, 'dd MMM yyyy / h:mm a')}">27 DEC 2017 / 8:0 PM</span></a>
+                </div>
+                <div class="review-rating pull-right">
+                    <i th:each="i : ${#numbers.sequence(1, 5)}" class="fa"
+                       th:class="${i <= review.rating} ? 'fa fa-star' : 'fa fa-star-o empty'"></i>
+                </div>
+            </div>
+            <div class="review-body">
+                <p th:text="${review.comment}"></p>
+            </div>
+        </div>
+        <!-- Phân trang -->
+        <ul class="reviews-pages" th:if="${totalPages > 1}">
+            <!-- Nút caret left -->
+            <li th:class="${currentPage == 0} ? 'disabled' : ''">
+                <a href="#" th:data-page="${currentPage - 1}" class="page-link">
+                    <i class="fa fa-caret-left"></i>
+                </a>
+            </li>
+
+            <!-- Hiển thị 3 trang -->
+            <!-- Tính toán trang bắt đầu và kết thúc -->
+            <th:block th:with="startPage=${currentPage - 1 < 0 ? 0 : currentPage - 1},
+                             endPage=${startPage + 2 >= totalPages ? totalPages - 1 : startPage + 2}">
+                <li th:each="i : ${#numbers.sequence(startPage, endPage)}"
+                    th:class="${i == currentPage} ? 'active' : ''">
+                    <a href="#" th:data-page="${i}" class="page-link" th:text="${i + 1}">1</a>
+                </li>
+            </th:block>
+
+            <!-- Nút caret right -->
+            <li th:class="${currentPage == totalPages - 1} ? 'disabled' : ''">
+                <a href="#" th:data-page="${currentPage + 1}" class="page-link">
+                    <i class="fa fa-caret-right"></i>
+                </a>
+            </li>
+        </ul>
+    </div>

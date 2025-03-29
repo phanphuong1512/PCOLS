@@ -88,9 +88,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void forgotPassword(String email) {
-        userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+        String otp = otpUtil.generateOTP();
+        user.setExpirationTime(LocalDateTime.now());
         try {
-            emailUtil.sendSetPassword(email);
+            user.setOtp(otp);
+            emailUtil.sendSetPassword(email, otp);
+            userRepository.save(user);
         } catch (MessagingException e) {
             throw new RuntimeException("Error sending email otp", e);
         }
@@ -99,6 +103,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void resetPassword(String email, String newPassword) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setEnabled(true);
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }

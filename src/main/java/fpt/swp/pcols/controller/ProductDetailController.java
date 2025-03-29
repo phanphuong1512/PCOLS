@@ -7,6 +7,8 @@ import fpt.swp.pcols.service.ReviewService;
 import fpt.swp.pcols.validation.ValidationResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +16,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashMap;
 import java.util.List;
@@ -57,35 +58,46 @@ public class ProductDetailController {
         return "product-detail";
     }
 
+    @GetMapping("/product-detail/review")
+    public String getReviews(@RequestParam("productId") Long productId,
+                             @RequestParam(defaultValue = "0") int page,
+                             @RequestParam(defaultValue = "3") int size,
+                             Model model) {
+        Product product = productService.getProductById(productId);
+        Page<Review> reviewPage = reviewService.getReviewsByProduct(product, page, size);
+        model.addAttribute("reviews", reviewPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", reviewPage.getTotalPages());
+        model.addAttribute("product", product);
+        return "fragments/reviews"; // Trả về fragment
+    }
+
     @PostMapping("/product-detail/review")
-    public String submitReview(@RequestParam Long productId,
-                               @ModelAttribute("reviewForm") ReviewFormDTO reviewForm,
-                               @AuthenticationPrincipal User user,
-                               Model model,
-                               RedirectAttributes redirectAttributes) {
+    public ResponseEntity<String> submitReview(@RequestParam Long productId,
+                                               @ModelAttribute("reviewForm") ReviewFormDTO reviewForm,
+                                               @AuthenticationPrincipal User user) {
         Product product = productService.getProductById(productId);
 
+        // validation
         ValidationResult validationResult = reviewService.validateReviewForm(reviewForm);
         if (validationResult.isHasErrors()) {
-            model.addAllAttributes(validationResult.getErrors());
-
-            Category category = product.getCategory();
-            model.addAttribute("product", product);
-            model.addAttribute("category", category);
-            model.addAttribute("relatedProducts", productService.getRelatedProducts(product, 4));
-
-            Page<Review> reviewPage = reviewService.getReviewsByProduct(product, 0, 3);
-            model.addAttribute("reviews", reviewPage.getContent());
-            model.addAttribute("currentPage", 0);
-            model.addAttribute("totalPages", reviewPage.getTotalPages());
-
-            return "product-detail";
+            Map<String, String> errors = validationResult.getErrors();
+            StringBuilder sb = new StringBuilder();
+            if (errors.containsKey("ratingError")) {
+                sb.append(errors.get("ratingError")).append(" ");
+            }
+            if (errors.containsKey("commentError")) {
+                sb.append(errors.get("commentError")).append(" ");
+            }
+            return ResponseEntity.badRequest().body(sb.toString().trim());
         }
 
+        // Kiểm tra đăng nhập
         if (user == null) {
-            return "redirect:/auth/login";
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Please login to submit a review");
         }
 
+        // Lưu review
         Review review = new Review();
         review.setProduct(product);
         review.setUser(user);
@@ -93,7 +105,6 @@ public class ProductDetailController {
         review.setComment(reviewForm.comment());
         reviewService.saveReview(review);
 
-        redirectAttributes.addFlashAttribute("successMessage", "Review submitted successfully");
-        return "redirect:/product-detail?id=" + productId;
+        return ResponseEntity.ok("Review submitted successfully");
     }
 }

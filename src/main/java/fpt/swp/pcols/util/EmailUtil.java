@@ -31,9 +31,6 @@ public class EmailUtil {
                 "http://localhost:8080/auth/verify-account?email=%s&otp=%s",
                 email, otp
         );
-
-        // Nội dung email dạng HTML
-        // Bạn có thể viết thêm nội dung, styling tuỳ ý
         return String.format(
                 """
                         <html>
@@ -49,20 +46,20 @@ public class EmailUtil {
         );
     }
 
-    public void sendSetPassword(String email) throws MessagingException {
+    public void sendSetPassword(String email, String otp) throws MessagingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
         helper.setTo(email);
 
         helper.setSubject("Reset Password");
-        String resetPasswordContent = resetPasswordContent(email);
+        String resetPasswordContent = resetPasswordContent(email, otp);
         helper.setText(resetPasswordContent, true);
         javaMailSender.send(mimeMessage);
     }
 
-    private String resetPasswordContent(String email) {
+    private String resetPasswordContent(String email, String otp) {
         String verifyLink = String.format(
-                "http://localhost:8080/auth/reset-password?email=%s", email
+                "http://localhost:8080/auth/reset-password?email=%s&otp=%s", email, otp
         );
         return String.format(
                 """
@@ -71,11 +68,11 @@ public class EmailUtil {
                             <p>Chào bạn,</p>
                             <p>Vui lòng bấm vào link bên dưới để reset password:</p>
                             <a href="%s" target="_blank">Click để reset pass</a>
+                             <p>OTP của bạn là: <b>%s</b></p>
                           </body>
                         </html>
                         """,
-                verifyLink
+                verifyLink,otp
         );
     }
-
 }
