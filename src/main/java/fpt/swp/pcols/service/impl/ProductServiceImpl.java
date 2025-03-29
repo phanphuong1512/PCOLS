@@ -136,4 +136,9 @@ public class ProductServiceImpl implements ProductService {
         this.productRepository.deleteById(id);
     }
 
+    @Override
+    public List<Product> getAllProducts() {
+        return this.productRepository.findAll();
+    }
+
 }

@@ -30,4 +30,5 @@ public interface ProductService {
 
     void deleteProductById(Long id);
 
+    List<Product> getAllProducts();
 }

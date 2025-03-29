@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Discount Management</title>
+</head>
+<body>
+<h1>Discount Management</h1>
+<a th:href="@{/admin/discount/new}">Create New Discount</a>
+<table border="1">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Value</th>
+    <th>Type</th>
+    <th>Applied To</th>
+    <th>Start Date</th>
+    <th>End Date</th>
+    <th>Active</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="discount : ${discounts}">
+    <td th:text="${discount.id}"></td>
+    <td th:text="${discount.discountType == 'PERCENTAGE' ? discount.discountValue + '%' : '$' + discount.discountValue}"></td>
+    <td th:text="${discount.discountType}"></td>
+    <td>
+      <span th:if="${discount.product != null}" th:text="'Product: ' + ${discount.product.name}"></span>
+      <span th:if="${discount.category != null}" th:text="'Category: ' + ${discount.category.name}"></span>
+      <span th:if="${discount.brand != null}" th:text="'Brand: ' + ${discount.brand.name}"></span>
+    </td>
+    <td th:text="${discount.startDate}"></td>
+    <td th:text="${discount.endDate}"></td>
+    <td th:text="${discount.isActive} ? 'Yes' : 'No'"></td>
+    <td>
+      <a th:href="@{/admin/discount/{id}/edit(id=${discount.id})}">Edit</a>
+      <form th:action="@{/admin/discount/{id}/deactivate(id=${discount.id})}" method="post" style="display:inline;">
+        <button type="submit" th:disabled="${!discount.isActive}">Deactivate</button>
+      </form>
+    </td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>
