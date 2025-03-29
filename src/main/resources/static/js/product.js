@@ -60,8 +60,15 @@ document.addEventListener("DOMContentLoaded", function () {
         fetch(currentUrl)
             .then(response => response.text())
             .then(html => {
-                let newContent = new DOMParser().parseFromString(html, "text/html").querySelector("#product-list").innerHTML;
-                document.getElementById("product-list").innerHTML = newContent;
+                let parser = new DOMParser();
+                let doc = parser.parseFromString(html, "text/html");
+                let newContent = doc.querySelector("#product-list");
+                if (newContent) {
+                    document.getElementById("product-list").innerHTML = newContent.innerHTML;
+                } else {
+                    console.error("❌ #product-list not found in the response");
+                    document.getElementById("product-list").innerHTML = "<p>Không có sản phẩm nào.</p>";
+                }
                 window.history.pushState({}, "", currentUrl.toString());
             })
             .catch(error => console.error("❌ Error updating filters:", error));

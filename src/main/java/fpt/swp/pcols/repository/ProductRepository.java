@@ -27,8 +27,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                                        @Param("maxPrice") Double maxPrice,
                                        String sort);
 
-    @Query("SELECT DISTINCT p.brand FROM Product p WHERE p.brand IS NOT NULL")
-    List<String> findAllBrands();
+//    @Query("SELECT DISTINCT p.brand FROM Product p WHERE p.brand IS NOT NULL")
+//    List<String> findAllBrands();
 
     @Query("SELECT p FROM Product p WHERE " +
             "(:categoryName IS NULL OR p.category.name = :categoryName) AND " +
