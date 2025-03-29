@@ -40,7 +40,7 @@ public class SecurityConfig {
                 .formLogin(login -> login
                         .loginPage("/auth/login")
                         .loginProcessingUrl("/auth/login")
-                        .defaultSuccessUrl("/home", true)
+                        .defaultSuccessUrl("/home")
                         .failureUrl("/auth/login?error")
                         .permitAll()
                 )
@@ -56,10 +56,14 @@ public class SecurityConfig {
                         .deleteCookies("JSESSIONID")
                         .permitAll()
                 )
+                .anonymous((anonymous) -> anonymous
+                        .principal("GUEST")
+                )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/products/**",
                                 "/", "/home",
+                                "/products/**",
+                                "/product-detail/**",
                                 "/auth/**",
                                 "/css/**",
                                 "/js/**",

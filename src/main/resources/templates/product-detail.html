@@ -35,8 +35,8 @@
     <script th:src="@{/js/slick.min.js}" src="/js/slick.min.js" defer></script>
     <script th:src="@{/js/nouislider.min.js}" src="/js/nouislider.min.js" defer></script>
     <script th:src="@{/js/jquery.zoom.min.js}" src="/js/jquery.zoom.min.js" defer></script>
-    <script th:src="@{/js/main.js}" src="/js/main.js" defer></script>
-    <script th:src="@{/js/add-to-cart.js}" src="/js/main.js" defer></script>
+    <script th:src="@{/js/main.js}" defer></script>
+    <script th:src="@{/js/ajax.js}" defer></script>
 
 </head>
 
@@ -83,7 +83,7 @@
                             <img th:src="${image.url}" alt="">
                         </div>
                         <div class="product-view" th:if="${product.images.isEmpty()}">
-                            <img src="/images/default.jpg" alt="No Image">
+                            <img src="" alt="No Image">
                         </div>
                     </div>
                     <div id="product-view">
@@ -92,7 +92,7 @@
                         </div>
                         <!-- Nếu không có hình ảnh, hiển thị mặc định -->
                         <div class="product-view" th:if="${product.images.isEmpty()}">
-                            <img src="/images/default.jpg" alt="No Image">
+                            <img src="" alt="No Image">
                         </div>
                     </div>
                 </div>
@@ -159,7 +159,6 @@
                     <div class="product-tab">
                         <ul class="tab-nav">
                             <li class="active"><a data-toggle="tab" href="#tab1">Description</a></li>
-                            <li><a data-toggle="tab" href="#tab1">Details</a></li>
                             <li><a data-toggle="tab" href="#tab2">Reviews (3)</a></li>
                         </ul>
                         <div class="tab-content">
@@ -169,53 +168,24 @@
                             <div id="tab2" class="tab-pane fade in">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <div class="product-reviews">
-                                            <div class="single-review" th:each="review : ${reviews}">
-                                                <div class="review-heading">
-                                                    <div><a href="#"><i class="fa fa-user-o"></i> <span
-                                                            th:text="${review.user.username}">John</span></a></div>
-                                                    <div><a href="#"><i class="fa fa-clock-o"></i> <span
-                                                            th:text="${#temporals.format(review.createdAt, 'dd MMM yyyy / h:mm a')}">27 DEC 2017 / 8:0 PM</span></a>
-                                                    </div>
-                                                    <div class="review-rating pull-right">
-                                                        <i th:each="i : ${#numbers.sequence(1, 5)}" class="fa"
-                                                           th:class="${i <= review.rating} ? 'fa fa-star' : 'fa fa-star-o empty'"></i>
-                                                    </div>
-                                                </div>
-                                                <div class="review-body">
-                                                    <p th:text="${review.comment}"></p>
-                                                </div>
-                                            </div>
-
-                                            <ul class="reviews-pages" th:if="${totalPages > 1}">
-                                                <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
-                                                    th:class="${i == currentPage} ? 'active' : ''">
-                                                    <a th:href="@{/product-detail(id=${product.id}, page=${i})}"
-                                                       th:text="${i + 1}">1</a>
-                                                </li>
-                                                <!-- Modify: Thêm nút "Next" nếu không phải trang cuối -->
-                                                <li th:if="${currentPage < totalPages - 1}">
-                                                    <a th:href="@{/product-detail(id=${product.id}, page=${currentPage + 1})}"><i
-                                                            class="fa fa-caret-right"></i></a>
-                                                </li>
-                                            </ul>
-                                        </div>
+                                        <div th:replace="~{fragments/reviews :: reviewsList}"></div>
                                     </div>
                                     <div class="col-md-6">
                                         <h4 class="text-uppercase">Write Your Review</h4>
                                         <div th:if="${successMessage}" class="alert alert-success"
                                              th:text="${successMessage}">
                                         </div>
-                                        <form class="review-form"
-                                              th:action="@{/product-detail/review(productId=${product.id})}"
+                                        <div class="text-danger" th:if="${commentError}"
+                                             th:text="${commentError}"></div>
+                                        <div class="text-danger" th:if="${ratingError}"
+                                             th:text="${ratingError}"></div>
+                                        <form id="reviewForm" class="review-form"
                                               th:object="${reviewForm}" method="post">
+                                            <input type="hidden" name="productId" th:value="${product.id}"/>
                                             <div class="form-group">
-                                                <label>
-                                                    <textarea class="input" name="comment"
-                                                              th:value="${reviewForm.comment}"
-                                                              placeholder="Your review">
-                                                    </textarea>
-                                                </label>
+                                                <textarea class="input" name="comment"
+                                                          th:value="${reviewForm.comment}"
+                                                          placeholder="Your review"></textarea>
                                             </div>
                                             <div class="form-group">
                                                 <div class="input-rating">
@@ -237,13 +207,11 @@
                                                                th:checked="${reviewForm.rating == 1}"/>
                                                         <label for="star1"></label>
                                                     </div>
-                                                    <div class="text-danger" th:if="${commentError}"
-                                                         th:text="${commentError}"></div>
-                                                    <div class="text-danger" th:if="${ratingError}"
-                                                         th:text="${ratingError}"></div>
+
                                                 </div>
                                             </div>
-                                            <button class="primary-btn">Submit</button>
+                                            <button type="button" id="submitReviewBtn" class="primary-btn">Submit
+                                            </button>
                                         </form>
                                     </div>
                                 </div>
