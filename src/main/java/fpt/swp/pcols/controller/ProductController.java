@@ -118,25 +118,8 @@ public class ProductController {
         model.addAttribute("maxPrice", maxPrice);
         model.addAttribute("sort", sort);
 
-        // Thêm map chứa rating cho từng product
-        Map<Long, Double> averageRatingMap = new HashMap<>();
-        for (Product product : products) {
-            double avgRating = reviewService.calculateAverageRating(product.getId());
-            averageRatingMap.put(product.getId(), avgRating);
-        }
-        System.out.println("Average Rating Map: " + averageRatingMap);
 
-        model.addAttribute("averageRating", averageRatingMap);
 
-        // Thêm map chứa discount (sale) cho từng product
-        Map<Long, Discount> discountMap = new HashMap<>();
-        for (Product product : products) {
-            Discount discount = discountService.getDiscountByProduct(product.getId());
-            if (discount != null) {
-                discountMap.put(product.getId(), discount);
-            }
-        }
-        model.addAttribute("discountMap", discountMap);
 
         return "products";
     }
