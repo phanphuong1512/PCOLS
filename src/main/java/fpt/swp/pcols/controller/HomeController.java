@@ -40,13 +40,8 @@ public class HomeController {
                 monitorProducts,
                 pcProducts
         ).flatMap(List::stream).toList();
-
-        // Lấy thông tin giảm giá
         Map<Long, DiscountDTO> discountMap = discountService.getProductDiscounts(allProducts);
-
-        // Đưa vào model
         model.addAttribute("discountMap", discountMap);
-        // ... (các attributes khác giữ nguyên)
 
         model.addAttribute("gearProducts", gearProducts);
         model.addAttribute("monitorProducts", monitorProducts);
