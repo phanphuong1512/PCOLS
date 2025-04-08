@@ -3,9 +3,11 @@ package fpt.swp.pcols.repository;
 import fpt.swp.pcols.entity.Category;
 import fpt.swp.pcols.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -37,4 +39,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findProducts(@Param("categoryName") String categoryName,
                                @Param("brandName") String brandName,
                                @Param("name") String name);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Product p SET p.stock = 0 WHERE p.id = :id")
+    void disableProductById(Long id);
 }

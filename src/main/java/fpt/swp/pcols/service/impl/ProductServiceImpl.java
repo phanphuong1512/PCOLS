@@ -38,12 +38,18 @@ public class ProductServiceImpl implements ProductService {
     public void createProduct(Product product, Long categoryId, List<MultipartFile> imageFiles) {
         // get category from DB
         Category selectedCategory = categoryService.getCategoryById(categoryId);
+        boolean hasNewImages = imageFiles != null && imageFiles.stream().anyMatch(file -> !file.isEmpty());
         product.setCategory(selectedCategory);
-        product.getImages().clear(); // Clear all images
+
+        if (hasNewImages) {
+            // Remove existing images only if new ones are uploaded
+            product.getImages().clear();
+        }
+
         productRepository.save(product); // Save product to DB
 
         // handle upload file if not null
-        if (imageFiles != null && !imageFiles.isEmpty()) {
+        if (hasNewImages) {
             Path uploadPath = Paths.get(uploadDir);
             if (!Files.exists(uploadPath)) {
                 try {
@@ -132,13 +138,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void deleteProductById(Long id) {
-        this.productRepository.deleteById(id);
+    public List<Product> getAllProducts() {
+        return this.productRepository.findAll();
     }
 
     @Override
-    public List<Product> getAllProducts() {
-        return this.productRepository.findAll();
+    public void disableProductById(Long id) {
+        this.productRepository.disableProductById(id);
     }
 
 }

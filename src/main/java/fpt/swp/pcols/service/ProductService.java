@@ -28,7 +28,7 @@ public interface ProductService {
 
     void deleteImagesByProductId(Long id);
 
-    void deleteProductById(Long id);
-
     List<Product> getAllProducts();
+
+    void disableProductById(Long id);
 }

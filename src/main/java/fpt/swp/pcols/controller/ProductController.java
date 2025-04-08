@@ -81,7 +81,9 @@ public class ProductController {
     public String getProductDetailPage(Model model, @PathVariable long id, @ModelAttribute List<MultipartFile> imageFiles) {
         Product product = this.productService.getProductById(id);
         List<Category> categories = categoryService.getAllCategory();
+        List<Brand> brands = brandService.getAllBrands();
         model.addAttribute("categories", categories);
+        model.addAttribute("brands", brands);
         model.addAttribute("product", product);
         model.addAttribute("imageFiles", imageFiles);
         model.addAttribute("id", id);
@@ -91,8 +93,7 @@ public class ProductController {
     @PostMapping("/admin/product/detail/saveEdit")
     public String saveProductDetailEdit(@ModelAttribute Product product,
                                         @RequestParam(value = "imageFiles", required = false) List<MultipartFile> imageFiles) {
-        // Delete old images before saving new ones
-        productService.deleteImagesByProductId(product.getId());
+
         productService.createProduct(product, product.getCategory().getId(), imageFiles);
         productService.handleSaveProduct(product);
         return "redirect:/admin/product/detail/" + product.getId();
@@ -141,10 +142,10 @@ public class ProductController {
         return "products";
     }
 
-    @GetMapping("admin/product/delete/{id}")
-    public String deleteProduct(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        productService.deleteProductById(id);
-        redirectAttributes.addFlashAttribute("message", "Delete Successfully!");
-        return "redirect:/admin/product"; // Redirect back to inventory after deletion
+    @GetMapping("admin/product/disable/{id}")
+    public String disableProduct(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        productService.disableProductById(id);
+        redirectAttributes.addFlashAttribute("message", "Disable Successfully!");
+        return "redirect:/admin/product"; // Redirect back to inventory after disable
     }
 }
