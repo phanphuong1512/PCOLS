@@ -93,6 +93,9 @@
                 <div class="mb-3">
                     <label for="name" class="form-label"><strong>Product Name:</strong></label>
                     <input type="text" id="name" class="form-control" th:field="*{name}" disabled>
+                    <div th:if="${#fields.hasErrors('name')}" class="text-danger">
+                        <p th:each="err : ${#fields.errors('name')}" th:text="${err}"></p>
+                    </div>
                 </div>
 
                 <!-- Category -->
@@ -105,6 +108,9 @@
                         <option value="">Select Category</option>
                         <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
                     </select>
+                    <div th:if="${#fields.hasErrors('category')}" class="text-danger">
+                        <p th:each="err : ${#fields.errors('category')}" th:text="${err}"></p>
+                    </div>
                 </div>
 
                 <!-- Brand -->
@@ -117,24 +123,36 @@
                         <option value="">Select Brand</option>
                         <option th:each="brand : ${brands}" th:value="${brand.id}" th:text="${brand.name}"></option>
                     </select>
+                    <div th:if="${#fields.hasErrors('brand')}" class="text-danger">
+                        <p th:each="err : ${#fields.errors('brand')}" th:text="${err}"></p>
+                    </div>
                 </div>
 
                 <!-- Price -->
                 <div class="mb-3">
                     <label for="price" class="form-label"><strong>Price:</strong></label>
                     <input type="number" id="price" class="form-control" th:field="*{price}" disabled>
+                    <div th:if="${#fields.hasErrors('price')}" class="text-danger">
+                        <p th:each="err : ${#fields.errors('price')}" th:text="${err}"></p>
+                    </div>
                 </div>
 
                 <!-- Stock -->
                 <div class="mb-3">
                     <label for="stock" class="form-label"><strong>Stock:</strong></label>
                     <input type="number" id="stock" class="form-control" th:field="*{stock}" disabled>
+                    <div th:if="${#fields.hasErrors('stock')}" class="text-danger">
+                        <p th:each="err : ${#fields.errors('stock')}" th:text="${err}"></p>
+                    </div>
                 </div>
 
                 <!-- Description -->
                 <div class="mb-3">
                     <label for="description" class="form-label"><strong>Description:</strong></label>
                     <textarea id="description" class="form-control" th:field="*{description}" disabled></textarea>
+                    <div th:if="${#fields.hasErrors('description')}" class="text-danger">
+                        <p th:each="err : ${#fields.errors('description')}" th:text="${err}"></p>
+                    </div>
                 </div>
 
 

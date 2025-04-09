@@ -1,5 +1,6 @@
 package fpt.swp.pcols.service.impl;
 
+import fpt.swp.pcols.entity.Brand;
 import fpt.swp.pcols.entity.Category;
 import fpt.swp.pcols.entity.Image;
 import fpt.swp.pcols.entity.Product;
@@ -30,16 +31,20 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryServiceImpl categoryService;
+    private final BrandServiceImpl brandService;
     private final ImageRepository imageRepository;
     private final CategoryRepository categoryRepository;
 
 
     @Override
-    public void createProduct(Product product, Long categoryId, List<MultipartFile> imageFiles) {
+    public void createProduct(Product product, Long categoryId, Long brandId, List<MultipartFile> imageFiles) {
         // get category from DB
         Category selectedCategory = categoryService.getCategoryById(categoryId);
+        Brand selectedBrand = brandService.getBrandById(categoryId);
+
         boolean hasNewImages = imageFiles != null && imageFiles.stream().anyMatch(file -> !file.isEmpty());
         product.setCategory(selectedCategory);
+        product.setBrand(selectedBrand);
 
         if (hasNewImages) {
             // Remove existing images only if new ones are uploaded

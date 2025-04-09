@@ -5,9 +5,11 @@ import fpt.swp.pcols.entity.Category;
 import fpt.swp.pcols.entity.Discount;
 import fpt.swp.pcols.entity.Product;
 import fpt.swp.pcols.service.*;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -65,14 +67,26 @@ public class ProductController {
     public String getCreateProductPage(Model model) {
         model.addAttribute("newProduct", new Product());
         model.addAttribute("categories", categoryService.getAllCategory());
+        model.addAttribute("brands", brandService.getAllBrands());
         return "admin/product/create";
     }
 
     @PostMapping(value = "/admin/product/create")
-    public String createProduct(@ModelAttribute("newProduct") Product product,
+    public String createProduct(@Valid @ModelAttribute("newProduct") Product product,
+                                BindingResult bindingResult,
                                 @RequestParam("category.id") Long selectedCategoryId,
-                                @RequestParam("imageFiles") List<MultipartFile> imageFiles) {
-        productService.createProduct(product, selectedCategoryId, imageFiles);
+                                @RequestParam("brand.id") Long selectedBrandId,
+                                @RequestParam("imageFiles") List<MultipartFile> imageFiles,
+                                Model model) {
+        if (bindingResult.hasErrors()) {
+            // Repopulate any necessary model attributes for the form:
+            model.addAttribute("categories", categoryService.getAllCategory());
+            model.addAttribute("brands", brandService.getAllBrands());
+            model.addAttribute("newProduct", product);
+            // Return to the create form so that the errors are shown to the user
+            return "admin/product/create";
+        }
+        productService.createProduct(product, selectedCategoryId, selectedBrandId, imageFiles);
         return "redirect:/admin/product";
     }
 
@@ -91,10 +105,19 @@ public class ProductController {
     }
 
     @PostMapping("/admin/product/detail/saveEdit")
-    public String saveProductDetailEdit(@ModelAttribute Product product,
-                                        @RequestParam(value = "imageFiles", required = false) List<MultipartFile> imageFiles) {
+    public String saveProductDetailEdit(@Valid @ModelAttribute Product product,
+                                        BindingResult bindingResult,
+                                        @RequestParam(value = "imageFiles", required = false) List<MultipartFile> imageFiles,
+                                        Model model) {
 
-        productService.createProduct(product, product.getCategory().getId(), imageFiles);
+        if (bindingResult.hasErrors()) {
+            // Repopulate supporting model attributes needed for the edit view (e.g., categories and brands)
+            model.addAttribute("categories", categoryService.getAllCategory());
+            model.addAttribute("brands", brandService.getAllBrands());
+            // Return to the edit form view, so that validation error messages can be displayed
+            return "admin/product/detail";
+        }
+        productService.createProduct(product, product.getCategory().getId(), product.getBrand().getId(), imageFiles);
         productService.handleSaveProduct(product);
         return "redirect:/admin/product/detail/" + product.getId();
     }
