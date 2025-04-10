@@ -27,17 +27,13 @@ public class DiscountServiceImpl implements DiscountService {
 
 
     @Override
-    public List<Discount> getAllDiscounts() {
+    public List<Discount> findAll() {
         return this.discountRepository.findAll();
     }
 
     @Override
-    public Discount getDiscountById(Long id) {
-        if (discountRepository.findDiscountById(id) != null) {
-            return discountRepository.findDiscountById(id);
-        } else {
-            throw new IllegalArgumentException("Discount not found");
-        }
+    public Optional<Discount> findById(Long id) {
+        return this.discountRepository.findById(id);
     }
 
     @Override
@@ -48,7 +44,7 @@ public class DiscountServiceImpl implements DiscountService {
 
     @Override
     public void updateDiscount(Long id, Discount discount, String applyTo, Long productId, Long categoryId, Long brandId) {
-        Discount existing = getDiscountById(id);
+        Discount existing = findById(id).orElseThrow(() -> new RuntimeException("Discount not found"));
         existing.setDiscountValue(discount.getDiscountValue());
         existing.setDiscountType(discount.getDiscountType());
         existing.setStartDate(discount.getStartDate());
@@ -60,7 +56,7 @@ public class DiscountServiceImpl implements DiscountService {
 
     @Override
     public void deactivateDiscount(Long id) {
-        Discount discount = getDiscountById(id);
+        Discount discount = findById(id).orElseThrow(() -> new RuntimeException("Discount not found"));
         discount.setIsActive(false);
         discountRepository.save(discount);
     }
@@ -76,19 +72,19 @@ public class DiscountServiceImpl implements DiscountService {
         switch (applyTo) {
             case "product":
                 if (productId != null) {
-                    Product product = productService.getProductById(productId);
+                    Product product = productService.findById(productId).orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
                     discount.setProduct(product);
                 }
                 break;
             case "category":
                 if (categoryId != null) {
-                    Category category = categoryService.getCategoryById(categoryId);
+                    Category category = categoryService.findById(categoryId).orElseThrow(() -> new IllegalArgumentException("Category not found"));
                     discount.setCategory(category);
                 }
                 break;
             case "brand":
                 if (brandId != null) {
-                    Brand brand = brandService.getBrandById(brandId);
+                    Brand brand = brandService.findById(brandId).orElseThrow(() -> new IllegalArgumentException("Brand not found"));
                     discount.setBrand(brand);
                 }
                 break;
@@ -155,7 +151,7 @@ public class DiscountServiceImpl implements DiscountService {
 
     @Override
     public Discount getDiscountByProduct(Long productId) {
-        Optional<Discount> discountOpt = discountRepository.findByProductId(productId);
+        Optional<Discount> discountOpt = discountRepository.findByProduct_Id(productId);
         return discountOpt.orElse(null);
     }
 

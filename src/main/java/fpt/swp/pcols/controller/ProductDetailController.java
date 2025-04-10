@@ -36,7 +36,7 @@ public class ProductDetailController {
                                    @RequestParam(defaultValue = "0") int page,
                                    @RequestParam(defaultValue = "3") int size,
                                    Model model) {
-        Product product = productService.getProductById(productId);
+        Product product = productService.findById(productId).orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
         Category category = product.getCategory();
         Brand brand = product.getBrand();
         List<Product> relatedProducts = productService.getRelatedProducts(product, 4);
@@ -75,7 +75,7 @@ public class ProductDetailController {
                              @RequestParam(defaultValue = "0") int page,
                              @RequestParam(defaultValue = "3") int size,
                              Model model) {
-        Product product = productService.getProductById(productId);
+        Product product = productService.findById(productId).orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
         Page<Review> reviewPage = reviewService.getReviewsByProduct(product, page, size);
         model.addAttribute("reviews", reviewPage.getContent());
         model.addAttribute("currentPage", page);
@@ -88,7 +88,7 @@ public class ProductDetailController {
     public ResponseEntity<String> submitReview(@RequestParam Long productId,
                                                @ModelAttribute("reviewForm") ReviewFormDTO reviewForm,
                                                @AuthenticationPrincipal User user) {
-        Product product = productService.getProductById(productId);
+        Product product = productService.findById(productId).orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
 
         // validation
         ValidationResult validationResult = reviewService.validateReviewForm(reviewForm);
@@ -115,7 +115,7 @@ public class ProductDetailController {
         review.setUser(user);
         review.setRating(reviewForm.rating());
         review.setComment(reviewForm.comment());
-        reviewService.saveReview(review);
+        reviewService.save(review);
 
         return ResponseEntity.ok("Review submitted successfully");
     }

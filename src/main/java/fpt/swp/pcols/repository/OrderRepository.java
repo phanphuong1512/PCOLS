@@ -13,8 +13,8 @@ import java.util.Optional;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
-    Optional<Order> findByUserAndStatus(User user, Order.OrderStatus status);
 
+    Optional<Order> findByUserAndStatus(User user, Order.OrderStatus status);
 
     @Query("SELECT o FROM Order o " +
             "JOIN FETCH o.orderDetails od " +

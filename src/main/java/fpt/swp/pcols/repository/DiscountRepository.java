@@ -12,9 +12,8 @@ import java.util.Optional;
 
 @Repository
 public interface DiscountRepository extends JpaRepository<Discount, Long> {
-    Discount findDiscountById(Long id);
 
-    Optional<Discount> findByProductId(Long productId);
+    Optional<Discount> findByProduct_Id(Long productId);
 
     @Query("SELECT d FROM Discount d WHERE " +
             "(d.product.id = :productId OR d.category.id = :categoryId OR d.brand.id = :brandId) " +

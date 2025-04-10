@@ -33,8 +33,8 @@ public class ProductController {
         String searchTerm = (search != null && !search.isEmpty()) ? search : null;
         List<Product> products = productService.getFilteredProductsForAdmin(categoryName, brandName, searchTerm);
         model.addAttribute("searchTerm", search);
-        model.addAttribute("categories", categoryService.getAllCategories());
-        model.addAttribute("brands", brandService.getAllBrands());
+        model.addAttribute("categories", categoryService.findAll());
+        model.addAttribute("brands", brandService.findAll());
         model.addAttribute("selectedCategory", category);
         model.addAttribute("selectedBrand", brand);
         model.addAttribute("products", products);
@@ -52,8 +52,8 @@ public class ProductController {
         String searchTerm = (search != null && !search.isEmpty()) ? search : null;
         List<Product> products = productService.getFilteredProductsForAdmin(categoryName, brandName, searchTerm);
         model.addAttribute("searchTerm", search);
-        model.addAttribute("categories", categoryService.getAllCategories());
-        model.addAttribute("brands", brandService.getAllBrands());
+        model.addAttribute("categories", categoryService.findAll());
+        model.addAttribute("brands", brandService.findAll());
         model.addAttribute("selectedCategory", category);
         model.addAttribute("selectedBrand", brand);
         model.addAttribute("products", products);
@@ -64,7 +64,7 @@ public class ProductController {
     @GetMapping("/admin/product/ProductCreatePage") // GET
     public String getCreateProductPage(Model model) {
         model.addAttribute("newProduct", new Product());
-        model.addAttribute("categories", categoryService.getAllCategory());
+        model.addAttribute("categories", categoryService.findAll());
         return "admin/product/create";
     }
 
@@ -79,8 +79,8 @@ public class ProductController {
     //get product detail by id
     @GetMapping("/admin/product/detail/{id}")
     public String getProductDetailPage(Model model, @PathVariable long id, @ModelAttribute List<MultipartFile> imageFiles) {
-        Product product = this.productService.getProductById(id);
-        List<Category> categories = categoryService.getAllCategory();
+        Product product = this.productService.findById(id).orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+        List<Category> categories = categoryService.findAll();
         model.addAttribute("categories", categories);
         model.addAttribute("product", product);
         model.addAttribute("imageFiles", imageFiles);
@@ -94,7 +94,7 @@ public class ProductController {
         // Delete old images before saving new ones
         productService.deleteImagesByProductId(product.getId());
         productService.createProduct(product, product.getCategory().getId(), imageFiles);
-        productService.handleSaveProduct(product);
+        productService.save(product);
         return "redirect:/admin/product/detail/" + product.getId();
     }
 
@@ -106,8 +106,8 @@ public class ProductController {
                                  @RequestParam(value = "imageFiles", required = false) List<MultipartFile> imageFiles,
                                  @RequestParam(value = "minPrice", required = false) Double minPrice,
                                  @RequestParam(value = "maxPrice", required = false) Double maxPrice) {
-        List<Category> listCategories = categoryService.getAllCategories();
-        List<Brand> listBrands = brandService.getAllBrands();
+        List<Category> listCategories = categoryService.findAll();
+        List<Brand> listBrands = brandService.findAll();
         List<Product> products = productService.getFilteredProducts(brand, category, minPrice, maxPrice, sort);
 
         model.addAttribute("products", products);
@@ -117,9 +117,6 @@ public class ProductController {
         model.addAttribute("minPrice", minPrice);
         model.addAttribute("maxPrice", maxPrice);
         model.addAttribute("sort", sort);
-
-
-
 
         return "products";
     }

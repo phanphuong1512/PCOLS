@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -14,12 +15,12 @@ public class BrandServiceImpl implements BrandService {
     private final BrandRepository brandRepository;
 
     @Override
-    public List<Brand> getAllBrands() {
+    public List<Brand> findAll() {
         return this.brandRepository.findAll();
     }
 
     @Override
-    public Brand getBrandById(Long brandId) {
-        return this.brandRepository.findBrandById(brandId);
+    public Optional<Brand> findById(Long brandId) {
+        return this.brandRepository.findById(brandId);
     }
 }

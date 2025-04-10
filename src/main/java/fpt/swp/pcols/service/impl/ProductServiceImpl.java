@@ -19,6 +19,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,8 +38,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void createProduct(Product product, Long categoryId, List<MultipartFile> imageFiles) {
         // get category from DB
-        Category selectedCategory = categoryService.getCategoryById(categoryId);
-        product.setCategory(selectedCategory);
+        Category category = categoryService.findById(categoryId)
+                .orElseThrow(() -> new RuntimeException("Category not found with id: " + categoryId));
+
+        product.setCategory(category);
         product.getImages().clear(); // Clear all images
         productRepository.save(product); // Save product to DB
 
@@ -81,13 +84,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void handleSaveProduct(Product product) {
+    public void save(Product product) {
         this.productRepository.save(product);
     }
 
     @Override
-    public Product getProductById(long id) {
-        return this.productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+    public Optional<Product> findById(long id) {
+        return this.productRepository.findById(id);
     }
 
     public List<Product> getProductsByCategoryWithImages(String categoryName) {
@@ -111,10 +114,10 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList());
     }
 
-//    @Override
-//    public List<String> getAllBrands() {
-//        return this.productRepository.findAllBrands();
-//    }
+    //    @Override
+    //    public List<String> getAllBrands() {
+    //        return this.productRepository.findAllBrands();
+    //    }
 
     @Override
     public List<Product> getFilteredProducts(String brand, String category, Double minPrice, Double maxPrice, String sort) {

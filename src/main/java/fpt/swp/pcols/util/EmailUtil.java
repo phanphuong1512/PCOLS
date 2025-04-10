@@ -13,66 +13,39 @@ public class EmailUtil {
 
     private JavaMailSender javaMailSender;
 
-    public void sendOtpEmail(String email, String otp) throws MessagingException {
+    private void sendEmail(String email, String subject, String linkTemplate, String otp) throws MessagingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
         helper.setTo(email);
+        helper.setSubject(subject);
 
-        helper.setSubject("Email Verification");
-        String htmlContent = getHtmlContent(email, otp);
-        // setText(content, true) => true để gửi dạng HTML
+        String htmlContent = getHtmlContent(email, otp, linkTemplate);
         helper.setText(htmlContent, true);
-        // Thực hiện gửi
+
         javaMailSender.send(mimeMessage);
     }
 
-    private String getHtmlContent(String email, String otp) {
-        String verifyLink = String.format(
-                "http://localhost:8080/auth/verify-account?email=%s&otp=%s",
-                email, otp
-        );
-        return String.format(
-                """
+    private String getHtmlContent(String email, String otp, String linkTemplate) {
+        String verifyLink = String.format(linkTemplate, email, otp);
+        return String.format("""
                         <html>
                           <body>
                             <p>Chào bạn,</p>
-                            <p>Vui lòng bấm vào link bên dưới để xác thực tài khoản:</p>
-                            <a href="%s" target="_blank">Click để xác thực</a>
+                            <p>Vui lòng bấm vào link bên dưới:</p>
+                            <a href="%s" target="_blank">Click để thực hiện</a>
                             <p>OTP của bạn là: <b>%s</b></p>
                           </body>
                         </html>
-                        """,
-                verifyLink, otp
-        );
+                        """, verifyLink, otp);
+    }
+
+    public void sendOtpEmail(String email, String otp) throws MessagingException {
+        String linkTemplate = "http://localhost:8080/auth/verify-account?email=%s&otp=%s";
+        sendEmail(email, "Email Verification", linkTemplate, otp);
     }
 
     public void sendSetPassword(String email, String otp) throws MessagingException {
-        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
-        helper.setTo(email);
-
-        helper.setSubject("Reset Password");
-        String resetPasswordContent = resetPasswordContent(email, otp);
-        helper.setText(resetPasswordContent, true);
-        javaMailSender.send(mimeMessage);
-    }
-
-    private String resetPasswordContent(String email, String otp) {
-        String verifyLink = String.format(
-                "http://localhost:8080/auth/reset-password?email=%s&otp=%s", email, otp
-        );
-        return String.format(
-                """
-                        <html>
-                          <body>
-                            <p>Chào bạn,</p>
-                            <p>Vui lòng bấm vào link bên dưới để reset password:</p>
-                            <a href="%s" target="_blank">Click để reset pass</a>
-                             <p>OTP của bạn là: <b>%s</b></p>
-                          </body>
-                        </html>
-                        """,
-                verifyLink,otp
-        );
+        String linkTemplate = "http://localhost:8080/auth/reset-password?email=%s&otp=%s";
+        sendEmail(email, "Reset Password", linkTemplate, otp);
     }
 }

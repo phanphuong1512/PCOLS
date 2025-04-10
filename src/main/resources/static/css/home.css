@@ -157,7 +157,8 @@ hr {
     color: #FFF;
     background-color: #30323A;
 }
-.close-to-footer{
+
+.close-to-footer {
     margin-bottom: 10px;
 }
 
@@ -820,7 +821,8 @@ textarea.input {
     transform: translate(-50%, -50%);
 
 }
-.banner-3{
+
+.banner-3 {
     padding-top: 8px;
 }
 
@@ -1760,5 +1762,10 @@ textarea.input {
 @media only screen and (max-width: 480px) {
     [class*='col-xs'] {
         width: 100%;
+    }
+
+    .no-padding-margin {
+        padding: 0 !important; /* Xóa padding */
+        margin: 0 !important; /* Xóa margin */
     }
 }

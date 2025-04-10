@@ -3,7 +3,7 @@
     <div class="navigation">
         <ul>
             <li>
-                <a th:href="@{/}">
+                <a th:href="@{/home}">
                         <span class="icon">
                             <ion-icon name="logo-apple"></ion-icon>
                         </span>
@@ -46,15 +46,23 @@
                     <span class="title">Order</span>
                 </a>
             </li>
+            <li>
+                <a th:href="@{/admin/discount}">
+                        <span class="icon">
+                            <ion-icon name="settings-outline"></ion-icon>
+                        </span>
+                    <span class="title">Discount</span>
+                </a>
+            </li>
 
             <li>
                 <form id="logoutForm" th:action="@{/logout}" method="post" style="display: none;">
                 </form>
-                <a href="#" onclick="document.getElementById('logoutForm').submit(); return false;">
+                <a th:href="@{/home}" >
                         <span class="icon">
                             <ion-icon name="log-out-outline"></ion-icon>
                         </span>
-                    <span class="title">Sign Out</span>
+                    <span class="title">Home</span>
                 </a>
             </li>
         </ul>

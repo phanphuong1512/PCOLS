@@ -26,7 +26,7 @@ public class DiscountController {
     // List all discounts
     @GetMapping
     public String listDiscounts(Model model) {
-        List<Discount> discounts = discountService.getAllDiscounts();
+        List<Discount> discounts = discountService.findAll();
         model.addAttribute("discounts", discounts);
         return "admin/discount/list";
     }
@@ -36,8 +36,8 @@ public class DiscountController {
     public String createDiscountForm(Model model) {
         model.addAttribute("discount", new Discount());
         model.addAttribute("products", productService.getAllProducts());
-        model.addAttribute("categories", categoryService.getAllCategories());
-        model.addAttribute("brands", brandService.getAllBrands());
+        model.addAttribute("categories", categoryService.findAll());
+        model.addAttribute("brands", brandService.findAll());
         return "admin/discount/create";
     }
 
@@ -53,8 +53,8 @@ public class DiscountController {
         if (result.hasErrors()) {
             model.addAttribute("discount", discount);
             model.addAttribute("products", productService.getAllProducts());
-            model.addAttribute("categories", categoryService.getAllCategories());
-            model.addAttribute("brands", brandService.getAllBrands());
+            model.addAttribute("categories", categoryService.findAll());
+            model.addAttribute("brands", brandService.findAll());
             return "admin/discount/create";
         }
         discountService.createDiscount(discount, applyTo, productId, categoryId, brandId);
@@ -64,11 +64,11 @@ public class DiscountController {
     // Show edit form
     @GetMapping("/{id}/edit")
     public String editDiscountForm(@PathVariable Long id, Model model) {
-        Discount discount = discountService.getDiscountById(id);
+        Discount discount = discountService.findById(id).orElseThrow(() -> new RuntimeException("Discount not found"));
         model.addAttribute("discount", discount);
         model.addAttribute("products", productService.getAllProducts());
-        model.addAttribute("categories", categoryService.getAllCategories());
-        model.addAttribute("brands", brandService.getAllBrands());
+        model.addAttribute("categories", categoryService.findAll());
+        model.addAttribute("brands", brandService.findAll());
         String applyTo = discount.getProduct() != null ? "product" :
                 discount.getCategory() != null ? "category" :
                         discount.getBrand() != null ? "brand" : "";

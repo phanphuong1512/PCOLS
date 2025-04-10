@@ -129,7 +129,6 @@
                         <td th:text="${product.category != null ? product.category.name : 'No Category'}"></td>
                         <td th:text="${product.price}"></td>
                         <td>
-                            <a href="#" class="btn btn-warning btn-sm delete-btn" th:data-id="${product.id}">Delete</a>
                             <a th:href="@{/admin/product/detail/{id}(id=${product.id})}" class="btn btn-danger btn-sm">Detail</a>
                         </td>
                     </tr>

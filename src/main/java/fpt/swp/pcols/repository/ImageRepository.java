@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface ImageRepository extends JpaRepository<Image, Long> {
-    List<Image> findByProductId(Long productId);
+    List<Image> findByProduct_Id(Long productId);
 
     @Transactional
     @Modifying
