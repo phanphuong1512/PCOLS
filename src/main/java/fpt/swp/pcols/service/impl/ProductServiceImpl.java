@@ -20,6 +20,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,8 +40,12 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void createProduct(Product product, Long categoryId, Long brandId, List<MultipartFile> imageFiles) {
         // get category from DB
-        Category selectedCategory = categoryService.getCategoryById(categoryId);
-        Brand selectedBrand = brandService.getBrandById(categoryId);
+        Category selectedCategory = categoryService.findById(categoryId)
+                .orElseThrow(() -> new RuntimeException("Category not found with id: " + categoryId));
+        ;
+        Brand selectedBrand = brandService.findById(brandId)
+                .orElseThrow(() -> new RuntimeException("Brand not found with id: " + categoryId));
+        ;
 
         boolean hasNewImages = imageFiles != null && imageFiles.stream().anyMatch(file -> !file.isEmpty());
         product.setCategory(selectedCategory);
@@ -92,13 +97,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void handleSaveProduct(Product product) {
+    public void save(Product product) {
         this.productRepository.save(product);
     }
 
     @Override
-    public Product getProductById(long id) {
-        return this.productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+    public Optional<Product> findById(long id) {
+        return this.productRepository.findById(id);
     }
 
     public List<Product> getProductsByCategoryWithImages(String categoryName) {

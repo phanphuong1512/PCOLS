@@ -1,8 +1,9 @@
 package fpt.swp.pcols.service;
 
+import fpt.swp.pcols.dto.BillDTO;
 import fpt.swp.pcols.entity.Order;
-import fpt.swp.pcols.entity.OrderDetail;
 import fpt.swp.pcols.entity.User;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,17 +14,12 @@ public interface OrderService {
 
     Optional<Order> getCurrentCartForUser(User user);
 
-    OrderDetail findOrderDetailByOrderAndProduct(Order cart, Long productId);
-
-    Optional<OrderDetail> findDetailById(Long detailId);
-
-    void deleteDetail(OrderDetail detail);
-
-    void saveDetail(OrderDetail detail);
-
     List<Order> getFilteredOrders(String sort, Order.OrderStatus status, String email);
 
-    Order getOrderById(Long id);
+    Optional<Order> findById(Long id);
 
-    List<Order> getAllOrders();
+    List<Order> findAll();
+
+    @Transactional
+    void confirmOrder(Order order, BillDTO billDTO);
 }

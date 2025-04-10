@@ -3,14 +3,13 @@ package fpt.swp.pcols.service;
 import fpt.swp.pcols.entity.Category;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CategoryService {
 
-    List<Category> getAllCategory();
+    Optional<Category> findById(Long selectedCategoryId);
 
-    Category getCategoryById(Long selectedCategoryId);
-
-    List<Category> getAllCategories();
+    List<Category> findAll();
 
 
 }

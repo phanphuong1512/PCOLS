@@ -5,12 +5,9 @@ import fpt.swp.pcols.entity.Order;
 import fpt.swp.pcols.entity.OrderDetail;
 import fpt.swp.pcols.entity.Product;
 import fpt.swp.pcols.entity.User;
-import fpt.swp.pcols.service.ExcelService;
-import fpt.swp.pcols.service.OrderService;
-import fpt.swp.pcols.service.ProductService;
-import fpt.swp.pcols.service.UserService;
+import fpt.swp.pcols.exception.OutOfStockException;
+import fpt.swp.pcols.service.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.SpringVersion;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -20,6 +17,7 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
@@ -34,13 +32,11 @@ public class OrderController {
     private final OrderService orderService;
     private final UserService userService;
     private final ProductService productService;
+    private final OrderDetailService orderDetailService;
     private final ExcelService excelService;
 
     @GetMapping("/checkout")
     public String checkoutPage(Model model, Principal principal) {
-        if (principal == null) {
-            return "redirect:/auth/login";
-        }
         User user;
         if (principal instanceof OAuth2AuthenticationToken oauthToken) {
             String email = (String) oauthToken.getPrincipal().getAttributes().get("email");
@@ -51,6 +47,7 @@ public class OrderController {
                     .orElseThrow(() -> new RuntimeException("User not found with username: " + principal.getName()));
         }
 
+        // Lấy giỏ hàng của người dùng
         Order cart = orderService.getCurrentCartForUser(user)
                 .orElseGet(() -> {
                     Order newCart = new Order();
@@ -61,15 +58,12 @@ public class OrderController {
                     return orderService.save(newCart);
                 });
 
-        System.out.println("Cart: " + cart);
-        System.out.println("Order Details: " + cart.getOrderDetails());
-        cart.getOrderDetails().forEach(detail -> {
-            System.out.println("Product: " + detail.getProduct());
-            System.out.println("Images: " + detail.getProduct().getImages());
-        });
-
         model.addAttribute("order", cart);
         model.addAttribute("orderDetails", cart.getOrderDetails());
+
+        if (model.containsAttribute("error")) {
+            model.addAttribute("error", model.getAttribute("error"));
+        }
         return "checkout";
     }
 
@@ -90,11 +84,11 @@ public class OrderController {
             cart = orderService.save(cart);
         }
         // check if product already exists in cart
-        OrderDetail existingDetail = orderService.findOrderDetailByOrderAndProduct(cart, productId);
+        OrderDetail existingDetail = orderDetailService.findByOrderAndProduct_Id(cart, productId);
         if (existingDetail != null) {
             existingDetail.setQuantity(existingDetail.getQuantity() + quantity);
         } else {
-            Product product = productService.getProductById(productId);
+            Product product = productService.findById(productId).orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
             OrderDetail detail = new OrderDetail();
             detail.setOrder(cart);
             detail.setProduct(product);
@@ -112,7 +106,7 @@ public class OrderController {
     public ResponseEntity<Map<String, String>> updateCartDetail(@RequestParam Long detailId,
                                                                 @RequestParam int quantity) {
         // find order by id
-        Optional<OrderDetail> optionalDetail = orderService.findDetailById(detailId);
+        Optional<OrderDetail> optionalDetail = orderDetailService.findById(detailId);
         if (optionalDetail.isEmpty()) {
             // if order not found, return 404 NOT FOUND with error message
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -121,7 +115,7 @@ public class OrderController {
 
         OrderDetail detail = optionalDetail.get();
         detail.setQuantity(quantity);
-        orderService.saveDetail(detail);
+        orderDetailService.save(detail);
 
         // Recalculate to get new line total
         BigDecimal lineTotal = detail.getPrice().multiply(BigDecimal.valueOf(quantity));
@@ -140,11 +134,11 @@ public class OrderController {
     @ResponseBody
     public ResponseEntity<Map<String, String>> removeCartDetail(@RequestParam Long detailId) {
         // Tìm OrderDetail theo id
-        OrderDetail detail = orderService.findDetailById(detailId)
+        OrderDetail detail = orderDetailService.findById(detailId)
                 .orElseThrow(() -> new RuntimeException("Order detail not found for id: " + detailId));
 
         // Xóa OrderDetail; giả sử bạn có phương thức trong service để xóa detail
-        orderService.deleteDetail(detail);
+        orderDetailService.delete(detail);
 
         Map<String, String> response = new HashMap<>();
         response.put("status", "ok");
@@ -153,27 +147,57 @@ public class OrderController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/checkout/success")
+    public String checkoutSuccess(Principal principal, Model model) {
+        try {
+            // Lấy thông tin người dùng
+            User user = userService.findByUsername(principal.getName())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            // Lấy đơn hàng vừa đặt của người dùng (trạng thái đơn hàng là PENDING hoặc PAID)
+            Order order = orderService.getCurrentCartForUser(user)
+                    .orElseThrow(() -> new RuntimeException("Order not found"));
+            for (OrderDetail orderDetail : order.getOrderDetails()) {
+                if (orderDetail.getProduct() == null) {
+                    // Xử lý khi product là null nếu cần (ví dụ: gán một giá trị mặc định hoặc báo lỗi)
+                    orderDetail.setProduct(new Product());  // Ví dụ: Tạo đối tượng product rỗng để tránh lỗi
+                }
+            }
+
+            // Thêm thông tin đơn hàng vào model để hiển thị
+            model.addAttribute("order", order);
+            model.addAttribute("orderDetails", order.getOrderDetails());
+
+            // Nếu có lỗi (OutOfStockException), model sẽ chứa errorMap để hiển thị thông báo
+            model.addAttribute("errorMap", model.containsAttribute("errorMap") ? model.getAttribute("errorMap") : null);
+
+            return "order-success"; // Trang HTML hiển thị thông tin đơn hàng thành công
+        } catch (Exception ex) {
+            model.addAttribute("error", "An error occurred: " + ex.getMessage());
+            return "checkout"; // Nếu có lỗi, quay lại trang checkout
+        }
+    }
+
+
     @PostMapping("/checkout/confirm")
-    public String confirmCheckout(@ModelAttribute BillDTO billDTO, Principal principal) {
-        User user = userService.findByUsername(principal.getName())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    public String confirmCheckout(@ModelAttribute BillDTO billDTO, Principal principal, RedirectAttributes redirectAttributes) {
+        try {
+            User user = userService.findByUsername(principal.getName())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
 
-        Order order = orderService.getCurrentCartForUser(user)
-                .orElseThrow(() -> new RuntimeException("Cart not found"));
+            Order order = orderService.getCurrentCartForUser(user)
+                    .orElseThrow(() -> new RuntimeException("Cart not found"));
 
-        order.setFirstName(billDTO.firstName());
-        order.setLastName(billDTO.lastName());
-        order.setEmail(billDTO.email());
-        order.setAddress(billDTO.address());
-        order.setCity(billDTO.city());
-        order.setCountry(billDTO.country());
-        order.setZipCode(billDTO.zipCode());
-        order.setPhone(billDTO.phone());
-        order.setShippingMethod(billDTO.shipping());
-        order.setPaymentMethod(billDTO.payment());
-        orderService.save(order);
+            orderService.confirmOrder(order, billDTO);
 
-        return "redirect:/home";
+            return "redirect:/checkout/success";
+        } catch (OutOfStockException ex) {
+            redirectAttributes.addFlashAttribute("errorMap", ex.getErrorMap());
+            return "redirect:/checkout";
+        } catch (Exception ex) {
+            redirectAttributes.addFlashAttribute("error", "An error occurred: " + ex.getMessage());
+            return "redirect:/checkout";
+        }
     }
 
     @GetMapping("admin/orders")
@@ -199,7 +223,7 @@ public class OrderController {
 
     @GetMapping("admin/order/detail/{id}")
     public String orderDetail(@PathVariable Long id, Model model) {
-        Order order = orderService.getOrderById(id);
+        Order order = orderService.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
         if (order == null) {
             return "redirect:/orders?error=Order not found";
         }
@@ -209,7 +233,7 @@ public class OrderController {
 
     @GetMapping("/admin/orders/export/excel")
     public ResponseEntity<InputStreamResource> exportToExcel() {
-        List<Order> orders = orderService.getAllOrders();
+        List<Order> orders = orderService.findAll();
         ByteArrayInputStream inStream = excelService.exportOrdersToExcel(orders);
 
         HttpHeaders headers = new HttpHeaders();

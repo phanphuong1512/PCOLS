@@ -35,8 +35,8 @@ public class ProductController {
         String searchTerm = (search != null && !search.isEmpty()) ? search : null;
         List<Product> products = productService.getFilteredProductsForAdmin(categoryName, brandName, searchTerm);
         model.addAttribute("searchTerm", search);
-        model.addAttribute("categories", categoryService.getAllCategories());
-        model.addAttribute("brands", brandService.getAllBrands());
+        model.addAttribute("categories", categoryService.findAll());
+        model.addAttribute("brands", brandService.findAll());
         model.addAttribute("selectedCategory", category);
         model.addAttribute("selectedBrand", brand);
         model.addAttribute("products", products);
@@ -54,8 +54,8 @@ public class ProductController {
         String searchTerm = (search != null && !search.isEmpty()) ? search : null;
         List<Product> products = productService.getFilteredProductsForAdmin(categoryName, brandName, searchTerm);
         model.addAttribute("searchTerm", search);
-        model.addAttribute("categories", categoryService.getAllCategories());
-        model.addAttribute("brands", brandService.getAllBrands());
+        model.addAttribute("categories", categoryService.findAll());
+        model.addAttribute("brands", brandService.findAll());
         model.addAttribute("selectedCategory", category);
         model.addAttribute("selectedBrand", brand);
         model.addAttribute("products", products);
@@ -66,8 +66,8 @@ public class ProductController {
     @GetMapping("/admin/product/ProductCreatePage") // GET
     public String getCreateProductPage(Model model) {
         model.addAttribute("newProduct", new Product());
-        model.addAttribute("categories", categoryService.getAllCategory());
-        model.addAttribute("brands", brandService.getAllBrands());
+        model.addAttribute("categories", categoryService.findAll());
+        model.addAttribute("brands", brandService.findAll());
         return "admin/product/create";
     }
 
@@ -80,8 +80,8 @@ public class ProductController {
                                 Model model) {
         if (bindingResult.hasErrors()) {
             // Repopulate any necessary model attributes for the form:
-            model.addAttribute("categories", categoryService.getAllCategory());
-            model.addAttribute("brands", brandService.getAllBrands());
+            model.addAttribute("categories", categoryService.findAll());
+            model.addAttribute("brands", brandService.findAll());
             model.addAttribute("newProduct", product);
             // Return to the create form so that the errors are shown to the user
             return "admin/product/create";
@@ -93,9 +93,9 @@ public class ProductController {
     //get product detail by id
     @GetMapping("/admin/product/detail/{id}")
     public String getProductDetailPage(Model model, @PathVariable long id, @ModelAttribute List<MultipartFile> imageFiles) {
-        Product product = this.productService.getProductById(id);
-        List<Category> categories = categoryService.getAllCategory();
-        List<Brand> brands = brandService.getAllBrands();
+        Product product = this.productService.findById(id).orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+        List<Category> categories = categoryService.findAll();
+        List<Brand> brands = brandService.findAll();
         model.addAttribute("categories", categories);
         model.addAttribute("brands", brands);
         model.addAttribute("product", product);
@@ -112,13 +112,13 @@ public class ProductController {
 
         if (bindingResult.hasErrors()) {
             // Repopulate supporting model attributes needed for the edit view (e.g., categories and brands)
-            model.addAttribute("categories", categoryService.getAllCategory());
-            model.addAttribute("brands", brandService.getAllBrands());
+            model.addAttribute("categories", categoryService.findAll());
+            model.addAttribute("brands", brandService.findAll());
             // Return to the edit form view, so that validation error messages can be displayed
             return "admin/product/detail";
         }
         productService.createProduct(product, product.getCategory().getId(), product.getBrand().getId(), imageFiles);
-        productService.handleSaveProduct(product);
+        productService.save(product);
         return "redirect:/admin/product/detail/" + product.getId();
     }
 
@@ -130,8 +130,8 @@ public class ProductController {
                                  @RequestParam(value = "imageFiles", required = false) List<MultipartFile> imageFiles,
                                  @RequestParam(value = "minPrice", required = false) Double minPrice,
                                  @RequestParam(value = "maxPrice", required = false) Double maxPrice) {
-        List<Category> listCategories = categoryService.getAllCategories();
-        List<Brand> listBrands = brandService.getAllBrands();
+        List<Category> listCategories = categoryService.findAll();
+        List<Brand> listBrands = brandService.findAll();
         List<Product> products = productService.getFilteredProducts(brand, category, minPrice, maxPrice, sort);
 
         model.addAttribute("products", products);

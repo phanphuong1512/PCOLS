@@ -1,27 +1,30 @@
 package fpt.swp.pcols.service.impl;
 
+import fpt.swp.pcols.dto.BillDTO;
 import fpt.swp.pcols.entity.Order;
 import fpt.swp.pcols.entity.OrderDetail;
+import fpt.swp.pcols.entity.Product;
 import fpt.swp.pcols.entity.User;
+import fpt.swp.pcols.exception.OutOfStockException;
 import fpt.swp.pcols.repository.OrderDetailRepository;
 import fpt.swp.pcols.repository.OrderRepository;
 import fpt.swp.pcols.service.OrderService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
-    private final OrderDetailRepository orderDetailRepository;
-
-    public OrderServiceImpl(OrderRepository orderRepository, OrderDetailRepository orderDetailRepository) {
-        this.orderRepository = orderRepository;
-        this.orderDetailRepository = orderDetailRepository;
-    }
+    private final ProductServiceImpl productService;
 
     @Override
     public Order save(Order cart) {
@@ -33,25 +36,7 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.findByUserAndStatus(user, Order.OrderStatus.PENDING);
     }
 
-    @Override
-    public OrderDetail findOrderDetailByOrderAndProduct(Order cart, Long productId) {
-        return orderDetailRepository.findByOrderAndProductId(cart, productId);
-    }
 
-    @Override
-    public Optional<OrderDetail> findDetailById(Long detailId) {
-        return orderDetailRepository.findById(detailId);
-    }
-
-    @Override
-    public void deleteDetail(OrderDetail detail) {
-        orderDetailRepository.delete(detail);
-    }
-
-    @Override
-    public void saveDetail(OrderDetail detail) {
-        orderDetailRepository.save(detail);
-    }
 
     @Override
     public List<Order> getFilteredOrders(String sort, Order.OrderStatus status, String email) {
@@ -65,13 +50,58 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order getOrderById(Long id) {
-        return this.orderRepository.findById(id).orElse(null);
+    public Optional<Order> findById(Long id) {
+        return this.orderRepository.findById(id);
     }
 
     @Override
-    public List<Order> getAllOrders() {
+    public List<Order> findAll() {
         return this.orderRepository.findAll();
     }
+
+    @Transactional
+    @Override
+    public void confirmOrder(Order order, BillDTO billDTO) {
+        Map<Long, String> errorMap = new HashMap<>();
+        // Kiểm tra và giảm stock cho các sản phẩm trong đơn hàng
+        for (OrderDetail orderDetail : order.getOrderDetails()) {
+            Product product = orderDetail.getProduct();
+            int availableStock = product.getStock();
+            int orderedQuantity = orderDetail.getQuantity();
+
+            if (orderedQuantity > availableStock) {
+                // Ghi lỗi cho chi tiết sản phẩm này (sử dụng detail.getId())
+                errorMap.put(orderDetail.getId(),
+                        String.format("Not enough stock for product: %s (Ordered: %d, Available: %d)",
+                                product.getName(), orderedQuantity, availableStock));
+            } else {
+                // Nếu đủ hàng, cập nhật stock và lưu sản phẩm
+                product.setStock(availableStock - orderedQuantity);
+                productService.save(product);
+            }
+        }
+
+        // Nếu có lỗi, ném lỗi ra ngoài
+        if (!errorMap.isEmpty()) {
+            throw new OutOfStockException(errorMap);
+        }
+
+        // Cập nhật thông tin order
+        order.setFirstName(billDTO.firstName());
+        order.setLastName(billDTO.lastName());
+        order.setEmail(billDTO.email());
+        order.setAddress(billDTO.address());
+        order.setCity(billDTO.city());
+        order.setCountry(billDTO.country());
+        order.setZipCode(billDTO.zipCode());
+        order.setPhone(billDTO.phone());
+        order.setShippingMethod(billDTO.shipping());
+        order.setPaymentMethod(billDTO.payment());
+
+        // Cập nhật trạng thái đơn hàng và lưu
+        order.setStatus(Order.OrderStatus.PENDING);
+        orderRepository.save(order);
+    }
+
 
 }

@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -15,17 +16,12 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
 
     @Override
-    public List<Category> getAllCategory() {
-        return this.categoryRepository.findAll();
+    public Optional<Category> findById(Long id) {
+        return this.categoryRepository.findById(id);
     }
 
     @Override
-    public Category getCategoryById(Long id) {
-        return this.categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
-    }
-
-    @Override
-    public List<Category> getAllCategories() {
+    public List<Category> findAll() {
         return this.categoryRepository.findAll();
     }
 

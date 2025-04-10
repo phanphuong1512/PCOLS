@@ -103,8 +103,14 @@
                                         <span>Category: </span>
                                         <span th:text="${detail.product.category.name}">Category</span>
                                     </li>
+                                    <li th:if="${errorMap != null and errorMap[detail.id] != null}"
+                                        class="alert alert-danger no-padding-margin">
+                                        <span th:text="${errorMap[detail.id]}"></span>
+                                    </li>
                                 </ul>
+                                <!-- Hiển thị thông báo lỗi nếu có -->
                             </td>
+
                             <!-- Giá sản phẩm -->
                             <td class="price text-center">
                                 <strong th:text="${detail.price}">0</strong>

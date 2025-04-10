@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required Meta Tags -->
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" th:content="${metaDescription}"/>
+
+    <!-- Title Of Site -->
+    <title th:text="${pageTitle}">Checkout Success - Optimal Multipurpose eCommerce Bootstrap 5 Html Template</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" th:href="@{${faviconUrl}}"/>
+
+    <!-- Plugins CSS -->
+    <link rel="stylesheet" th:href="@{/css/plugins.css}"/>
+
+    <!-- Main Style CSS -->
+    <link rel="stylesheet" th:href="@{/css/order-success.css}"/>
+    <link rel="stylesheet" th:href="@{/css/responsive.css}"/>
+
+    <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}"/>
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+
+</head>
+
+<body class="my-wishlist-page">
+<div class="page-wrapper">
+    <!--Main Content-->
+    <div class="container">
+        <div class="checkout-success-content py-2">
+            <!--Order Card-->
+            <div class="row">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="checkout-scard card border-0 rounded">
+                        <div class="card-body text-center">
+                            <p class="card-icon">
+                                <i class="icon an an-shield-check fs-1"></i>
+                            </p>
+                            <h4 class="card-title">Thank you for your order!</h4>
+                            <p class="card-text mb-1">You will receive an order confirmation email with details of your
+                                order and a link to track its progress.</p>
+                            <p class="card-text mb-1">All necessary information about the delivery, we sent to your
+                                email</p>
+                            <p class="card-text text-order badge bg-success my-3">
+                                Your order # is: <b>00000123</b>
+                            </p>
+                            <p class="card-text mb-0">Order date: 14 Nov 2021</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--End Order Card-->
+            <!--Order Summary-->
+            <div class="row">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                    <div class="checkout-item-ordered">
+                        <h2 class="fs-6 mb-3">Order Summary</h2>
+                        <div class="table-content table-responsive order-table mb-4">
+                            <table class="table table-bordered align-middle table-hover text-center mb-0">
+                                <thead>
+                                <tr>
+                                    <th class="fw-bold">Image</th>
+                                    <th class="text-start fw-600">Product Name</th>
+                                    <th class="fw-600">Price</th>
+                                    <th class="fw-600">Qty</th>
+                                    <th class="fw-600">Subtotal</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="detail : ${orderDetails}">
+                                    <td class="pro-img">
+                                        <a th:href="@{/product-detail(id=${detail.product.id})}">
+                                            <img class="primary lazyload"
+                                                 th:src="${detail.product != null && !detail.product.images.isEmpty() ? detail.product.images[0].url : '/assets/images/products/100x120.jpg'}"
+                                                 alt="image" title="product" width="80"/>
+                                        </a>
+                                    </td>
+                                    <td class="pro-name text-start">
+                                        <a th:href="@{/product-detail(id=${detail.product.id})}" class="d-block"
+                                           th:text="${detail.product != null ? detail.product.name : 'Unknown Product'}"></a>
+                                        <div class="cart__meta-text">
+                                            <span th:text="'Brand: ' + ${detail.product != null ? detail.product.brand.name : 'N/A'}">Brand</span><br>
+                                            <span th:text="'Category: ' + ${detail.product != null ? detail.product.category.name : 'N/A'}">Category</span><br>
+                                        </div>
+                                    </td>
+                                    <td class="pro-price" th:text="${detail.price}"></td>
+                                    <td class="pro-qty" th:text="${detail.quantity}"></td>
+                                    <td class="pro-total fw-500" th:text="${detail.totalPrice}"></td>
+                                </tr>
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <td colspan="4" class="item subtotal text-end fw-bolder">Subtotal:</td>
+                                    <td class="fw-500 last">$59.00</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" class="item tax text-end fw-bolder">Tax:</td>
+                                    <td class="fw-500 last">$4.87</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" class="item discount text-end fw-bolder">Discount:</td>
+                                    <td class="fw-500 last">$0.00</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" class="item shipping text-end fw-bolder">Shipping:</td>
+                                    <td class="fw-500 last">$5.00</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" class="item total text-end fw-bolder">Grand Total:</td>
+                                    <td class="fw-500 last">$68.87</td>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                    <div class="ship-info-details shipping-method-details">
+                        <div class="row g-0">
+                            <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                                <div class="shipping-details mb-4 mb-sm-0 clearfix">
+                                    <h3>Billing Infor</h3>
+                                    <p>Full Name: <span th:text="${order.firstName} + ' ' + ${order.lastName}"></span>
+                                    </p>
+                                    <p>First Name: <span th:text="${order.firstName}"></span></p>
+                                    <p>Last Name: <span th:text="${order.lastName}"></span></p>
+                                    <p>Email: <span th:text="${order.email}"></span></p>
+                                    <p>Phone: <span th:text="${order.phone}"></span></p>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                                <div class="billing-details clearfix">
+                                    <h3>Shipping Address</h3>
+                                    <p>Country: <span th:text="${order.country}"></span></p>
+                                    <p>City: <span th:text="${order.city}"></span></p>
+                                    <p>Address: <span th:text="${order.address}"></span></p>
+                                    <p>Zip-code: <span th:text="${order.zipCode}"></span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ship-info-details billing-payment-details">
+                        <div class="row g-0">
+                            <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                                <div class="shipping-details mb-4 mb-sm-0 clearfix">
+                                    <h3>Shipping Method</h3>
+                                    <p th:text="${order.shippingMethod}">Shipping Method</p>
+
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                                <div class="billing-details clearfix">
+                                    <h3>Payment Method</h3>
+                                    <p th:text="${order.paymentMethod}">Payment Method</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex-wrap w-100 mt-4 text-center">
+                        <a th:href="@{/home}"
+                           class="d-inline-flex align-items-center btn btn-outline-primary rounded me-2 mb-2 me-sm-3">
+                            <i class="me-2 icon an an-angle-left-r"></i>
+                            Continue Shopping
+                        </a>
+                        <button type="button" class="d-inline-flex align-items-center btn rounded me-2 mb-2 me-sm-3">
+                            <i class="me-2 icon an an-print"></i>
+                            Print Order
+                        </button>
+                        <button type="button" class="d-inline-flex align-items-center btn rounded me-2 mb-2 me-sm-3">
+                            <i class="me-2 icon an an-sync-ar"></i>
+                            Re-Order
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!--End Order Summary-->
+        </div>
+    </div>
+    <!--End Main Content-->
+</div>
+<!--End Body Container-->
+
+
+<!--End MiniCart Drawer-->
+<div class="modalOverly"></div>
+<!-- Including Jquery -->
+<script src="assets/js/vendor/jquery-min.js"></script>
+<script src="assets/js/vendor/js.cookie.js"></script>
+<!--Including Javascript-->
+<script src="assets/js/plugins.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+        integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+        integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+        crossorigin="anonymous"></script>
+
+<!--End Page Wrapper-->
+</body>
+</html>

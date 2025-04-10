@@ -6,11 +6,13 @@ import fpt.swp.pcols.entity.Product;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public interface DiscountService {
-    List<Discount> getAllDiscounts();
 
-    Discount getDiscountById(Long id);
+    List<Discount> findAll();
+
+    Optional<Discount> findById(Long id);
 
     void createDiscount(Discount discount, String applyTo, Long productId, Long categoryId, Long brandId);
 

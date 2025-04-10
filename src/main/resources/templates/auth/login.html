@@ -31,9 +31,11 @@
 
             <span>or use your email for registration</span>
 
-            <input type="text" name="username" placeholder="Name" required>
+            <input type="text" name="username" placeholder="Name" required pattern="[A-Za-z0-9]{3,}"
+                   title="Tên người dùng phải có ít nhất 3 ký tự chữ và số">
             <input type="email" name="email" placeholder="Email" required>
-            <input type="password" name="password" placeholder="Password" required>
+            <input type="password" name="password" placeholder="Password" required minlength="6"
+                   title="Mật khẩu phải có ít nhất 6 ký tự">
 
             <button type="submit">Sign Up</button>
         </form>
@@ -53,8 +55,10 @@
 
             <span>or use your email and password</span>
 
-            <input type="text" name="username" placeholder="Username" required>
-            <input type="password" name="password" placeholder="Password" required>
+            <input type="text" name="username" placeholder="Username" required pattern="[A-Za-z0-9]{3,}"
+                   title="Tên người dùng phải có ít nhất 3 ký tự chữ và số">
+            <input type="password" name="password" placeholder="Password" required minlength="6"
+                   title="Mật khẩu phải có ít nhất 6 ký tự">
 
             <a th:href="@{/auth/forgot-password}">Forgot Your Password?</a>
 
@@ -84,6 +88,7 @@
 
 <!-- Custom JavaScript -->
 <script th:src="@{/js/login.js}"></script>
+<script th:src="@{/js/validation.js}"></script>
 
 </body>
 </html>

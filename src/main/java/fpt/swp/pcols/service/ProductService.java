@@ -5,22 +5,21 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductService {
 
     void createProduct(Product product, Long categoryId, Long brandId, List<MultipartFile> imageFile);
 
-    void handleSaveProduct(Product product);
+    void save(Product product);
 
-    Product getProductById(long id);
+    Optional<Product> findById(long id);
 
-    Collection<Product> getProductsByCategory(String categoryNam);
+    Collection<Product> getProductsByCategory(String categoryName);
 
     List<Product> getProductsByCategoryWithImages(String category);
 
     List<Product> getRelatedProducts(Product product, int limit);
-
-//    List<String> getAllBrands();
 
     List<Product> getFilteredProducts(String brand, String category, Double minPrice, Double maxPrice, String sort);
 

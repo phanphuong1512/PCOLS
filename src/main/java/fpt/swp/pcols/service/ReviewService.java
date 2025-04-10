@@ -10,7 +10,7 @@ public interface ReviewService {
 
     Page<Review> getReviewsByProduct(Product product, int page, int size);
 
-    void saveReview(Review review);
+    void save(Review review);
 
     ValidationResult validateReviewForm(ReviewFormDTO reviewForm);
 

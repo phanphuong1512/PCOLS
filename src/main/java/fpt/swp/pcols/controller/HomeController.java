@@ -65,7 +65,7 @@ public class HomeController {
 
 
         // New code: Load all categories dynamically and prepare a map of category name to up to 3 products
-        List<Category> allCategories = categoryService.getAllCategories();
+        List<Category> allCategories = categoryService.findAll();
         System.out.println("All Categories: " + allCategories);
 
         Map<String, List<Product>> categoryProductsMap = new HashMap<>();

@@ -90,6 +90,7 @@
                         <input type="text" name="email" id="email" th:value="${email}"/>
                     </div>
                     <div>
+                        <label >Apply Filters</label>
                         <button type="submit">Apply Filters</button>
                     </div>
                 </form>
@@ -115,7 +116,6 @@
                         <td th:text="${#lists.size(user.authorities) > 0 ? user.authorities[0].authority : 'N/A'}"></td>
                         <td>
                             <a th:href="@{/admin/user/edit/{id}(id=${user.id})}" class="btn btn-warning btn-sm">Edit</a>
-                            <a th:href="@{/admin/user/delete/{id}(id=${user.id})}" class="btn btn-danger btn-sm">Delete</a>
                         </td>
                     </tr>
                     </tbody>

@@ -29,7 +29,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public void saveReview(Review review) {
+    public void save(Review review) {
         reviewRepository.save(review);
     }
 
@@ -54,7 +54,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public double calculateAverageRating(Long productId) {
-        List<Review> reviews = reviewRepository.findByProductId(productId);
+        List<Review> reviews = reviewRepository.findByProduct_Id(productId);
         if (reviews.isEmpty()) {
             return 0; // Nếu không có đánh giá nào, trả về 0
         }
