@@ -1,6 +1,8 @@
 package fpt.swp.pcols.util;
 
 import fpt.swp.pcols.entity.Order;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -8,33 +10,40 @@ import org.thymeleaf.context.Context;
 @Component
 public class EmailContentBuilder {
 
+    private static final Logger logger = LoggerFactory.getLogger(EmailContentBuilder.class);
+
     private final TemplateEngine templateEngine;
 
     public EmailContentBuilder(TemplateEngine templateEngine) {
         this.templateEngine = templateEngine;
     }
 
-    public String buildOrderSuccessEmail(Order order) {
+    public String buildOrderSuccessEmail(Order order, boolean isEmail) {
+        logger.debug("Building email content for order ID: {}", order.getId());
+
         Context context = new Context();
-        // Đánh dấu đây là render cho email
-        context.setVariable("isEmail", true);
 
-        // Các biến dùng cho meta, favicon, CSS với URL tuyệt đối
+        // Quan trọng: Truyền biến isEmail xuống template để tránh lỗi chuyển đổi null -> boolean
+        context.setVariable("isEmail", isEmail);
+
+        // Thiết lập URL động dựa trên isEmail
+        String baseUrl = isEmail ? "http://localhost:8080" : "";
         context.setVariable("metaDescription", "Chi tiết đơn hàng");
-        context.setVariable("faviconUrl", "http://localhost:8080/assets/images/favicon.ico");
-        context.setVariable("cssPluginsAbsolute", "http://localhost:8080/css/plugins.css");
-        context.setVariable("orderSuccessCssAbsolute", "http://localhost:8080/css/order-success.css");
-        context.setVariable("responsiveCssAbsolute", "http://localhost:8080/css/responsive.css");
-        context.setVariable("fontAwesomeAbsolute", "http://localhost:8080/css/font-awesome.min.css");
-
-        // Biến cho URL chi tiết sản phẩm
-        context.setVariable("productDetailAbsoluteUrlPrefix", "http://localhost:8080/product-detail");
+        context.setVariable("faviconUrl", baseUrl + "/assets/images/favicon.ico");
+        context.setVariable("cssPluginsUrl", baseUrl + "/css/plugins.css");
+        context.setVariable("orderSuccessCssUrl", baseUrl + "/css/order-success.css");
+        context.setVariable("responsiveCssUrl", baseUrl + "/css/responsive.css");
+        context.setVariable("fontAwesomeUrl", baseUrl + "/css/font-awesome.min.css");
+        context.setVariable("productDetailUrlPrefix", baseUrl + "/product-detail");
+        context.setVariable("homeUrl", baseUrl + "/home");
 
         // Truyền dữ liệu đơn hàng
         context.setVariable("order", order);
         context.setVariable("orderDetails", order.getOrderDetails());
 
-        // Render template order-success (file order-success.html nằm trong thư mục resources/templates)
-        return templateEngine.process("order-success", context);
+        // Render template order-success
+        String html = templateEngine.process("order-success", context);
+        logger.debug("Email content built successfully for order ID: {}", order.getId());
+        return html;
     }
 }

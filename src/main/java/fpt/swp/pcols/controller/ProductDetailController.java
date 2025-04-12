@@ -4,6 +4,7 @@ import fpt.swp.pcols.dto.DiscountDTO;
 import fpt.swp.pcols.dto.ReviewFormDTO;
 import fpt.swp.pcols.entity.*;
 import fpt.swp.pcols.service.DiscountService;
+import fpt.swp.pcols.service.OrderService;
 import fpt.swp.pcols.service.ProductService;
 import fpt.swp.pcols.service.ReviewService;
 import fpt.swp.pcols.validation.ValidationResult;
@@ -19,10 +20,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -30,6 +29,7 @@ public class ProductDetailController {
     private final ProductService productService;
     private final ReviewService reviewService;
     private final DiscountService discountService;
+    private final OrderService orderService;
 
     @GetMapping("/product-detail")
     public String getProductDetail(@RequestParam("id") Long productId,
@@ -88,13 +88,21 @@ public class ProductDetailController {
     public ResponseEntity<String> submitReview(@RequestParam Long productId,
                                                @ModelAttribute("reviewForm") ReviewFormDTO reviewForm,
                                                @AuthenticationPrincipal User user) {
-        Product product = productService.findById(productId).orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
+        // Kiểm tra đăng nhập
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Please login to submit a review");
+        }
 
-        // validation
+        // Lấy sản phẩm theo productId
+        Product product = productService.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
+
+        // Validate form review
         ValidationResult validationResult = reviewService.validateReviewForm(reviewForm);
         if (validationResult.isHasErrors()) {
-            Map<String, String> errors = validationResult.getErrors();
             StringBuilder sb = new StringBuilder();
+            Map<String, String> errors = validationResult.getErrors();
             if (errors.containsKey("ratingError")) {
                 sb.append(errors.get("ratingError")).append(" ");
             }
@@ -104,19 +112,32 @@ public class ProductDetailController {
             return ResponseEntity.badRequest().body(sb.toString().trim());
         }
 
-        // Kiểm tra đăng nhập
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Please login to submit a review");
+        // Kiểm tra xem user đã mua sản phẩm này chưa
+        if (!orderService.hasUserPurchasedProduct(user, product)) {
+            return ResponseEntity.badRequest()
+                    .body("You can only review products you have purchased.");
         }
 
-        // Lưu review
-        Review review = new Review();
-        review.setProduct(product);
-        review.setUser(user);
-        review.setRating(reviewForm.rating());
-        review.setComment(reviewForm.comment());
-        reviewService.save(review);
-
-        return ResponseEntity.ok("Review submitted successfully");
+        // Kiểm tra xem user đã có review cho sản phẩm này chưa
+        Optional<Review> existingReview = reviewService.findReviewByUserAndProduct(user, product);
+        if (existingReview.isPresent()) {
+            // Nếu đã có, cập nhật review cũ với thông tin mới
+            Review reviewToUpdate = existingReview.get();
+            reviewToUpdate.setRating(reviewForm.rating());
+            reviewToUpdate.setComment(reviewForm.comment());
+            // Cập nhật lại thời gian tạo, nếu cần cập nhật thời gian review
+            reviewToUpdate.setCreatedAt(LocalDateTime.now());
+            reviewService.save(reviewToUpdate);
+            return ResponseEntity.ok("Review updated successfully");
+        } else {
+            // Nếu chưa có, tạo review mới
+            Review review = new Review();
+            review.setProduct(product);
+            review.setUser(user);
+            review.setRating(reviewForm.rating());
+            review.setComment(reviewForm.comment());
+            reviewService.save(review);
+            return ResponseEntity.ok("Review submitted successfully");
+        }
     }
 }

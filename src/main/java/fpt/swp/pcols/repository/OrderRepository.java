@@ -16,6 +16,9 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     Optional<Order> findByUserAndStatus(User user, Order.OrderStatus status);
 
+    Optional<Order> findTopByUserAndStatusOrderByOrderDateDesc(User user, Order.OrderStatus status);
+
+
     @Query("SELECT o FROM Order o " +
             "JOIN FETCH o.orderDetails od " +
             "JOIN FETCH od.product p " +
@@ -35,4 +38,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Query("SELECT MIN(YEAR(o.orderDate)) FROM Order o")
     Integer findEarliestOrderYear();
+
+    List<Order> findByUserAndStatusIn(User user, List<Order.OrderStatus> validStatuses);
 }

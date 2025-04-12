@@ -59,7 +59,7 @@ public class OrderController {
                 .orElseGet(() -> {
                     Order newCart = new Order();
                     newCart.setUser(user);
-                    newCart.setStatus(Order.OrderStatus.PENDING);
+                    newCart.setStatus(Order.OrderStatus.CART);
                     newCart.setOrderDate(LocalDateTime.now());
                     newCart.setOrderDetails(new ArrayList<>());
                     return orderService.save(newCart);
@@ -165,17 +165,14 @@ public class OrderController {
                     .orElseThrow(() -> new RuntimeException("Không tìm thấy user"));
             logger.debug("Đã tìm thấy user: {}", user.getUsername());
 
-            // Lấy order
-            Order order = orderService.getCurrentCartForUser(user)
-                    .orElseThrow(() -> new RuntimeException("Không tìm thấy order"));
-            logger.debug("Đã tìm thấy order với ID: {}", order.getId());
+            // Lấy đơn hàng đã đặt (với status PENDING)
+            Order order = orderService.getLatestPlacedOrderForUser(user)
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn hàng đã đặt"));
+            logger.debug("Đã tìm thấy order đã đặt với ID: {}", order.getId());
 
-            // Kích hoạt lazy loading cho order details
+            // Kích hoạt lazy loading cho order details nếu cần
             order.getOrderDetails().size();
             logger.debug("Số lượng order details: {}", order.getOrderDetails().size());
-
-            // Kiểm tra subtotal
-            logger.debug("Subtotal của order: {}", order.getSubtotal());
 
             // Thêm vào model
             model.addAttribute("order", order);
@@ -201,8 +198,50 @@ public class OrderController {
                     .orElseThrow(() -> new RuntimeException("Cart not found"));
 
             orderService.confirmOrder(order, billDTO);
+            logger.debug("Order confirmed, subtotal: {}, shippingFee: {}, grandTotal: {}",
+                    order.getSubtotal(), order.getShippingFee(), order.getGrandTotal());
+
+
+            logger.debug("Loading order details for order ID: {}", order.getId());
+            if (order.getOrderDetails() != null) {
+                order.getOrderDetails().size();
+                for (OrderDetail detail : order.getOrderDetails()) {
+                    if (detail != null && detail.getProduct() != null) {
+                        logger.debug("Loading product data for detail ID: {}", detail.getId());
+                        // Load images
+                        if (detail.getProduct().getImages() != null) {
+                            detail.getProduct().getImages().size();
+                        } else {
+                            logger.warn("Images null for product ID: {}", detail.getProduct().getId());
+                        }
+                        // Load brand
+                        if (detail.getProduct().getBrand() != null) {
+                            detail.getProduct().getBrand().getName();
+                            logger.debug("Loaded brand: {} for product ID: {}",
+                                    detail.getProduct().getBrand().getName(), detail.getProduct().getId());
+                        } else {
+                            logger.warn("Brand null for product ID: {}", detail.getProduct().getId());
+                        }
+                        // Load category
+                        if (detail.getProduct().getCategory() != null) {
+                            detail.getProduct().getCategory().getName();
+                            logger.debug("Loaded category: {} for product ID: {}",
+                                    detail.getProduct().getCategory().getName(), detail.getProduct().getId());
+                        } else {
+                            logger.warn("Category null for product ID: {}", detail.getProduct().getId());
+                        }
+                    } else {
+                        logger.warn("Detail or product null for order ID: {}", order.getId());
+                    }
+                }
+            } else {
+                logger.warn("Order details null for order ID: {}", order.getId());
+            }
             redirectAttributes.addFlashAttribute("order", order);
-            emailUtil.sendOrderSuccessEmail(user.getEmail(), order);
+
+
+            logger.debug("Triggering async email for order ID: {} to email: {}", order.getId(), order.getEmail());
+            emailUtil.sendOrderSuccessEmail(order.getEmail(), order);
 
             return "redirect:/checkout/success";
         } catch (OutOfStockException ex) {
@@ -238,9 +277,9 @@ public class OrderController {
 
     @GetMapping("seller/orders")
     public String listSellerOrders(Model model,
-                             @RequestParam(value = "sort", required = false, defaultValue = "desc") String sort,
-                             @RequestParam(value = "status", required = false) String status,
-                             @RequestParam(value = "email", required = false) String email) {
+                                   @RequestParam(value = "sort", required = false, defaultValue = "desc") String sort,
+                                   @RequestParam(value = "status", required = false) String status,
+                                   @RequestParam(value = "email", required = false) String email) {
         Order.OrderStatus orderStatus = null;
         if (status != null && !status.isEmpty()) {
             try {

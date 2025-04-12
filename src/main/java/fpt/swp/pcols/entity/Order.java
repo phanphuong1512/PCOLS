@@ -8,6 +8,7 @@ import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -35,11 +36,11 @@ public class Order {
     // Trạng thái đơn hàng
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 50)
-    private OrderStatus status = OrderStatus.PENDING;
+    private OrderStatus status = OrderStatus.CART;
 
     // Danh sách chi tiết đơn hàng
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<OrderDetail> orderDetails;
+    private List<OrderDetail> orderDetails = new ArrayList<>();
 
     // Thông tin billing/shipping (snapshot tại thời điểm đặt hàng)
     @Column(name = "first_name")
@@ -74,9 +75,13 @@ public class Order {
     private String paymentMethod;
 
     public enum OrderStatus {
-        PENDING, PACKED, SHIPPED, CANCELLED, PAID
+        CART,       // Giỏ hàng đang được tích lũy, có thể thay đổi
+        PENDING,    // Đơn hàng đã được xác nhận (place order) và đang chờ xử lý
+        PACKED,
+        SHIPPED,
+        CANCELLED,
+        PAID
     }
-
 
     @Transient
     public BigDecimal getSubtotal() {
