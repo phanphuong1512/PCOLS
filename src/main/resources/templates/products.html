@@ -39,7 +39,45 @@
     <script th:src="@{/js/product.js}" src="/js/product.js" defer></script>
     <script th:src="@{/js/ajax.js}" src="/js/product.js" defer></script>
 
+<style>
+    /* Search bar styling */
+    .search-container {
+        display: inline-block;
+        margin-right: 15px;
+        float: left;
+        width: 70%;
+    }
 
+    #product-search-input {
+        width: 75%;
+        height: 40px;
+        padding: 10px;
+        border: 1px solid #E4E7ED;
+        margin-right: 5px;
+    }
+
+    #product-search-button {
+        height: 40px;
+        padding: 0 15px;
+    }
+
+    /* Responsive styles */
+    @media (max-width: 768px) {
+        .search-container {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        #product-search-input {
+            width: 70%;
+        }
+
+        .pull-right {
+            float: none !important;
+            clear: both;
+        }
+    }
+</style>
 </head>
 
 <body>
@@ -164,21 +202,15 @@
             <div id="main" class="col-md-9">
                 <!-- store top filter -->
                 <div class="store-filter clearfix">
-                    <div class="pull-left">
-                        <div class="row-filter">
-                            <a href="#"><i class="fa fa-th-large"></i></a>
-                            <a href="#" class="active"><i class="fa fa-bars"></i></a>
-                        </div>
-                        <div class="sort-filter">
-                            <span class="text-uppercase">Sort By:</span>
-                            <label for="sortByPrice">
-                                <select class="input" id="sortByPrice">
-                                    <option value="">Price</option>
-                                    <option value="asc">Price (Ascending)</option>
-                                    <option value="desc">Price (Descending)</option>
-                                </select>
-                            </label>
-                        </div>
+                    <div class="search-container">
+                        <form id="product-search-form" class="form-inline">
+                            <div class="form-group">
+                                <input type="text" id="product-search-input" class="form-control" placeholder="Search products...">
+                                <button type="submit" id="product-search-button" class="btn primary-btn">
+                                    <i class="fa fa-search"></i> Search
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
 
@@ -249,28 +281,6 @@
                     <p>Loading more products...</p>
                 </div>
 
-                <!-- store bottom filter -->
-                <div class="store-filter clearfix">
-                    <div class="pull-left">
-                        <div class="row-filter">
-                            <a href="#"><i class="fa fa-th-large"></i></a>
-                            <a href="#" class="active"><i class="fa fa-bars"></i></a>
-                        </div>
-                        <div class="sort-filter">
-                            <span class="text-uppercase">Sort By:</span>
-                            <label>
-                                <select class="input">
-                                    <option value="0">Position</option>
-                                    <option value="0">Price</option>
-                                    <option value="0">Rating</option>
-                                </select>
-                            </label>
-                            <a href="#" class="main-btn icon-btn"><i class="fa fa-arrow-down"></i></a>
-                        </div>
-                    </div>
-
-                </div>
-                <!-- /store bottom filter -->
             </div>
             <!-- /MAIN -->
         </div>

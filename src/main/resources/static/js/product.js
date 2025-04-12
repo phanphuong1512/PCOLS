@@ -25,10 +25,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // ✅ Ensure noUiSlider is initialized only once
     noUiSlider.create(priceSlider, {
-        start: [0, 5000],
+        start: [0, 100],
         connect: true,
-        range: { 'min': 0, 'max': 5000 },
-        step: 50,
+        range: { 'min': 0, 'max': 100 },
+        step: 5,
         tooltips: true,
         format: {
             to: value => Math.round(value),
