@@ -8,19 +8,26 @@
     <meta name="description" th:content="${metaDescription}"/>
 
     <!-- Title Of Site -->
-    <title th:text="${pageTitle}">Checkout Success - Optimal Multipurpose eCommerce Bootstrap 5 Html Template</title>
+    <title>Checkout Success - Optimal Multipurpose eCommerce Bootstrap 5 Html Template</title>
 
     <!-- Favicon -->
-    <link rel="shortcut icon" th:href="@{${faviconUrl}}"/>
+    <!-- Nếu dùng email: sử dụng URL tuyệt đối, còn nếu web: sử dụng cú pháp context-relative -->
+    <link rel="shortcut icon" th:if="${isEmail}" th:href="${faviconUrl}"/>
+    <link rel="shortcut icon" th:if="${isEmail != true}" th:href="@{/assets/images/favicon.ico}"/>
 
     <!-- Plugins CSS -->
-    <link rel="stylesheet" th:href="@{/css/plugins.css}"/>
+    <link rel="stylesheet" th:if="${isEmail}" th:href="${cssPluginsAbsolute}"/>
+    <link rel="stylesheet" th:if="${isEmail != true}" th:href="@{/css/plugins.css}"/>
 
     <!-- Main Style CSS -->
-    <link rel="stylesheet" th:href="@{/css/order-success.css}"/>
-    <link rel="stylesheet" th:href="@{/css/responsive.css}"/>
+    <link rel="stylesheet" th:if="${isEmail}" th:href="${orderSuccessCssAbsolute}"/>
+    <link rel="stylesheet" th:if="${isEmail != true}" th:href="@{/css/order-success.css}"/>
 
-    <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}"/>
+    <link rel="stylesheet" th:if="${isEmail}" th:href="${responsiveCssAbsolute}"/>
+    <link rel="stylesheet" th:if="${isEmail != true}" th:href="@{/css/responsive.css}"/>
+
+    <link rel="stylesheet" th:if="${isEmail}" th:href="${fontAwesomeAbsolute}"/>
+    <link rel="stylesheet" th:if="${isEmail != true}" th:href="@{/css/font-awesome.min.css}"/>
 
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -76,15 +83,34 @@
                                 <tbody>
                                 <tr th:each="detail : ${orderDetails}">
                                     <td class="pro-img">
-                                        <a th:href="@{/product-detail(id=${detail.product.id})}">
+                                        <a th:if="${isEmail}"
+                                           th:href="${productDetailAbsoluteUrlPrefix + '?id=' + detail.product.id}">
                                             <img class="primary lazyload"
-                                                 th:src="${detail.product != null && !detail.product.images.isEmpty() ? detail.product.images[0].url : '/assets/images/products/100x120.jpg'}"
+                                                 th:src="${detail.product != null && !#lists.isEmpty(detail.product.images) ? detail.product.images[0].url : '/assets/images/products/100x120.jpg'}"
+                                                 alt="image" title="product" width="80"/>
+                                        </a>
+                                        <a th:if="${isEmail != true}"
+                                           th:href="@{/product-detail(id=${detail.product.id})}">
+                                            <img class="primary lazyload"
+                                                 th:src="${detail.product != null && !#lists.isEmpty(detail.product.images) ? detail.product.images[0].url : '/assets/images/products/100x120.jpg'}"
                                                  alt="image" title="product" width="80"/>
                                         </a>
                                     </td>
                                     <td class="pro-name text-start">
-                                        <a th:href="@{/product-detail(id=${detail.product.id})}" class="d-block"
-                                           th:text="${detail.product != null ? detail.product.name : 'Unknown Product'}"></a>
+                                        <!-- Dành cho email -->
+                                        <a th:if="${isEmail}"
+                                           th:href="${productDetailAbsoluteUrlPrefix + '?id=' + detail.product.id}"
+                                           class="d-block"
+                                           th:text="${detail.product != null ? detail.product.name : 'Unknown Product'}">
+                                        </a>
+
+                                        <!-- Dành cho web -->
+                                        <a th:if="${isEmail != true}"
+                                           th:href="@{/product-detail(id=${detail.product.id})}"
+                                           class="d-block"
+                                           th:text="${detail.product != null ? detail.product.name : 'Unknown Product'}">
+                                        </a>
+
                                         <div class="cart__meta-text">
                                             <span th:text="'Brand: ' + ${detail.product != null ? detail.product.brand.name : 'N/A'}">Brand</span><br>
                                             <span th:text="'Category: ' + ${detail.product != null ? detail.product.category.name : 'N/A'}">Category</span><br>
@@ -96,27 +122,32 @@
                                 </tr>
                                 </tbody>
                                 <tfoot>
+                                <!-- Subtotal -->
                                 <tr>
                                     <td colspan="4" class="item subtotal text-end fw-bolder">Subtotal:</td>
-                                    <td class="fw-500 last">$59.00</td>
+                                    <td class="fw-500 last"
+                                        th:text="${order.subtotal != null ? #numbers.formatDecimal(order.subtotal, 1, 2, 'POINT') : '0.00'}">
+                                        $0.00
+                                    </td>
                                 </tr>
-                                <tr>
-                                    <td colspan="4" class="item tax text-end fw-bolder">Tax:</td>
-                                    <td class="fw-500 last">$4.87</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="4" class="item discount text-end fw-bolder">Discount:</td>
-                                    <td class="fw-500 last">$0.00</td>
-                                </tr>
+                                <!-- Shipping -->
                                 <tr>
                                     <td colspan="4" class="item shipping text-end fw-bolder">Shipping:</td>
-                                    <td class="fw-500 last">$5.00</td>
+                                    <td class="fw-500 last"
+                                        th:text="${order.shippingFee != null ? #numbers.formatDecimal(order.shippingFee, 1, 2, 'POINT') : '0.00'}">
+                                        $0.00
+                                    </td>
                                 </tr>
+                                <!-- Grand Total -->
                                 <tr>
                                     <td colspan="4" class="item total text-end fw-bolder">Grand Total:</td>
-                                    <td class="fw-500 last">$68.87</td>
+                                    <td class="fw-500 last"
+                                        th:text="${order.grandTotal != null ? #numbers.formatDecimal(order.grandTotal, 1, 2, 'POINT') : '0.00'}">
+                                        $0.00
+                                    </td>
                                 </tr>
                                 </tfoot>
+
                             </table>
                         </div>
                     </div>
@@ -163,7 +194,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="d-flex-wrap w-100 mt-4 text-center">
+                    <div class="d-flex-wrap w-100 mt-4 text-center" th:if="${isEmail != true}">
                         <a th:href="@{/home}"
                            class="d-inline-flex align-items-center btn btn-outline-primary rounded me-2 mb-2 me-sm-3">
                             <i class="me-2 icon an an-angle-left-r"></i>

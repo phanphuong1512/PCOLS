@@ -6,8 +6,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "orders")
@@ -73,5 +75,35 @@ public class Order {
 
     public enum OrderStatus {
         PENDING, PACKED, SHIPPED, CANCELLED, PAID
+    }
+
+
+    @Transient
+    public BigDecimal getSubtotal() {
+        if (orderDetails == null || orderDetails.isEmpty()) {
+            return BigDecimal.ZERO;
+        }
+        return orderDetails.stream()
+                .map(OrderDetail::getTotalPrice)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    @Transient
+    public BigDecimal getShippingFee() {
+        if ("FREE".equalsIgnoreCase(shippingMethod)) {
+            return BigDecimal.ZERO;
+        } else if ("STANDARD".equalsIgnoreCase(shippingMethod)) {
+            return new BigDecimal("4.00");
+        }
+        // Giá trị mặc định nếu shippingMethod không hợp lệ
+        return BigDecimal.ZERO;
+    }
+
+    @Transient
+    public BigDecimal getGrandTotal() {
+        BigDecimal subtotal = getSubtotal() != null ? getSubtotal() : BigDecimal.ZERO;
+        BigDecimal shippingFee = getShippingFee() != null ? getShippingFee() : BigDecimal.ZERO;
+        return subtotal.add(shippingFee);
     }
 }

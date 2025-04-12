@@ -36,8 +36,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-
-
+    
     // Database driver
     implementation 'com.mysql:mysql-connector-j:9.2.0'
 
@@ -49,6 +48,9 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
 
     // devtool(for development environment)
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // Spring Boot Actuator
     implementation 'io.github.cdimascio:dotenv-java:3.0.0'
 
     // Testing dependencies

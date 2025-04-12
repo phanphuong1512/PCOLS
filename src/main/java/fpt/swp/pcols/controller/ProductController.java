@@ -1,5 +1,6 @@
 package fpt.swp.pcols.controller;
 
+import fpt.swp.pcols.dto.DiscountDTO;
 import fpt.swp.pcols.entity.*;
 import fpt.swp.pcols.service.*;
 import jakarta.validation.Valid;
@@ -135,7 +136,9 @@ public class ProductController {
         List<Category> listCategories = categoryService.findAll();
         List<Brand> listBrands = brandService.findAll();
         List<Product> products = productService.getFilteredProducts(brand, category, minPrice, maxPrice, sort);
+        Map<Long, DiscountDTO> discountMap = discountService.getProductDiscounts(products);
 
+        model.addAttribute("discountMap", discountMap);
         model.addAttribute("products", products);
         model.addAttribute("listCategories", listCategories);
         model.addAttribute("listBrands", listBrands);
@@ -154,15 +157,6 @@ public class ProductController {
 
         model.addAttribute("averageRating", averageRatingMap);
 
-        // Thêm map chứa discount (sale) cho từng product
-        Map<Long, Discount> discountMap = new HashMap<>();
-        for (Product product : products) {
-            Discount discount = discountService.getDiscountByProduct(product.getId());
-            if (discount != null) {
-                discountMap.put(product.getId(), discount);
-            }
-        }
-        model.addAttribute("discountMap", discountMap);
 
         return "products";
     }

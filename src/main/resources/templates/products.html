@@ -37,6 +37,7 @@
     <script th:src="@{/js/jquery.zoom.min.js}" src="/js/jquery.zoom.min.js" defer></script>
     <script th:src="@{/js/main.js}" src="/js/main.js" defer></script>
     <script th:src="@{/js/product.js}" src="/js/product.js" defer></script>
+    <script th:src="@{/js/ajax.js}" src="/js/product.js" defer></script>
 
 
 </head>
@@ -187,7 +188,58 @@
                 <div id="store">
                     <div class="row" id="product-list">
                         <div th:each="product : ${products}" th:with="averageRating=${averageRating[product.id]}">
-                            <div th:replace="fragments/product :: productCard (product=${product}, averageRating=${averageRating})"></div>
+                            <!-- Fragment: productCard -->
+                            <div th:fragment="productCard (product,averageRating)" class="col-md-4 col-sm-6 col-xs-6">
+                                <div class="product product-single">
+
+                                    <a th:href="@{/product-detail(id=${product.id})}">
+                                        <div class="product-thumb">
+                                            <div class="product-label"
+                                                 th:if="${discountMap != null && discountMap.containsKey(product.id)}">
+                    <span class="sale" th:text="${discountMap.get(product.id).discountType() == T(fpt.swp.pcols.entity.Discount.DiscountType).PERCENTAGE ?
+                        '-' + discountMap.get(product.id).discountValue.stripTrailingZeros().toPlainString() + '%' :
+                        '$' + discountMap.get(product.id).discountValue}"></span>
+                                            </div>
+                                            <img th:src="${!product.images.isEmpty() ? product.images[0].url : '/images/default.jpg'}"
+                                                 alt="">
+                                        </div>
+                                    </a>
+                                    <div class="product-body">
+                                        <h3 class="product-price" th:with="discount=${discountMap?.get(product.id)}">
+                <span th:if="${discount}"
+                      th:text="'$' + ${#numbers.formatDecimal(discount.discountedPrice(), 1, 2)}">
+                    </span>
+                                            <span th:unless="${discount}"
+                                                  th:text="'$' + ${#numbers.formatDecimal(product.price, 1, 2)}">
+                    </span>
+                                            <del th:if="${discount}"
+                                                 class="product-old-price"
+                                                 th:text="'$' + ${#numbers.formatDecimal(product.price, 1, 2)}">
+                                            </del>
+                                        </h3>
+                                        <div class="product-rating">
+                                            <i th:classappend="${averageRating >= 1 ? 'fa fa-star' : 'fa fa-star-o empty'}"></i>
+                                            <i th:classappend="${averageRating >= 2 ? 'fa fa-star' : 'fa fa-star-o empty'}"></i>
+                                            <i th:classappend="${averageRating >= 3 ? 'fa fa-star' : 'fa fa-star-o empty'}"></i>
+                                            <i th:classappend="${averageRating >= 4 ? 'fa fa-star' : 'fa fa-star-o empty'}"></i>
+                                            <i th:classappend="${averageRating >= 5 ? 'fa fa-star' : 'fa fa-star-o empty'}"></i>
+                                        </div>
+                                        <h2 class="product-name">
+                                            <a th:href="@{/product-detail(id=${product.id})}"
+                                               th:text="${product.name}"></a>
+                                        </h2>
+                                        <div class="product-btns">
+                                            <button class="main-btn icon-btn"><i class="fa fa-heart"></i></button>
+                                            <button class="main-btn icon-btn"><i class="fa fa-exchange"></i></button>
+                                            <button class="primary-btn add-to-cart"
+                                                    th:attr="data-product-id=${product.id}">
+                                                <i class="fa fa-shopping-cart"></i> Add to Cart
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
