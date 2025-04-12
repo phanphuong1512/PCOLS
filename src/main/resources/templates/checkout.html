@@ -146,28 +146,36 @@
                             <h3 class="title">Billing Details</h3>
                         </div>
                         <div class="form-group">
-                            <input class="input" type="text" name="firstName" placeholder="First Name">
+                            <input class="input" type="text" name="firstName" placeholder="First Name"
+                                   th:value="${order.firstName}">
                         </div>
                         <div class="form-group">
-                            <input class="input" type="text" name="lastName" placeholder="Last Name">
+                            <input class="input" type="text" name="lastName" placeholder="Last Name"
+                                   th:value="${order.lastName}">
                         </div>
                         <div class="form-group">
-                            <input class="input" type="email" name="email" placeholder="Email">
+                            <input class="input" type="email" name="email" placeholder="Email"
+                                   th:value="${user.email}">
                         </div>
                         <div class="form-group">
-                            <input class="input" type="text" name="address" placeholder="Address">
+                            <input class="input" type="text" name="address" placeholder="Address"
+                                   th:value="${user.address}">
                         </div>
                         <div class="form-group">
-                            <input class="input" type="text" name="city" placeholder="City">
+                            <input class="input" type="text" name="city" placeholder="City"
+                                   th:value="${order.city}">
                         </div>
                         <div class="form-group">
-                            <input class="input" type="text" name="country" placeholder="Country">
+                            <input class="input" type="text" name="country" placeholder="Country"
+                                   th:value="${order.country}">
                         </div>
                         <div class="form-group">
-                            <input class="input" type="text" name="zipCode" placeholder="ZIP Code">
+                            <input class="input" type="text" name="zipCode" placeholder="ZIP Code"
+                                   th:value="${order.zipCode}">
                         </div>
                         <div class="form-group">
-                            <input class="input" type="tel" name="phone" placeholder="Telephone">
+                            <input class="input" type="tel" name="phone" placeholder="Telephone"
+                                   th:value="${user.phone}">
                         </div>
                     </div>
                 </div>

@@ -7,6 +7,7 @@ import fpt.swp.pcols.entity.User;
 import fpt.swp.pcols.validation.ValidationResult;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ReviewService {
@@ -20,4 +21,6 @@ public interface ReviewService {
     ValidationResult validateReviewForm(ReviewFormDTO reviewForm);
 
     double calculateAverageRating(Long productId);
+
+    List<Review> getRecentReviews(int limit);
 }

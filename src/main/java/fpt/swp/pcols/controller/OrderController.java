@@ -67,6 +67,7 @@ public class OrderController {
 
         model.addAttribute("order", cart);
         model.addAttribute("orderDetails", cart.getOrderDetails());
+        model.addAttribute("user", user);
 
         if (model.containsAttribute("error")) {
             model.addAttribute("error", model.getAttribute("error"));

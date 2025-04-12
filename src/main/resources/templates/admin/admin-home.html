@@ -37,16 +37,6 @@
 
         <!-- ======================= Cards ================== -->
         <div class="cardBox">
-            <form th:action="@{/admin/dashboard}" method="get" class="year-filter-form">
-                <label for="year">Filter by Year:</label>
-                <select name="year" id="year" onchange="this.form.submit()">
-                    <option th:each="y : ${years}"
-                            th:value="${y}"
-                            th:text="${y}"
-                            th:selected="${y == selectedYear}">
-                    </option>
-                </select>
-            </form>
             <div class="card">
                 <div>
                     <div class="numbers" th:text="${ordersThisYear}"></div>
@@ -76,129 +66,75 @@
         <div class="details">
             <div class="recentOrders">
                 <div class="cardHeader">
-                    <h2>Products List</h2>
-                    <a th:href="@{/admin/orders}" href="/admin/orders" class="btn">View All</a>
+                    <h2>Orders List</h2>
+                    <div class="view-all-container">
+                        <form th:action="@{/admin/orders}" method="get" class="year-filter-form">
+                            <select name="year" id="year" onchange="this.form.submit()">
+                                <option th:each="y : ${years}"
+                                        th:value="${y}"
+                                        th:text="${y}"
+                                        th:selected="${y == selectedYear}">
+                                </option>
+                            </select>
+                        </form>
+                    </div>
                 </div>
                 <table>
                     <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Category</th>
-                        <th>Brand</th>
-                        <th>Price</th>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Order Date</th>
+                        <th>Status</th>
+                        <th>Total</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="product : ${products}">
-                        <td th:text="${product.id}"></td>
-                        <td th:text="${product.name}"></td>
-                        <td th:text="${product.category != null ? product.category.name : 'No Category'}"></td>
-                        <td th:text="${product.brand != null ? product.brand.name : 'No Brand'}"></td>
-                        <td th:text="${product.price}"></td>
+                    <tr th:each="order : ${orders}">
+                        <td th:text="${order.id}"></td>
+                        <td th:text="${order.firstName + ' ' + order.lastName}"></td>
+                        <td th:text="${#temporals.format(order.orderDate, 'dd-MM-yyyy')}"></td>
                         <td>
-                            <a href="#" class="btn btn-warning btn-sm delete-btn" th:data-id="${product.id}">Delete</a>
-                            <a th:href="@{/admin/product/detail/{id}(id=${product.id})}" class="btn btn-danger btn-sm">Detail</a>
+                            <span th:class="${'status ' + order.status.toString().toLowerCase()}"
+                                  th:text="${order.status}"></span>
+                        </td>
+                        <td th:text="${'$' + order.grandTotal}"></td>
+                        <td>
+                            <a th:href="@{/admin/order/detail/{id}(id=${order.id})}" class="btn btn-danger btn-sm">Detail</a>
                         </td>
                     </tr>
                     </tbody>
                 </table>
             </div>
 
-            <!-- =============== Add New Product =============== -->
-            <div class="addProductContainer">
-                <div class="addProductHeader">
-                    <h2>Add New Product</h2>
+            <!-- =============== Recent Reviews =============== -->
+            <div class="recentReviews">
+                <div class="cardHeader">
+                    <h2>Recent Reviews</h2>
                 </div>
-                <form action="#" method="POST" enctype="multipart/form-data" class="addProductForm">
-                    <!-- Row 1: Name & Category -->
-                    <div class="form-row">
-                        <!-- Name -->
-                        <div class="form-group">
-                            <label for="productName">Product Name</label>
-                            <input
-                                    type="text"
-                                    id="productName"
-                                    name="name"
-                                    placeholder="Enter product name..."
-                                    required
-                            />
+                <div class="reviews-container">
+                    <div class="review-item" th:each="review : ${recentReviews}">
+                        <div class="review-header">
+                            <div class="review-user" th:text="${review.user.username}"></div>
+                            <div class="review-date" th:text="${#temporals.format(review.createdAt, 'dd-MM-yyyy')}"></div>
                         </div>
-
-                        <!-- Category -->
-                        <div class="form-group">
-                            <label for="category">Category</label>
-                            <select id="category" name="category" required>
-                                <option value="">-- Select Category --</option>
-                                <option value="Monitor">Monitor</option>
-                                <option value="CPU">CPU</option>
-                                <option value="VGA">VGA</option>
-                            </select>
+                        <div class="review-product" th:text="${'Product: ' + review.product.name}"></div>
+                        <div class="review-rating">
+                            <span class="stars">
+                                <span th:each="i : ${#numbers.sequence(1, 5)}">
+                                    <ion-icon name="star" th:class="${i <= review.rating ? 'filled' : ''}"></ion-icon>
+                                </span>
+                            </span>
+                        </div>
+                        <div class="review-comment" th:text="${review.comment}"></div>
+                        <div class="review-actions">
+<!--                            <a th:href="@{/admin/reviews/{id}(id=${review.id})}" class="btn btn-sm">View</a>-->
+<!--                            <button class="btn btn-sm delete-review" th:data-id="${review.id}">Hide</button>-->
                         </div>
                     </div>
-
-                    <!-- Row 2: Brand & Price -->
-                    <div class="form-row">
-                        <!-- Brand -->
-                        <div class="form-group">
-                            <label for="brand">Brand</label>
-                            <select id="brand" name="brand" required>
-                                <option value="">-- Select Brand --</option>
-                                <option value="Asus">Asus</option>
-                                <option value="Intel">Intel</option>
-                                <option value="Nvidia">Nvidia</option>
-                            </select>
-                        </div>
-
-                        <!-- Price -->
-                        <div class="form-group">
-                            <label for="price">Price</label>
-                            <input
-                                    type="number"
-                                    id="price"
-                                    name="price"
-                                    placeholder="Enter product price..."
-                                    required
-                            />
-                        </div>
-                    </div>
-
-                    <!-- Row 3: Description (full width) -->
-                    <div class="form-row">
-                        <div class="form-group full-width">
-                            <label for="description">Description</label>
-                            <textarea
-                                    id="description"
-                                    name="description"
-                                    rows="4"
-                                    placeholder="Enter product description..."
-                            ></textarea>
-                        </div>
-                    </div>
-
-                    <!-- Row 4: Image (full width) -->
-                    <div class="form-row">
-                        <div class="form-group full-width">
-                            <label for="image">Image</label>
-                            <input
-                                    type="file"
-                                    id="image"
-                                    name="image"
-                                    accept="image/*"
-                            />
-                        </div>
-                    </div>
-
-                    <!-- Row 5: Buttons -->
-                    <div class="form-row btn-row">
-                        <button type="submit" class="btn-save">Save</button>
-                        <button type="button" class="btn-cancel">Cancel</button>
-                    </div>
-                </form>
+                </div>
             </div>
-
-
         </div>
     </div>
 </div>

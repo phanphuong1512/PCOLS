@@ -34,4 +34,6 @@ public interface OrderService {
     DashboardStatsDTO getDashboardStats(int year);
 
     List<Integer> getYearRangeForOrders();
+
+    List<Order> getOrdersByYear(int selectedYear);
 }

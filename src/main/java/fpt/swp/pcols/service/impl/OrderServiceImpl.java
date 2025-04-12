@@ -194,5 +194,17 @@ public class OrderServiceImpl implements OrderService {
         return years;
     }
 
+    @Override
+    public List<Order> getOrdersByYear(int year) {
+        LocalDateTime startOfYear = LocalDateTime.of(year, 1, 1, 0, 0, 0);
+        LocalDateTime endOfYear = LocalDateTime.of(year, 12, 31, 23, 59, 59);
+
+        return orderRepository.findByOrderDateBetweenAndStatusNot(
+                startOfYear,
+                endOfYear,
+                Order.OrderStatus.CART
+        );
+    }
+
 
 }

@@ -71,4 +71,9 @@ public class ReviewServiceImpl implements ReviewService {
         }
         return totalRating / reviews.size(); // Tính trung bình
     }
+
+    @Override
+    public List<Review> getRecentReviews(int limit) {
+        return reviewRepository.findTop10ByOrderByCreatedAtDesc();
+    }
 }

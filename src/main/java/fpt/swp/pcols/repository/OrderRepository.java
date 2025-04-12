@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,4 +41,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     Integer findEarliestOrderYear();
 
     List<Order> findByUserAndStatusIn(User user, List<Order.OrderStatus> validStatuses);
+
+    List<Order> findByOrderDateBetweenAndStatusNot(LocalDateTime start, LocalDateTime end, Order.OrderStatus excludeStatus);
 }
