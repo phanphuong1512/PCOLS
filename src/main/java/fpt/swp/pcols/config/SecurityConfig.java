@@ -40,7 +40,7 @@ public class SecurityConfig {
                 .formLogin(login -> login
                         .loginPage("/auth/login")
                         .loginProcessingUrl("/auth/login")
-                        .defaultSuccessUrl("/home")
+                        .defaultSuccessUrl("/home",true)
                         .failureUrl("/auth/login?error")
                         .permitAll()
                 )

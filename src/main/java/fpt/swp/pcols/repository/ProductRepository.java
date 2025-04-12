@@ -9,14 +9,16 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("SELECT p FROM Product p LEFT JOIN FETCH p.images WHERE p.category = :category")
     List<Product> findByCategoryWithImages(@Param("category") Category category);
+
+    List<Product> findAllByIdIn(Collection<Long> ids);
 
     @Query("SELECT p FROM Product p WHERE " +
             "(:brand IS NULL OR p.brand.name = :brand) " +
@@ -29,8 +31,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                                        @Param("maxPrice") Double maxPrice,
                                        String sort);
 
-//    @Query("SELECT DISTINCT p.brand FROM Product p WHERE p.brand IS NOT NULL")
-//    List<String> findAllBrands();
+    //    @Query("SELECT DISTINCT p.brand FROM Product p WHERE p.brand IS NOT NULL")
+    //    List<String> findAllBrands();
 
     @Query("SELECT p FROM Product p WHERE " +
             "(:categoryName IS NULL OR p.category.name = :categoryName) AND " +

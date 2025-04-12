@@ -16,6 +16,8 @@ public interface DiscountRepository extends JpaRepository<Discount, Long> {
 
     Optional<Discount> findByProduct_Id(Long productId);
 
+    List<Discount> findByIsActiveTrueAndStartDateLessThanEqualAndEndDateGreaterThan(LocalDateTime now1, LocalDateTime now2);
+
     @Query("SELECT d FROM Discount d WHERE " +
             "(d.product.id = :productId OR d.category.id = :categoryId OR d.brand.id = :brandId) " +
             "AND d.isActive = true " +
