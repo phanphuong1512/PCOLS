@@ -49,7 +49,7 @@
                 url: '/product-detail/review',
                 data: formData,
                 success: function (response) {
-                    $('#reviewForm').prepend('<div class="alert alert-success">Review submitted successfully</div>');
+                    $('#reviewForm').prepend('<div class="alert alert-success">' + response + '</div>');
                     $('#reviewForm')[0].reset();
                     setTimeout(() => {
                         loadReviews(productId, 0); // HIGHLIGHT: Trở về trang đầu tiên sau khi submit

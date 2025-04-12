@@ -3,6 +3,7 @@ package fpt.swp.pcols.service.impl;
 import fpt.swp.pcols.dto.ReviewFormDTO;
 import fpt.swp.pcols.entity.Product;
 import fpt.swp.pcols.entity.Review;
+import fpt.swp.pcols.entity.User;
 import fpt.swp.pcols.repository.ReviewRepository;
 import fpt.swp.pcols.service.ReviewService;
 import fpt.swp.pcols.validation.ValidationResult;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +28,11 @@ public class ReviewServiceImpl implements ReviewService {
     public Page<Review> getReviewsByProduct(Product product, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         return reviewRepository.findByProduct(product, pageable);
+    }
+
+    @Override
+    public Optional<Review> findReviewByUserAndProduct(User user, Product product) {
+        return reviewRepository.findByUserAndProduct(user, product);
     }
 
     @Override

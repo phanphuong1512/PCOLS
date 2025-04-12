@@ -7,7 +7,6 @@ import fpt.swp.pcols.entity.OrderDetail;
 import fpt.swp.pcols.entity.Product;
 import fpt.swp.pcols.entity.User;
 import fpt.swp.pcols.exception.OutOfStockException;
-import fpt.swp.pcols.repository.OrderDetailRepository;
 import fpt.swp.pcols.repository.OrderRepository;
 import fpt.swp.pcols.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.*;
 import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -31,36 +30,56 @@ public class OrderServiceImpl implements OrderService {
     private final ProductServiceImpl productService;
 
     @Override
+    public boolean hasUserPurchasedProduct(User user, Product product) {
+        // Giả sử các trạng thái đơn hàng hợp lệ là PAID, PACKED và SHIPPED
+        List<Order.OrderStatus> validStatuses = Arrays.asList(Order.OrderStatus.PAID, Order.OrderStatus.PACKED, Order.OrderStatus.SHIPPED);
+        // Lấy danh sách đơn hàng của user có trạng thái hợp lệ
+        List<Order> orders = orderRepository.findByUserAndStatusIn(user, validStatuses);
+
+        // Nếu không có đơn hàng nào, trả về false
+        if (orders == null || orders.isEmpty()) {
+            return false;
+        }
+
+        // Kiểm tra từng đơn hàng xem có chứa sản phẩm được review không.
+        return orders.stream().anyMatch(order ->
+                order.getOrderDetails().stream()
+                        .anyMatch(orderDetail -> orderDetail.getProduct().getId().equals(product.getId()))
+        );
+    }
+
+
+    @Override
     public Order save(Order cart) {
         return orderRepository.save(cart);
     }
 
     @Override
     public Optional<Order> getCurrentCartForUser(User user) {
-        logger.info("Tìm kiếm order cho user: {}", user.getUsername());
-        Optional<Order> orderOptional = orderRepository.findByUserAndStatus(user, Order.OrderStatus.PENDING);
+        logger.info("Tìm kiếm order (giỏ hàng) cho user: {}", user.getUsername());
+        Optional<Order> orderOptional = orderRepository.findByUserAndStatus(user, Order.OrderStatus.CART);
 
         if (orderOptional.isPresent()) {
             Order order = orderOptional.get();
-            logger.debug("Tìm thấy order với ID: {}", order.getId());
-
-            // Kiểm tra orderDetails
-            if (order.getOrderDetails() == null || order.getOrderDetails().isEmpty()) {
-                logger.warn("Order ID: {} không có orderDetails", order.getId());
-            } else {
-                logger.debug("Order ID: {} có {} orderDetails", order.getId(), order.getOrderDetails().size());
-                // Kiểm tra subtotal
-                BigDecimal subtotal = order.getSubtotal();
-                logger.debug("Subtotal của order ID: {} là {}", order.getId(), subtotal);
-                if (subtotal == null) {
-                    logger.warn("Subtotal của order ID: {} là null", order.getId());
-                }
-            }
+            logger.debug("Tìm thấy order với ID: {} có {} orderDetails", order.getId(),
+                    order.getOrderDetails() != null ? order.getOrderDetails().size() : 0);
+            return orderOptional;
         } else {
-            logger.warn("Không tìm thấy order PENDING cho user: {}", user.getUsername());
+            logger.warn("Không tìm thấy giỏ hàng (order với status CART) cho user: {}. Tạo giỏ hàng mới.", user.getUsername());
+            Order newCart = new Order();
+            newCart.setUser(user);
+            newCart.setStatus(Order.OrderStatus.CART);
+            // Optionally, các field khác có thể được khởi tạo nếu cần (ví dụ: orderDate)
+            newCart.setOrderDate(LocalDateTime.now());
+            Order savedCart = orderRepository.save(newCart);
+            return Optional.of(savedCart);
         }
+    }
 
-        return orderOptional;
+    @Override
+    public Optional<Order> getLatestPlacedOrderForUser(User user) {
+        // Nếu nghiệp vụ cho rằng đơn hàng xác nhận có status PENDING, bạn lấy đơn hàng mới nhất với status PENDING
+        return orderRepository.findTopByUserAndStatusOrderByOrderDateDesc(user, Order.OrderStatus.PENDING);
     }
 
 
@@ -143,7 +162,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public DashboardStatsDTO getDashboardStats(int year) {
-        List<Order> paidOrders = orderRepository.findByYear( year);
+        List<Order> paidOrders = orderRepository.findByYear(year);
 
         int totalOrders = paidOrders.size();
 

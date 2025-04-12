@@ -4,13 +4,18 @@ import fpt.swp.pcols.entity.Order;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class EmailUtil {
+
+    private static final Logger logger = LoggerFactory.getLogger(EmailUtil.class);
 
     private final JavaMailSender javaMailSender;
     private final EmailContentBuilder emailContentBuilder;
@@ -51,8 +56,15 @@ public class EmailUtil {
     }
 
     // Phương thức gửi email xác nhận đơn hàng sử dụng Thymeleaf để render template order-success.html
-    public void sendOrderSuccessEmail(String email, Order order) throws MessagingException {
-        String htmlContent = emailContentBuilder.buildOrderSuccessEmail(order);
-        sendEmail(email, "Đơn hàng của bạn đã được xác nhận", htmlContent);
+    @Async
+    public void sendOrderSuccessEmail(String email, Order order) {
+        try {
+            logger.debug("Starting to send email to {} for order ID: {}", email, order.getId());
+            String htmlContent = emailContentBuilder.buildOrderSuccessEmail(order, true);
+            sendEmail(email, "Đơn hàng của bạn đã được xác nhận", htmlContent);
+            logger.info("Email sent successfully to {} for order ID: {}", email, order.getId());
+        } catch (MessagingException e) {
+            logger.error("Failed to send email to {} for order ID: {}: {}", email, order.getId(), e.getMessage(), e);
+        }
     }
 }

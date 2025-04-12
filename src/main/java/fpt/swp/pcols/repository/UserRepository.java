@@ -1,7 +1,8 @@
 package fpt.swp.pcols.repository;
 
+import fpt.swp.pcols.entity.Product;
+import fpt.swp.pcols.entity.Review;
 import fpt.swp.pcols.entity.User;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

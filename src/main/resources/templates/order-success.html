@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <!-- Required Meta Tags -->
     <meta charset="utf-8">
@@ -8,26 +8,40 @@
     <meta name="description" th:content="${metaDescription}"/>
 
     <!-- Title Of Site -->
-    <title>Checkout Success - Optimal Multipurpose eCommerce Bootstrap 5 Html Template</title>
+    <title>Checkout Success - Optimal Multipurpose eCommerce</title>
 
-    <!-- Favicon -->
-    <!-- Nếu dùng email: sử dụng URL tuyệt đối, còn nếu web: sử dụng cú pháp context-relative -->
-    <link rel="shortcut icon" th:if="${isEmail}" th:href="${faviconUrl}"/>
-    <link rel="shortcut icon" th:if="${isEmail != true}" th:href="@{/assets/images/favicon.ico}"/>
+    <th:block th:if="${isEmail eq true}">
+        <style>
+            /* Inline CSS cho email */
+            body {
+                font-family: Arial, sans-serif;
+                font-size: 14px;
+                color: #333;
+            }
 
-    <!-- Plugins CSS -->
-    <link rel="stylesheet" th:if="${isEmail}" th:href="${cssPluginsAbsolute}"/>
-    <link rel="stylesheet" th:if="${isEmail != true}" th:href="@{/css/plugins.css}"/>
+            .container {
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 20px;
+            }
 
-    <!-- Main Style CSS -->
-    <link rel="stylesheet" th:if="${isEmail}" th:href="${orderSuccessCssAbsolute}"/>
-    <link rel="stylesheet" th:if="${isEmail != true}" th:href="@{/css/order-success.css}"/>
+            /* Thêm các style cần thiết cho email */
+        </style>
+    </th:block>
 
-    <link rel="stylesheet" th:if="${isEmail}" th:href="${responsiveCssAbsolute}"/>
-    <link rel="stylesheet" th:if="${isEmail != true}" th:href="@{/css/responsive.css}"/>
-
-    <link rel="stylesheet" th:if="${isEmail}" th:href="${fontAwesomeAbsolute}"/>
-    <link rel="stylesheet" th:if="${isEmail != true}" th:href="@{/css/font-awesome.min.css}"/>
+    <!-- Nếu render cho web, dùng link stylesheet -->
+    <th:block th:if="${isEmail ne true}">
+        <link rel="shortcut icon" th:href="@{/assets/images/favicon.ico}"/>
+        <link rel="stylesheet" th:href="@{/css/plugins.css}"/>
+        <link rel="stylesheet" th:href="@{/css/order-success.css}"/>
+        <link rel="stylesheet" th:href="@{/css/responsive.css}"/>
+        <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}"/>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+              rel="stylesheet"
+              integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+              crossorigin="anonymous">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+    </th:block>
 
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -56,9 +70,11 @@
                             <p class="card-text mb-1">All necessary information about the delivery, we sent to your
                                 email</p>
                             <p class="card-text text-order badge bg-success my-3">
-                                Your order # is: <b>00000123</b>
+                                Your order # is: <b th:text="${order.id}">00000123</b>
                             </p>
-                            <p class="card-text mb-0">Order date: 14 Nov 2021</p>
+                            <p class="card-text mb-0">
+                                Order date: <span th:text="${#temporals.format(order.orderDate, 'dd MMM yyyy')}">14 Nov 2021</span>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -83,33 +99,16 @@
                                 <tbody>
                                 <tr th:each="detail : ${orderDetails}">
                                     <td class="pro-img">
-                                        <a th:if="${isEmail}"
-                                           th:href="${productDetailAbsoluteUrlPrefix + '?id=' + detail.product.id}">
-                                            <img class="primary lazyload"
-                                                 th:src="${detail.product != null && !#lists.isEmpty(detail.product.images) ? detail.product.images[0].url : '/assets/images/products/100x120.jpg'}"
-                                                 alt="image" title="product" width="80"/>
-                                        </a>
-                                        <a th:if="${isEmail != true}"
-                                           th:href="@{/product-detail(id=${detail.product.id})}">
+                                        <a th:href="${productDetailUrlPrefix} + '?id=' + ${detail.product.id}">
                                             <img class="primary lazyload"
                                                  th:src="${detail.product != null && !#lists.isEmpty(detail.product.images) ? detail.product.images[0].url : '/assets/images/products/100x120.jpg'}"
                                                  alt="image" title="product" width="80"/>
                                         </a>
                                     </td>
                                     <td class="pro-name text-start">
-                                        <!-- Dành cho email -->
-                                        <a th:if="${isEmail}"
-                                           th:href="${productDetailAbsoluteUrlPrefix + '?id=' + detail.product.id}"
+                                        <a th:href="${productDetailUrlPrefix} + '?id=' + ${detail.product.id}"
                                            class="d-block"
-                                           th:text="${detail.product != null ? detail.product.name : 'Unknown Product'}">
-                                        </a>
-
-                                        <!-- Dành cho web -->
-                                        <a th:if="${isEmail != true}"
-                                           th:href="@{/product-detail(id=${detail.product.id})}"
-                                           class="d-block"
-                                           th:text="${detail.product != null ? detail.product.name : 'Unknown Product'}">
-                                        </a>
+                                           th:text="${detail.product != null ? detail.product.name : 'Unknown Product'}"></a>
 
                                         <div class="cart__meta-text">
                                             <span th:text="'Brand: ' + ${detail.product != null ? detail.product.brand.name : 'N/A'}">Brand</span><br>
@@ -157,7 +156,7 @@
                         <div class="row g-0">
                             <div class="col-12 col-sm-6 col-md-6 col-lg-6">
                                 <div class="shipping-details mb-4 mb-sm-0 clearfix">
-                                    <h3>Billing Infor</h3>
+                                    <h3>Billing Info</h3>
                                     <p>Full Name: <span th:text="${order.firstName} + ' ' + ${order.lastName}"></span>
                                     </p>
                                     <p>First Name: <span th:text="${order.firstName}"></span></p>
@@ -194,7 +193,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="d-flex-wrap w-100 mt-4 text-center" th:if="${isEmail != true}">
+                    <div class="d-flex-wrap w-100 mt-4 text-center" th:if="${isEmail ne true}">
                         <a th:href="@{/home}"
                            class="d-inline-flex align-items-center btn btn-outline-primary rounded me-2 mb-2 me-sm-3">
                             <i class="me-2 icon an an-angle-left-r"></i>
