@@ -29,4 +29,10 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findOrders(@Param("status") Order.OrderStatus status,
                            @Param("email") String email,
                            Sort sort);
+
+    @Query("SELECT o FROM Order o WHERE YEAR(o.orderDate) = :year")
+    List<Order> findByYear(@Param("year") int year);
+
+    @Query("SELECT MIN(YEAR(o.orderDate)) FROM Order o")
+    Integer findEarliestOrderYear();
 }

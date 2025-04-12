@@ -8,11 +8,13 @@ import fpt.swp.pcols.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -62,18 +64,29 @@ public class DiscountController {
     }
 
     // Show edit form
-    @GetMapping("/{id}/edit")
-    public String editDiscountForm(@PathVariable Long id, Model model) {
+    @GetMapping("/{id}/detail")
+    public String showDiscountDetail(@PathVariable Long id, Model model) {
         Discount discount = discountService.findById(id).orElseThrow(() -> new RuntimeException("Discount not found"));
         model.addAttribute("discount", discount);
-        model.addAttribute("products", productService.getAllProducts());
-        model.addAttribute("categories", categoryService.findAll());
-        model.addAttribute("brands", brandService.findAll());
-        String applyTo = discount.getProduct() != null ? "product" :
-                discount.getCategory() != null ? "category" :
-                        discount.getBrand() != null ? "brand" : "";
+
+        String applyTo = "";
+        String appliedName = "";
+
+        if (discount.getProduct() != null) {
+            applyTo = "Product";
+            appliedName = discount.getProduct().getName();
+        } else if (discount.getCategory() != null) {
+            applyTo = "Category";
+            appliedName = discount.getCategory().getName();
+        } else if (discount.getBrand() != null) {
+            applyTo = "Brand";
+            appliedName = discount.getBrand().getName();
+        }
+
         model.addAttribute("applyTo", applyTo);
-        return "admin/discount/edit";
+        model.addAttribute("appliedName", appliedName);
+
+        return "admin/discount/detail";
     }
 
     // Handle edit form submission
@@ -88,9 +101,10 @@ public class DiscountController {
     }
 
     // Deactivate a discount
-    @PostMapping("/{id}/deactivate")
-    public String deactivateDiscount(@PathVariable Long id) {
-        discountService.deactivateDiscount(id);
+    // Toggle discount status (active/inactive)
+    @PostMapping("/{id}/toggle-status")
+    public String toggleDiscountStatus(@PathVariable Long id) {
+        discountService.toggleDiscountStatus(id);
         return "redirect:/admin/discount";
     }
 }

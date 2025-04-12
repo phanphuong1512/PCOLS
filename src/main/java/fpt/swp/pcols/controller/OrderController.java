@@ -200,8 +200,30 @@ public class OrderController {
         }
     }
 
+
     @GetMapping("admin/orders")
     public String listOrders(Model model,
+                             @RequestParam(value = "sort", required = false, defaultValue = "desc") String sort,
+                             @RequestParam(value = "status", required = false) String status,
+                             @RequestParam(value = "email", required = false) String email) {
+        Order.OrderStatus orderStatus = null;
+        if (status != null && !status.isEmpty()) {
+            try {
+                orderStatus = Order.OrderStatus.valueOf(status.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                throw new RuntimeException("Invalid order status: " + status);
+            }
+        }
+        List<Order> orders = orderService.getFilteredOrders(sort, orderStatus, email);
+        model.addAttribute("orders", orders);
+        model.addAttribute("sort", sort);
+        model.addAttribute("status", status);
+        model.addAttribute("email", email);
+        return "admin/order/list";
+    }
+
+    @GetMapping("seller/orders")
+    public String listSellerOrders(Model model,
                              @RequestParam(value = "sort", required = false, defaultValue = "desc") String sort,
                              @RequestParam(value = "status", required = false) String status,
                              @RequestParam(value = "email", required = false) String email) {
@@ -243,5 +265,12 @@ public class OrderController {
                 .headers(headers)
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(new InputStreamResource(inStream));
+    }
+
+    @PostMapping("seller/orders/updateStatus")
+    public String updateOrderStatus(@RequestParam Long orderId,
+                                    @RequestParam Order.OrderStatus status) {
+        orderService.updateOrderStatus(orderId, status);
+        return "redirect:/seller/orders";
     }
 }

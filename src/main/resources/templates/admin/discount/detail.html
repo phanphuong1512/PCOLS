@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Discount Details</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Bootstrap CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .detail-section {
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      border-radius: 8px;
+      background-color: #f8f9fa;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .detail-label {
+      font-weight: 600;
+      color: #495057;
+    }
+    .detail-value {
+      padding: 0.5rem 0.75rem;
+      background-color: #fff;
+      border: 1px solid #ced4da;
+      border-radius: 0.25rem;
+      min-height: 38px;
+      display: flex;
+      align-items: center;
+    }
+    .card-header {
+      background-color: #f7f7f7;
+    }
+    .badge-active {
+      background-color: #198754;
+    }
+    .badge-inactive {
+      background-color: #dc3545;
+    }
+  </style>
+</head>
+<body class="bg-light">
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+          <div class="d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">Discount Details</h3>
+            <span class="badge rounded-pill" th:classappend="${discount.isActive} ? 'badge-active' : 'badge-inactive'"
+                  th:text="${discount.isActive} ? 'Active' : 'Inactive'"></span>
+          </div>
+        </div>
+        <div class="card-body">
+
+          <!-- Discount Value and Type Section -->
+          <div class="detail-section">
+            <h5 class="mb-3">Discount Details</h5>
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label class="form-label detail-label">Discount Value:</label>
+                <div class="input-group">
+                  <div class="detail-value flex-grow-1" th:text="${discount.discountValue}"></div>
+                  <span class="input-group-text" th:text="${discount.discountType == 'PERCENTAGE'} ? '%' : '$'"></span>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label detail-label">Discount Type:</label>
+                <div class="detail-value" th:text="${discount.discountType == 'PERCENTAGE'} ? 'Percentage' : 'Fixed Amount'"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Date Range Section -->
+          <div class="detail-section">
+            <h5 class="mb-3">Discount Period</h5>
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label class="form-label detail-label">Start Date:</label>
+                <div class="detail-value" th:text="${#temporals.format(discount.startDate, 'yyyy-MM-dd HH:mm')}"></div>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label detail-label">End Date:</label>
+                <div class="detail-value" th:text="${#temporals.format(discount.endDate, 'yyyy-MM-dd HH:mm')}"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Application Section -->
+          <div class="detail-section">
+            <h5 class="mb-3">Applied To</h5>
+
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label class="form-label detail-label">Application Type:</label>
+                <div class="detail-value" th:text="${applyTo}"></div>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label detail-label" th:text="${applyTo + ' Name:'}"></label>
+                <div class="detail-value" th:text="${appliedName}"></div>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- Action Buttons -->
+          <div class="d-flex justify-content-between mt-4">
+            <a th:href="@{/admin/discount}" class="btn btn-outline-secondary">Back to List</a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Bootstrap Bundle with Popper -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

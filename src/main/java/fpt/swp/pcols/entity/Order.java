@@ -72,6 +72,6 @@ public class Order {
     private String paymentMethod;
 
     public enum OrderStatus {
-        PENDING, PAID, SHIPPED, CANCELLED
+        PENDING, PACKED, SHIPPED, CANCELLED, PAID
     }
 }

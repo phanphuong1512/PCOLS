@@ -18,7 +18,7 @@ public interface DiscountService {
 
     void updateDiscount(Long id, Discount discount, String applyTo, Long productId, Long categoryId, Long brandId);
 
-    void deactivateDiscount(Long id);
+    void toggleDiscountStatus(Long id);
 
     void setAppliedTo(Discount discount, String applyTo, Long productId, Long categoryId, Long brandId);
 
@@ -31,4 +31,6 @@ public interface DiscountService {
     double calculateDiscountValueImpact(Discount discount);
 
     Discount getDiscountByProduct(Long productId);
+
+    void save(Discount discount);
 }

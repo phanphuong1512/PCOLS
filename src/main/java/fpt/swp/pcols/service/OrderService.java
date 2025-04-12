@@ -1,6 +1,7 @@
 package fpt.swp.pcols.service;
 
 import fpt.swp.pcols.dto.BillDTO;
+import fpt.swp.pcols.dto.DashboardStatsDTO;
 import fpt.swp.pcols.entity.Order;
 import fpt.swp.pcols.entity.User;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,4 +23,10 @@ public interface OrderService {
 
     @Transactional
     void confirmOrder(Order order, BillDTO billDTO);
+
+    void updateOrderStatus(Long orderId, Order.OrderStatus status);
+
+    DashboardStatsDTO getDashboardStats(int year);
+
+    List<Integer> getYearRangeForOrders();
 }

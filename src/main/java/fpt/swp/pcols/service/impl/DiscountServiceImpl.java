@@ -12,6 +12,7 @@ import fpt.swp.pcols.service.DiscountService;
 import fpt.swp.pcols.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -55,10 +56,9 @@ public class DiscountServiceImpl implements DiscountService {
     }
 
     @Override
-    public void deactivateDiscount(Long id) {
-        Discount discount = findById(id).orElseThrow(() -> new RuntimeException("Discount not found"));
-        discount.setIsActive(false);
-        discountRepository.save(discount);
+    @Transactional
+    public void toggleDiscountStatus(Long id) {
+        discountRepository.toggleActiveStatus(id);
     }
 
     @Override
@@ -153,6 +153,11 @@ public class DiscountServiceImpl implements DiscountService {
     public Discount getDiscountByProduct(Long productId) {
         Optional<Discount> discountOpt = discountRepository.findByProduct_Id(productId);
         return discountOpt.orElse(null);
+    }
+
+    @Override
+    public void save(Discount discount) {
+        discountRepository.save(discount);
     }
 
 }

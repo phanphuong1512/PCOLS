@@ -1,4 +1,5 @@
-<div th:fragment="admin_nav">
+<div th:fragment="admin_nav"
+     xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <!-- =============== Navigation ================ -->
     <div class="navigation">
         <ul>
@@ -11,7 +12,7 @@
                 </a>
             </li>
 
-            <li>
+            <li sec:authorize="hasRole('ADMIN')">
                 <a th:href="@{/admin/dashboard}">
                         <span class="icon">
                             <ion-icon name="home-outline"></ion-icon>
@@ -20,7 +21,7 @@
                 </a>
             </li>
 
-            <li>
+            <li sec:authorize="hasRole('ADMIN')">
                 <a th:href="@{/admin/user}">
                         <span class="icon">
                             <ion-icon name="people-outline"></ion-icon>
@@ -29,8 +30,8 @@
                 </a>
             </li>
 
-            <li>
-                <a th:href="@{/admin/product}">
+            <li sec:authorize="hasRole('SELLER')">
+                <a th:href="@{/seller/product}">
                         <span class="icon">
                             <ion-icon name="chatbubble-outline"></ion-icon>
                         </span>
@@ -38,7 +39,7 @@
                 </a>
             </li>
 
-            <li>
+            <li sec:authorize="hasRole('ADMIN')">
                 <a th:href="@{/admin/orders}">
                         <span class="icon">
                             <ion-icon name="settings-outline"></ion-icon>
@@ -46,7 +47,7 @@
                     <span class="title">Order</span>
                 </a>
             </li>
-            <li>
+            <li sec:authorize="hasRole('SELLER')">
                 <a th:href="@{/admin/discount}">
                         <span class="icon">
                             <ion-icon name="settings-outline"></ion-icon>
@@ -55,7 +56,7 @@
                 </a>
             </li>
 
-            <li>
+            <li sec:authorize="hasRole('SELLER')">
                 <a th:href="@{/seller/orders}">
                         <span class="icon">
                             <ion-icon name="settings-outline"></ion-icon>

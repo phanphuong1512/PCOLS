@@ -1,9 +1,6 @@
 package fpt.swp.pcols.controller;
 
-import fpt.swp.pcols.entity.Brand;
-import fpt.swp.pcols.entity.Category;
-import fpt.swp.pcols.entity.Discount;
-import fpt.swp.pcols.entity.Product;
+import fpt.swp.pcols.entity.*;
 import fpt.swp.pcols.service.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,23 +25,28 @@ public class ProductController {
     private final ReviewService reviewService;
     private final DiscountService discountService;
 
-    @GetMapping("/admin/dashboard")
-    public String getAdminDashboard(Model model, @RequestParam(value = "category", required = false) String category, @RequestParam(value = "brand", required = false) String brand, @RequestParam(value = "search", required = false) String search) {
-        String categoryName = (category != null && !category.isEmpty()) ? category : null;
-        String brandName = (brand != null && !brand.isEmpty()) ? brand : null;
-        String searchTerm = (search != null && !search.isEmpty()) ? search : null;
-        List<Product> products = productService.getFilteredProductsForAdmin(categoryName, brandName, searchTerm);
-        model.addAttribute("searchTerm", search);
-        model.addAttribute("categories", categoryService.findAll());
-        model.addAttribute("brands", brandService.findAll());
-        model.addAttribute("selectedCategory", category);
-        model.addAttribute("selectedBrand", brand);
-        model.addAttribute("products", products);
-        System.out.println("check user" + products);
-        return "admin/admin-home";
-    }
+//    @GetMapping("/admin/dashboard")
+//    public String getAdminDashboard(Model model, @RequestParam(value = "category", required = false) String category,
+//                                    @RequestParam(value = "brand", required = false) String brand,
+//                                    @RequestParam(value = "search", required = false) String search,
+//                                    Authority authority) {
+//        String categoryName = (category != null && !category.isEmpty()) ? category : null;
+//        String brandName = (brand != null && !brand.isEmpty()) ? brand : null;
+//        String searchTerm = (search != null && !search.isEmpty()) ? search : null;
+//        String role = authority.getAuthority();
+//        List<Product> products = productService.getFilteredProductsForAdmin(categoryName, brandName, searchTerm);
+//        model.addAttribute("searchTerm", search);
+//        model.addAttribute("categories", categoryService.findAll());
+//        model.addAttribute("brands", brandService.findAll());
+//        model.addAttribute("selectedCategory", category);
+//        model.addAttribute("selectedBrand", brand);
+//        model.addAttribute("role", role);
+//        model.addAttribute("products", products);
+//        System.out.println("check user" + products);
+//        return "admin/admin-home";
+//    }
 
-    @GetMapping("/admin/product")
+    @GetMapping("/seller/product")
     public String getInventoryPage(Model model,
                                    @RequestParam(value = "category", required = false) String category,
                                    @RequestParam(value = "brand", required = false) String brand,

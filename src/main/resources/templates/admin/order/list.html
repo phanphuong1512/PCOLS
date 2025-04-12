@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -122,7 +123,20 @@
                         <td th:text="${order.firstName} + ' ' + ${order.lastName}"></td>
                         <td th:text="${order.email}"></td>
                         <td th:text="${#temporals.format(order.orderDate, 'yyyy-MM-dd HH:mm')}"></td>
-                        <td th:text="${order.status}"></td>
+                        <td th:text="${order.status}" sec:authorize="hasRole('ADMIN')"></td>
+                        <td sec:authorize="hasRole('SELLER')">
+                            <form th:action="@{/seller/orders/updateStatus}" method="post">
+                                <input type="hidden" name="orderId" th:value="${order.id}" />
+                                <select name="status">
+                                    <option th:each="s : ${T(fpt.swp.pcols.entity.Order.OrderStatus).values()}"
+                                            th:value="${s}"
+                                            th:text="${s}"
+                                            th:selected="${s == order.status}">
+                                    </option>
+                                </select>
+                                <button type="submit" class="btn btn-sm btn-primary">Update</button>
+                            </form>
+                        </td>
                         <td><a th:href="@{/admin/order/detail/{id}(id=${order.id})}">View Details</a></td>
                     </tr>
                     </tbody>

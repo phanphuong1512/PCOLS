@@ -40,6 +40,67 @@
     .filter-form button:hover {
       background: #45a049;
     }
+
+    /* Status badge styling */
+    .status-badge {
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      text-align: center;
+    }
+    .status-active {
+      background-color: #e1f7e1;
+      color: #198754;
+      border: 1px solid #198754;
+    }
+    .status-inactive {
+      background-color: #f8d7da;
+      color: #dc3545;
+      border: 1px solid #dc3545;
+    }
+
+    /* Button styling */
+    .btn-toggle-active {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .btn-toggle-inactive {
+      background-color: #198754;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .btn-toggle-active:hover {
+      background-color: #bb2d3b;
+    }
+    .btn-toggle-inactive:hover {
+      background-color: #157347;
+    }
+
+    /* Actions column styling */
+    .action-buttons {
+      display: flex;
+      gap: 5px;
+    }
+    .btn-detail {
+      background-color: #0d6efd;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-detail:hover {
+      background-color: #0b5ed7;
+    }
   </style>
 </head>
 <body>
@@ -90,10 +151,9 @@
             </select>
           </div>
           <div>
-            <label for="active">Apply Filters</label>
-            <button type="submit">Apply Filters</button>
+            <label for="apply">Apply Filters</label>
+            <button type="submit" id="apply">Apply Filters</button>
           </div>
-
         </form>
         <!-- /Filter & Sort Form -->
 
@@ -106,7 +166,7 @@
             <th>Applied To</th>
             <th>Start Date</th>
             <th>End Date</th>
-            <th>Active</th>
+            <th>Status</th>
             <th>Actions</th>
           </tr>
           </thead>
@@ -120,13 +180,19 @@
               <span th:if="${discount.category != null}" th:text="'Category: ' + ${discount.category.name}"></span>
               <span th:if="${discount.brand != null}" th:text="'Brand: ' + ${discount.brand.name}"></span>
             </td>
-            <td th:text="${discount.startDate}"></td>
-            <td th:text="${discount.endDate}"></td>
-            <td th:text="${discount.isActive} ? 'Yes' : 'No'"></td>
+            <td th:text="${#temporals.format(discount.startDate, 'yyyy-MM-dd HH:mm')}"></td>
+            <td th:text="${#temporals.format(discount.endDate, 'yyyy-MM-dd HH:mm')}"></td>
             <td>
-              <a th:href="@{/admin/discount/{id}/edit(id=${discount.id})}" class="btn btn-warning btn-sm">Edit</a>
-              <form th:action="@{/admin/discount/{id}/deactivate(id=${discount.id})}" method="post" style="display:inline;">
-                <button type="submit" class="btn btn-danger btn-sm" th:disabled="${!discount.isActive}">Deactivate</button>
+              <span class="status-badge" th:classappend="${discount.isActive} ? 'status-active' : 'status-inactive'"
+                    th:text="${discount.isActive} ? 'Active' : 'Inactive'"></span>
+            </td>
+            <td class="action-buttons">
+              <a th:href="@{/admin/discount/{id}/detail(id=${discount.id})}" class="btn-detail">Detail</a>
+              <form th:action="@{/admin/discount/{id}/toggle-status(id=${discount.id})}" method="post">
+                <button type="submit" class="btn-toggle"
+                        th:classappend="${discount.isActive} ? 'btn-toggle-active' : 'btn-toggle-inactive'"
+                        th:text="${discount.isActive} ? 'Deactivate' : 'Activate'">
+                </button>
               </form>
             </td>
           </tr>

@@ -70,7 +70,7 @@ public class SecurityConfig {
                                 "/img/**",
                                 "/fonts/**",
                                 "/uploads/**").permitAll()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/admin/**").hasAnyRole("ADMIN", "SELLER")
                         .anyRequest().authenticated()
                 )
 

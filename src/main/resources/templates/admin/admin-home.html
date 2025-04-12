@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" >
 <head>
     <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -36,44 +37,38 @@
 
         <!-- ======================= Cards ================== -->
         <div class="cardBox">
+            <form th:action="@{/admin/dashboard}" method="get" class="year-filter-form">
+                <label for="year">Filter by Year:</label>
+                <select name="year" id="year" onchange="this.form.submit()">
+                    <option th:each="y : ${years}"
+                            th:value="${y}"
+                            th:text="${y}"
+                            th:selected="${y == selectedYear}">
+                    </option>
+                </select>
+            </form>
             <div class="card">
                 <div>
-                    <div class="numbers">1,504</div>
-                    <div class="cardName">Daily Views</div>
+                    <div class="numbers" th:text="${ordersThisYear}"></div>
+                    <div class="cardName">Orders (This Year)</div>
                 </div>
-                <div class="iconBx">
-                    <ion-icon name="eye-outline"></ion-icon>
-                </div>
+                <div class="iconBx"><ion-icon name="calendar-outline"></ion-icon></div>
             </div>
 
             <div class="card">
                 <div>
-                    <div class="numbers">80</div>
+                    <div class="numbers" th:text="${sales}"></div>
                     <div class="cardName">Sales</div>
                 </div>
-                <div class="iconBx">
-                    <ion-icon name="cart-outline"></ion-icon>
-                </div>
+                <div class="iconBx"><ion-icon name="cart-outline"></ion-icon></div>
             </div>
 
             <div class="card">
                 <div>
-                    <div class="numbers">284</div>
-                    <div class="cardName">Comments</div>
+                    <div class="numbers" th:text="${earnings} + ' '"></div>
+                    <div class="cardName">Earnings</div>
                 </div>
-                <div class="iconBx">
-                    <ion-icon name="chatbubbles-outline"></ion-icon>
-                </div>
-            </div>
-
-            <div class="card">
-                <div>
-                    <div class="numbers">$7,842</div>
-                    <div class="cardName">Earning</div>
-                </div>
-                <div class="iconBx">
-                    <ion-icon name="cash-outline"></ion-icon>
-                </div>
+                <div class="iconBx"><ion-icon name="cash-outline"></ion-icon></div>
             </div>
         </div>
 

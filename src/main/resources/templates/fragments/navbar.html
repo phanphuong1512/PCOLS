@@ -1,4 +1,5 @@
-<div th:fragment="navbar">
+<div th:fragment="navbar"
+     xmlns:sec="http://www.thymeleaf.org/extras/spring-security" >
     <!-- NAVIGATION -->
     <div id="navigation">
         <!-- container -->
@@ -148,6 +149,7 @@
                                 </div>
                             </div>
                         </li>
+<!--                        //brands-->
                         <li class="dropdown mega-dropdown full-width">
                             <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                                 Brands <i class="fa fa-caret-down"></i>
@@ -237,6 +239,7 @@
                                 </div>
                             </div>
                         </li>
+<!--                        brand-->
                         <li><a th:href="@{/checkout}">Checkout</a></li>
                         <li class="dropdown default-dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
@@ -246,8 +249,8 @@
 
                                 <li><a th:href="@{/home}">Home</a></li>
                                 <li><a th:href="@{products}">Products</a></li>
-                                <li><a th:href="@{/admin/dashboard}">Admin Home</a></li>
-                                <li><a th:href="@{/seller/dashboard}">Seller Home</a></li>
+                                <li sec:authorize="hasRole('ADMIN')"><a th:href="@{/admin/dashboard}">Admin Home</a></li>
+                                <li sec:authorize="hasRole('SELLER')"><a th:href="@{/admin/dashboard}">Seller Home</a></li>
                                 <li><a th:href="@{/checkout}">Checkout</a></li>
                             </ul>
                         </li>

@@ -1,6 +1,7 @@
 package fpt.swp.pcols.service.impl;
 
 import fpt.swp.pcols.dto.BillDTO;
+import fpt.swp.pcols.dto.DashboardStatsDTO;
 import fpt.swp.pcols.entity.Order;
 import fpt.swp.pcols.entity.OrderDetail;
 import fpt.swp.pcols.entity.Product;
@@ -14,10 +15,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -101,6 +101,52 @@ public class OrderServiceImpl implements OrderService {
         // Cập nhật trạng thái đơn hàng và lưu
         order.setStatus(Order.OrderStatus.PENDING);
         orderRepository.save(order);
+    }
+
+    @Override
+    public void updateOrderStatus(Long orderId, Order.OrderStatus status) {
+        Optional<Order> optionalOrder = orderRepository.findById(orderId);
+        if (optionalOrder.isPresent()) {
+            Order order = optionalOrder.get();
+            order.setStatus(status);
+            orderRepository.save(order);
+        } else {
+            throw new RuntimeException("Order with ID " + orderId + " not found.");
+        }
+    }
+
+    @Override
+    public DashboardStatsDTO getDashboardStats(int year) {
+        List<Order> paidOrders = orderRepository.findByYear( year);
+
+        int totalOrders = paidOrders.size();
+
+        // Sales = number of orders with PAID status
+        int sales = totalOrders;
+
+        // Earnings = sum of all orderDetail prices * quantity for PAID orders
+        BigDecimal earnings = paidOrders.stream()
+                .flatMap(order -> order.getOrderDetails().stream())
+                .map(od -> od.getPrice().multiply(BigDecimal.valueOf(od.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        return new DashboardStatsDTO(totalOrders, sales, earnings);
+    }
+
+    @Override
+    public List<Integer> getYearRangeForOrders() {
+        Integer startYear = orderRepository.findEarliestOrderYear();
+        int currentYear = LocalDateTime.now().getYear();
+
+        if (startYear == null) {
+            return List.of(currentYear); // fallback if no orders
+        }
+
+        List<Integer> years = new ArrayList<>();
+        for (int y = startYear; y <= currentYear; y++) {
+            years.add(y);
+        }
+        return years;
     }
 
 

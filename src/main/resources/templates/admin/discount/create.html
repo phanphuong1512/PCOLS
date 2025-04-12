@@ -2,6 +2,27 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>Create Discount</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Bootstrap CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .form-section {
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      border-radius: 8px;
+      background-color: #f8f9fa;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .error {
+      color: #dc3545;
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
+    }
+    .card-header {
+      background-color: #f7f7f7;
+    }
+  </style>
   <script>
     function toggleSelectors() {
       var applyTo = document.querySelector('input[name="applyTo"]:checked').value;
@@ -11,65 +32,145 @@
     }
   </script>
 </head>
-<body>
-<h1>Create New Discount</h1>
-<form th:action="@{/admin/discount}" th:object="${discount}" method="post">
-  <div>
-    <label>Discount Value:</label>
-    <input type="number" th:field="*{discountValue}" required step="0.01"/><br/>
-    <span class="error" th:if="${#fields.hasErrors('discountValue')}" th:errors="*{discountValue}"></span>
+<body class="bg-light">
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+          <h3 class="mb-0">Create New Discount</h3>
+        </div>
+        <div class="card-body">
+          <form th:action="@{/admin/discount}" th:object="${discount}" method="post" class="needs-validation" novalidate>
+
+            <!-- Discount Value and Type Section -->
+            <div class="form-section">
+              <h5 class="mb-3">Discount Details</h5>
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label for="discountValue" class="form-label">Discount Value:</label>
+                  <div class="input-group">
+                    <input type="number" class="form-control" th:field="*{discountValue}" id="discountValue" required step="0.01"/>
+                    <span class="input-group-text" id="valueType">$/%</span>
+                  </div>
+                  <span class="error" th:if="${#fields.hasErrors('discountValue')}" th:errors="*{discountValue}"></span>
+                </div>
+
+                <div class="col-md-6">
+                  <label for="discountType" class="form-label">Discount Type:</label>
+                  <select class="form-select" th:field="*{discountType}" id="discountType" required
+                          onchange="document.getElementById('valueType').textContent = this.value === 'PERCENTAGE' ? '%' : '$'">
+                    <option value="PERCENTAGE">Percentage</option>
+                    <option value="FIXED">Fixed Amount</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Date Range Section -->
+            <div class="form-section">
+              <h5 class="mb-3">Discount Period</h5>
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label for="startDate" class="form-label">Start Date:</label>
+                  <input type="datetime-local" class="form-control" th:field="*{startDate}" id="startDate" required/>
+                  <span class="error" th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}"></span>
+                </div>
+
+                <div class="col-md-6">
+                  <label for="endDate" class="form-label">End Date:</label>
+                  <input type="datetime-local" class="form-control" th:field="*{endDate}" id="endDate" required/>
+                  <span class="error" th:if="${#fields.hasErrors('endDate')}" th:errors="*{endDate}"></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Application Section -->
+            <div class="form-section">
+              <h5 class="mb-3">Apply Discount To</h5>
+              <div class="mb-3">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="applyTo" id="applyToProduct" value="product" onclick="toggleSelectors()" checked/>
+                  <label class="form-check-label" for="applyToProduct">Product</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="applyTo" id="applyToCategory" value="category" onclick="toggleSelectors()"/>
+                  <label class="form-check-label" for="applyToCategory">Category</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="applyTo" id="applyToBrand" value="brand" onclick="toggleSelectors()"/>
+                  <label class="form-check-label" for="applyToBrand">Brand</label>
+                </div>
+              </div>
+
+              <div id="productSelector" class="mb-3">
+                <label for="productId" class="form-label">Select Product:</label>
+                <select class="form-select" name="productId" id="productId">
+                  <option value="">--Select Product--</option>
+                  <option th:each="product : ${products}" th:value="${product.id}" th:text="${product.name}"></option>
+                </select>
+              </div>
+
+              <div id="categorySelector" class="mb-3" style="display:none;">
+                <label for="categoryId" class="form-label">Select Category:</label>
+                <select class="form-select" name="categoryId" id="categoryId">
+                  <option value="">--Select Category--</option>
+                  <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+                </select>
+              </div>
+
+              <div id="brandSelector" class="mb-3" style="display:none;">
+                <label for="brandId" class="form-label">Select Brand:</label>
+                <select class="form-select" name="brandId" id="brandId">
+                  <option value="">--Select Brand--</option>
+                  <option th:each="brand : ${brands}" th:value="${brand.id}" th:text="${brand.name}"></option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Status Section -->
+            <div class="form-section">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="isActive" th:field="*{isActive}" checked/>
+                <label class="form-check-label" for="isActive">Active Status</label>
+              </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="d-flex justify-content-between mt-4">
+              <a th:href="@{/admin/discount}" class="btn btn-outline-secondary">Back to List</a>
+              <button type="submit" class="btn btn-primary">Create Discount</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
+</div>
 
-  <label>Discount Type:</label>
-  <select th:field="*{discountType}" required>
-    <option value="PERCENTAGE">Percentage</option>
-    <option value="FIXED">Fixed</option>
-  </select><br/>
+<!-- Bootstrap Bundle with Popper -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Initialize the discount type symbol
+  document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('valueType').textContent =
+            document.getElementById('discountType').value === 'PERCENTAGE' ? '%' : '$';
+  });
 
-  <div>
-    <label>Start Date:</label>
-    <input type="datetime-local" th:field="*{startDate}" required/><br/>
-    <span class="error" th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}"></span>
-  </div>
-
-  <div>
-    <label>End Date:</label>
-    <input type="datetime-local" th:field="*{endDate}" required/><br/>
-    <span class="error" th:if="${#fields.hasErrors('endDate')}" th:errors="*{endDate}"></span>
-  </div>
-
-  <label>Apply To:</label>
-  <input type="radio" name="applyTo" value="product" onclick="toggleSelectors()" checked/> Product
-  <input type="radio" name="applyTo" value="category" onclick="toggleSelectors()"/> Category
-  <input type="radio" name="applyTo" value="brand" onclick="toggleSelectors()"/> Brand<br/>
-
-  <div id="productSelector">
-    <label>Select Product:</label>
-    <select name="productId">
-      <option value="">--Select Product--</option>
-      <option th:each="product : ${products}" th:value="${product.id}" th:text="${product.name}"></option>
-    </select><br/>
-  </div>
-  <div id="categorySelector" style="display:none;">
-    <label>Select Category:</label>
-    <select name="categoryId">
-      <option value="">--Select Category--</option>
-      <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
-    </select><br/>
-  </div>
-  <div id="brandSelector" style="display:none;">
-    <label>Select Brand:</label>
-    <select name="brandId">
-      <option value="">--Select Brand--</option>
-      <option th:each="brand : ${brands}" th:value="${brand.id}" th:text="${brand.name}"></option>
-    </select><br/>
-  </div>
-
-  <label>Active:</label>
-  <input type="checkbox" th:field="*{isActive}" checked/><br/>
-
-  <button type="submit">Create</button>
-</form>
-<a th:href="@{/admin/discount}">Back to List</a>
+  // Form validation
+  (() => {
+    'use strict'
+    const forms = document.querySelectorAll('.needs-validation')
+    Array.from(forms).forEach(form => {
+      form.addEventListener('submit', event => {
+        if (!form.checkValidity()) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+        form.classList.add('was-validated')
+      }, false)
+    })
+  })()
+</script>
 </body>
 </html>
