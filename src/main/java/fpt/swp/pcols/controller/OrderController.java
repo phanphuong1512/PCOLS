@@ -7,7 +7,10 @@ import fpt.swp.pcols.entity.Product;
 import fpt.swp.pcols.entity.User;
 import fpt.swp.pcols.exception.OutOfStockException;
 import fpt.swp.pcols.service.*;
+import fpt.swp.pcols.util.EmailUtil;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -29,11 +33,14 @@ import java.util.*;
 @RequiredArgsConstructor
 public class OrderController {
 
+    private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
+
     private final OrderService orderService;
     private final UserService userService;
     private final ProductService productService;
     private final OrderDetailService orderDetailService;
     private final ExcelService excelService;
+    private final EmailUtil emailUtil;
 
     @GetMapping("/checkout")
     public String checkoutPage(Model model, Principal principal) {
@@ -148,33 +155,38 @@ public class OrderController {
     }
 
     @GetMapping("/checkout/success")
+    @Transactional
     public String checkoutSuccess(Principal principal, Model model) {
         try {
-            // Lấy thông tin người dùng
+            logger.info("Bắt đầu xử lý /checkout/success cho user: {}", principal.getName());
+
+            // Lấy user
             User user = userService.findByUsername(principal.getName())
-                    .orElseThrow(() -> new RuntimeException("User not found"));
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy user"));
+            logger.debug("Đã tìm thấy user: {}", user.getUsername());
 
-            // Lấy đơn hàng vừa đặt của người dùng (trạng thái đơn hàng là PENDING hoặc PAID)
+            // Lấy order
             Order order = orderService.getCurrentCartForUser(user)
-                    .orElseThrow(() -> new RuntimeException("Order not found"));
-            for (OrderDetail orderDetail : order.getOrderDetails()) {
-                if (orderDetail.getProduct() == null) {
-                    // Xử lý khi product là null nếu cần (ví dụ: gán một giá trị mặc định hoặc báo lỗi)
-                    orderDetail.setProduct(new Product());  // Ví dụ: Tạo đối tượng product rỗng để tránh lỗi
-                }
-            }
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy order"));
+            logger.debug("Đã tìm thấy order với ID: {}", order.getId());
 
-            // Thêm thông tin đơn hàng vào model để hiển thị
+            // Kích hoạt lazy loading cho order details
+            order.getOrderDetails().size();
+            logger.debug("Số lượng order details: {}", order.getOrderDetails().size());
+
+            // Kiểm tra subtotal
+            logger.debug("Subtotal của order: {}", order.getSubtotal());
+
+            // Thêm vào model
             model.addAttribute("order", order);
-            model.addAttribute("orderDetails", order.getOrderDetails());
+            model.addAttribute("orderDetails", new ArrayList<>(order.getOrderDetails()));
+            logger.info("Đã thêm order vào model, trả về trang order-success");
 
-            // Nếu có lỗi (OutOfStockException), model sẽ chứa errorMap để hiển thị thông báo
-            model.addAttribute("errorMap", model.containsAttribute("errorMap") ? model.getAttribute("errorMap") : null);
-
-            return "order-success"; // Trang HTML hiển thị thông tin đơn hàng thành công
+            return "order-success";
         } catch (Exception ex) {
-            model.addAttribute("error", "An error occurred: " + ex.getMessage());
-            return "checkout"; // Nếu có lỗi, quay lại trang checkout
+            logger.error("Lỗi trong checkoutSuccess: ", ex);
+            model.addAttribute("error", "Đã xảy ra lỗi: " + ex.getMessage());
+            return "checkout";
         }
     }
 
@@ -189,6 +201,8 @@ public class OrderController {
                     .orElseThrow(() -> new RuntimeException("Cart not found"));
 
             orderService.confirmOrder(order, billDTO);
+            redirectAttributes.addFlashAttribute("order", order);
+            emailUtil.sendOrderSuccessEmail(user.getEmail(), order);
 
             return "redirect:/checkout/success";
         } catch (OutOfStockException ex) {

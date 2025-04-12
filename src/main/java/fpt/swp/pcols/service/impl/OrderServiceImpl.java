@@ -6,14 +6,16 @@ import fpt.swp.pcols.entity.OrderDetail;
 import fpt.swp.pcols.entity.Product;
 import fpt.swp.pcols.entity.User;
 import fpt.swp.pcols.exception.OutOfStockException;
-import fpt.swp.pcols.repository.OrderDetailRepository;
 import fpt.swp.pcols.repository.OrderRepository;
 import fpt.swp.pcols.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +24,8 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
+
+    private static final Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
 
     private final OrderRepository orderRepository;
     private final ProductServiceImpl productService;
@@ -33,9 +37,31 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Optional<Order> getCurrentCartForUser(User user) {
-        return orderRepository.findByUserAndStatus(user, Order.OrderStatus.PENDING);
-    }
+        logger.info("Tìm kiếm order cho user: {}", user.getUsername());
+        Optional<Order> orderOptional = orderRepository.findByUserAndStatus(user, Order.OrderStatus.PENDING);
 
+        if (orderOptional.isPresent()) {
+            Order order = orderOptional.get();
+            logger.debug("Tìm thấy order với ID: {}", order.getId());
+
+            // Kiểm tra orderDetails
+            if (order.getOrderDetails() == null || order.getOrderDetails().isEmpty()) {
+                logger.warn("Order ID: {} không có orderDetails", order.getId());
+            } else {
+                logger.debug("Order ID: {} có {} orderDetails", order.getId(), order.getOrderDetails().size());
+                // Kiểm tra subtotal
+                BigDecimal subtotal = order.getSubtotal();
+                logger.debug("Subtotal của order ID: {} là {}", order.getId(), subtotal);
+                if (subtotal == null) {
+                    logger.warn("Subtotal của order ID: {} là null", order.getId());
+                }
+            }
+        } else {
+            logger.warn("Không tìm thấy order PENDING cho user: {}", user.getUsername());
+        }
+
+        return orderOptional;
+    }
 
 
     @Override

@@ -84,7 +84,6 @@ public class HomeController {
         return "/fragments/chatbot";
     }
 
-
 }
 
 

@@ -49,8 +49,9 @@ spring:
           temperature: 0.7
 logging:
   level:
-    org.springframework.security: DEBUG
+    root: INFO
+    fpt.swp.pcols: DEBUG  # Thay bằng package thực tế của bạn
     org.springframework.web: DEBUG
-#    root: DEBUG
+    org.hibernate: DEBUG
 upload:
   dir: uploads
