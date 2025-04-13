@@ -32,7 +32,7 @@ public class HomeController {
     public String getHomePage(Model model) {
         List<Product> gearProducts = productService.getProductsByCategoryWithImages("Gear").stream().limit(3).collect(Collectors.toList());
         List<Product> monitorProducts = productService.getProductsByCategoryWithImages("Monitor").stream().limit(3).collect(Collectors.toList());
-        List<Product> pcProducts = productService.getProductsByCategoryWithImages("PC").stream().limit(3).collect(Collectors.toList());
+        List<Product> pcProducts = productService.getProductsByCategoryWithImages("Console").stream().limit(3).collect(Collectors.toList());
 
         // Gộp tất cả sản phẩm
         List<Product> allProducts = Stream.of(
