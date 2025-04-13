@@ -90,7 +90,7 @@ public class ProductController {
             return "admin/product/create";
         }
         productService.createProduct(product, selectedCategoryId, selectedBrandId, imageFiles);
-        return "redirect:/admin/product";
+        return "redirect:/seller/product";
     }
 
     //get product detail by id
@@ -165,6 +165,6 @@ public class ProductController {
     public String disableProduct(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         productService.disableProductById(id);
         redirectAttributes.addFlashAttribute("message", "Disable Successfully!");
-        return "redirect:/admin/product"; // Redirect back to inventory after disable
+        return "redirect:/seller/product"; // Redirect back to inventory after disable
     }
 }
