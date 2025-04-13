@@ -8,6 +8,7 @@ import fpt.swp.pcols.entity.User;
 import fpt.swp.pcols.exception.OutOfStockException;
 import fpt.swp.pcols.service.*;
 import fpt.swp.pcols.util.EmailUtil;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,7 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -28,6 +30,8 @@ import java.math.BigDecimal;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
+
 
 @Controller
 @RequiredArgsConstructor
@@ -190,7 +194,17 @@ public class OrderController {
 
 
     @PostMapping("/checkout/confirm")
-    public String confirmCheckout(@ModelAttribute BillDTO billDTO, Principal principal, RedirectAttributes redirectAttributes) {
+    public String confirmCheckout(@Valid @ModelAttribute BillDTO billDTO, BindingResult bindingResult, Principal principal, RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            // Lấy các thông báo lỗi từ BindingResult và chuyển sang view
+            redirectAttributes.addFlashAttribute("error", "Validation error: " +
+                    bindingResult.getAllErrors().stream()
+                            .map(e -> e.getDefaultMessage())
+                            .collect(Collectors.joining(", ")));
+            return "redirect:/checkout";
+        }
+
+
         try {
             User user = userService.findByUsername(principal.getName())
                     .orElseThrow(() -> new RuntimeException("User not found"));

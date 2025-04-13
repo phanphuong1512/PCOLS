@@ -137,7 +137,9 @@
                             <div class="qty-input">
                                 <span class="text-uppercase">QUANTITY: </span>
                                 <label>
-                                    <input class="input" type="number" value="1">
+                                    <input class="input quantity-field" type="number" value="1" min="1"
+                                           oninput="if(this.value < 1 || isNaN(this.value)) { this.value = 1; }"
+                                           onblur="if(this.value < 1 || isNaN(this.value)) { this.value = 1; }">
                                 </label>
                             </div>
                             <button th:attr="data-product-id=${product.id}" class="primary-btn add-to-cart"><i
