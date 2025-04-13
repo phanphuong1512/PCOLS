@@ -212,6 +212,12 @@ public class OrderController {
             Order order = orderService.getCurrentCartForUser(user)
                     .orElseThrow(() -> new RuntimeException("Cart not found"));
 
+            // Thêm kiểm tra: nếu giỏ hàng không có sản phẩm nào, trả về lỗi
+            if (order.getOrderDetails() == null || order.getOrderDetails().isEmpty()) {
+                redirectAttributes.addFlashAttribute("error", "Your cart is empty. Please add products before placing an order.");
+                return "redirect:/checkout";
+            }
+
             orderService.confirmOrder(order, billDTO);
             logger.debug("Order confirmed, subtotal: {}, shippingFee: {}, grandTotal: {}",
                     order.getSubtotal(), order.getShippingFee(), order.getGrandTotal());

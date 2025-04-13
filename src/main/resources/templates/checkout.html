@@ -220,12 +220,12 @@
                             </div>
                         </div>
                         <div class="input-checkbox">
-                            <input type="radio" name="payment" id="payments-2" value="PAYPAL">
-                            <label for="payments-2">Paypal</label>
+                            <input type="radio" name="payment" id="payments-cod" value="COD">
+                            <label for="payments-cod">Cash on Delivery</label>
                             <div class="caption">
-                                <p>“Dễ dàng, an toàn, và nhanh chóng – hãy chọn PayPal để thanh toán. Hệ thống sẽ mã hóa
-                                    thông tin, giúp bạn yên tâm về tính bảo mật trong mỗi giao dịch.”
-                                <p>
+                                <p>"Fast, secure, and convenient – choose Cash on Delivery to pay upon receiving your
+                                    order. Your payment is made only after delivery, ensuring you are satisfied with
+                                    your purchase."</p>
                             </div>
                         </div>
                     </div>
@@ -262,6 +262,7 @@
                             </tbody>
                         </table>
                         <!-- Nút nằm ngoài bảng -->
+                        <div th:if="${error}" class="alert alert-danger pull-left" th:text="${error}"></div>
                         <div class="pull-right">
                             <button class="primary-btn close-to-footer">Place Order</button>
                         </div>
