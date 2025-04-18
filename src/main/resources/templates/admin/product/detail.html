@@ -2,167 +2,419 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Details</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --primary-hover: #3a56d4;
+            --danger-color: #e63946;
+            --success-color: #2a9d8f;
+            --secondary-color: #4f4f4f;
+            --light-gray: #f5f5f5;
+            --border-color: #e0e0e0;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-gray);
+            color: var(--text-color);
+        }
+
+        .container {
+            padding: 30px;
+            max-width: 1000px;
+        }
+
+        .card {
+            background: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin: 0;
+        }
+
+        .product-id {
+            font-size: 14px;
+            color: var(--secondary-color);
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .form-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text-color);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            font-size: 16px;
+            transition: border 0.3s, box-shadow 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+            outline: none;
+        }
+
+        .form-control:disabled {
+            background-color: #f9f9f9;
+            border: 1px solid #e9e9e9;
+            cursor: not-allowed;
+        }
+
+        .image-gallery {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .image-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .image-container:hover img {
+            transform: scale(1.05);
+        }
+
+        .upload-container {
+            padding: 15px;
+            border: 2px dashed var(--border-color);
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 20px;
+            background-color: #f9f9f9;
+            transition: all 0.3s;
+        }
+
+        .upload-container:hover {
+            border-color: var(--primary-color);
+            background-color: #f0f7ff;
+        }
+
+        .text-value {
+            font-size: 16px;
+            padding: 10px 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            display: inline-block;
+            min-width: 200px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            font-weight: 600;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(67, 97, 238, 0.2);
+        }
+
+        .btn-danger {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #d62f3c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(230, 57, 70, 0.2);
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #2a8d81;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(42, 157, 143, 0.2);
+        }
+
+        .btn-secondary {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #3d3d3d;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(79, 79, 79, 0.2);
+        }
+
+        .text-danger {
+            color: var(--danger-color);
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .image-gallery {
+                justify-content: center;
+            }
+        }
+    </style>
     <script>
         function enableEdit() {
+            // Enable all form controls
             document.querySelectorAll(".form-control").forEach(input => input.removeAttribute("disabled"));
+
+            // Switch to dropdown selects
             document.getElementById("categoryText").style.display = "none";
-            document.getElementById("categorySelect").style.display = "inline-block";
-            document.getElementById("brandSelect").style.display = "inline-block";
+            document.getElementById("categorySelect").style.display = "block";
             document.getElementById("brandText").style.display = "none";
+            document.getElementById("brandSelect").style.display = "block";
+
+            // Show/hide buttons
             document.getElementById("editBtn").style.display = "none";
             document.getElementById("cancelBtn").style.display = "inline-block";
             document.getElementById("saveBtn").style.display = "inline-block";
-            document.getElementById("imageFiles").style.display = "block";
+
+            // Show image upload field
+            document.getElementById("uploadSection").style.display = "block";
         }
 
         function confirmSave(event) {
-            if (!confirm("Bạn có chắc chắn muốn lưu thay đổi?")) {
+            if (!confirm("Are you sure you want to save changes?")) {
                 event.preventDefault();
             }
         }
 
         function cancelEdit() {
+            // Disable and restore original values for all form controls
             document.querySelectorAll(".form-control").forEach(input => {
                 input.setAttribute("disabled", "true");
-                input.value = input.defaultValue; // Restore original value
+                input.value = input.defaultValue;
             });
 
+            // Switch back to text display
             document.getElementById("categoryText").style.display = "inline-block";
             document.getElementById("categorySelect").style.display = "none";
             document.getElementById("brandText").style.display = "inline-block";
             document.getElementById("brandSelect").style.display = "none";
+
+            // Show/hide buttons
+            document.getElementById("editBtn").style.display = "inline-block";
             document.getElementById("saveBtn").style.display = "none";
             document.getElementById("cancelBtn").style.display = "none";
-            document.getElementById("editBtn").style.display = "inline-block";
-            document.getElementById("imageFiles").style.display = "none";
+
+            // Hide image upload field
+            document.getElementById("uploadSection").style.display = "none";
         }
     </script>
-    <style>
-    .container {
-    padding: 20px;
-    }
-    .card {
-    background: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    }
-    .image-gallery {
-    display: flex;
-    overflow-x: auto;
-    gap: 10px;
-    padding-bottom: 10px;
-    }
-    .image-gallery img {
-    height: 120px;
-    border-radius: 5px;
-    object-fit: cover;
-    }
-    </style>
 </head>
 <body>
-<div class="container mt-5">
+<div class="container mt-4">
     <form th:action="@{/admin/product/detail/saveEdit}" method="post" th:object="${product}" enctype="multipart/form-data">
         <input type="hidden" th:field="*{id}">
-        <div class="card">
-            <div class="row g-0">
 
-                <!-- Product Images Preview -->
+        <div class="card">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Product Details</h1>
+                    <span class="product-id">ID: <span th:text="*{id}"></span></span>
+                </div>
+                <div class="btn-group" style="margin-top: 0;">
+                    <button type="button" class="btn btn-primary" id="editBtn" onclick="enableEdit()">Edit Product</button>
+                    <a th:href="@{/seller/product}" class="btn btn-secondary">Back to Products</a>
+                </div>
+            </div>
+
+            <!-- Images Section -->
+            <div class="form-section">
+                <h2 class="section-title">Product Images</h2>
                 <div class="image-gallery">
-                    <div th:each="img, iterStat : ${product.images}">
-                        <img th:src="@{${img.url}}" class="img-fluid m-1" alt="Product Image" />
+                    <div class="image-container" th:each="img, iterStat : ${product.images}">
+                        <img th:src="@{${img.url}}" alt="Product Image" />
 
                         <!-- Hidden fields to retain image data with proper list binding -->
                         <input type="hidden" th:name="images[__${iterStat.index}__].product.id" th:value="${product.id}" />
                         <input type="hidden" th:name="images[__${iterStat.index}__].id" th:value="${img.id}" />
-                        <input type="hidden" th:name="images[__${iterStat.index}__].url" th:value="${img.url}" />                    </div>
+                        <input type="hidden" th:name="images[__${iterStat.index}__].url" th:value="${img.url}" />
+                    </div>
                 </div>
 
                 <!-- Upload New Image -->
-                <div class="mb-3">
-                    <label class="form-label"><strong>Upload New Image</strong></label>
-                    <input type="file" class="form-control" id="imageFiles" name="imageFiles" style="display: none" multiple disabled>
+                <div id="uploadSection" class="upload-container" style="display: none;">
+                    <label for="imageFiles" class="form-label mb-2"><strong>Upload New Images</strong></label>
+                    <input type="file" class="form-control" id="imageFiles" name="imageFiles" multiple disabled>
+                    <p class="text-muted mt-2">You can select multiple images. Recommended size: 800x800px.</p>
                 </div>
+            </div>
 
-                <!-- Product Name -->
-                <div class="mb-3">
-                    <label for="name" class="form-label"><strong>Product Name:</strong></label>
+            <!-- Basic Information Section -->
+            <div class="form-section">
+                <h2 class="section-title">Basic Information</h2>
+                <div class="mb-4">
+                    <label for="name" class="form-label">Product Name</label>
                     <input type="text" id="name" class="form-control" th:field="*{name}" disabled>
                     <div th:if="${#fields.hasErrors('name')}" class="text-danger">
                         <p th:each="err : ${#fields.errors('name')}" th:text="${err}"></p>
                     </div>
                 </div>
 
-                <!-- Category -->
-                <div class="mb-3">
-                    <label for="categorySelect" class="form-label"><strong>Category:</strong></label>
-                    <!-- Show category name when not editing -->
-                    <span id="categoryText" th:text="${product.category != null ? product.category.name : 'No Category'}"></span>
-                    <!-- Show dropdown when editing -->
-                    <select id="categorySelect" class="form-control" th:field="*{category}" style="display:none;" disabled>
-                        <option value="">Select Category</option>
-                        <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
-                    </select>
-                    <div th:if="${#fields.hasErrors('category')}" class="text-danger">
-                        <p th:each="err : ${#fields.errors('category')}" th:text="${err}"></p>
+                <div class="two-column">
+                    <!-- Category -->
+                    <div class="mb-4">
+                        <label class="form-label">Category</label>
+                        <div class="text-value" id="categoryText" th:text="${product.category != null ? product.category.name : 'No Category'}"></div>
+                        <select id="categorySelect" class="form-control" th:field="*{category}" style="display:none;" disabled>
+                            <option value="">Select Category</option>
+                            <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
+                        </select>
+                        <div th:if="${#fields.hasErrors('category')}" class="text-danger">
+                            <p th:each="err : ${#fields.errors('category')}" th:text="${err}"></p>
+                        </div>
+                    </div>
+
+                    <!-- Brand -->
+                    <div class="mb-4">
+                        <label class="form-label">Brand</label>
+                        <div class="text-value" id="brandText" th:text="${product.brand != null ? product.brand.name : 'No Brand'}"></div>
+                        <select id="brandSelect" class="form-control" th:field="*{brand}" style="display:none;" disabled>
+                            <option value="">Select Brand</option>
+                            <option th:each="brand : ${brands}" th:value="${brand.id}" th:text="${brand.name}"></option>
+                        </select>
+                        <div th:if="${#fields.hasErrors('brand')}" class="text-danger">
+                            <p th:each="err : ${#fields.errors('brand')}" th:text="${err}"></p>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Brand -->
-                <div class="mb-3">
-                    <label for="brandSelect" class="form-label"><strong>Brand:</strong></label>
-                    <!-- Show brand name when not editing -->
-                    <span id="brandText" th:text="${product.brand != null ? product.brand.name : 'No Category'}"></span>
-                    <!-- Show dropdown when editing -->
-                    <select id="brandSelect" class="form-control" th:field="*{brand}" style="display:none;" disabled>
-                        <option value="">Select Brand</option>
-                        <option th:each="brand : ${brands}" th:value="${brand.id}" th:text="${brand.name}"></option>
-                    </select>
-                    <div th:if="${#fields.hasErrors('brand')}" class="text-danger">
-                        <p th:each="err : ${#fields.errors('brand')}" th:text="${err}"></p>
+                <div class="two-column">
+                    <!-- Price -->
+                    <div class="mb-4">
+                        <label for="price" class="form-label">Price</label>
+                        <input type="number" id="price" class="form-control" th:field="*{price}" disabled>
+                        <div th:if="${#fields.hasErrors('price')}" class="text-danger">
+                            <p th:each="err : ${#fields.errors('price')}" th:text="${err}"></p>
+                        </div>
+                    </div>
+
+                    <!-- Stock -->
+                    <div class="mb-4">
+                        <label for="stock" class="form-label">Stock</label>
+                        <input type="number" id="stock" class="form-control" th:field="*{stock}" disabled>
+                        <div th:if="${#fields.hasErrors('stock')}" class="text-danger">
+                            <p th:each="err : ${#fields.errors('stock')}" th:text="${err}"></p>
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Price -->
+            <!-- Description Section -->
+            <div class="form-section">
+                <h2 class="section-title">Product Description</h2>
                 <div class="mb-3">
-                    <label for="price" class="form-label"><strong>Price:</strong></label>
-                    <input type="number" id="price" class="form-control" th:field="*{price}" disabled>
-                    <div th:if="${#fields.hasErrors('price')}" class="text-danger">
-                        <p th:each="err : ${#fields.errors('price')}" th:text="${err}"></p>
-                    </div>
-                </div>
-
-                <!-- Stock -->
-                <div class="mb-3">
-                    <label for="stock" class="form-label"><strong>Stock:</strong></label>
-                    <input type="number" id="stock" class="form-control" th:field="*{stock}" disabled>
-                    <div th:if="${#fields.hasErrors('stock')}" class="text-danger">
-                        <p th:each="err : ${#fields.errors('stock')}" th:text="${err}"></p>
-                    </div>
-                </div>
-
-                <!-- Description -->
-                <div class="mb-3">
-                    <label for="description" class="form-label"><strong>Description:</strong></label>
-                    <textarea id="description" class="form-control" th:field="*{description}" disabled></textarea>
+                    <label for="description" class="form-label">Description</label>
+                    <textarea id="description" class="form-control" th:field="*{description}" rows="5" disabled></textarea>
                     <div th:if="${#fields.hasErrors('description')}" class="text-danger">
                         <p th:each="err : ${#fields.errors('description')}" th:text="${err}"></p>
                     </div>
                 </div>
+            </div>
 
-
-                <!-- Buttons -->
-                <div class="mb-3">
-                        <button type="button" class="btn btn-primary" id="editBtn" onclick="enableEdit()">Edit</button>
-                        <button type="button" class="btn btn-danger" id="cancelBtn" style="display:none" onclick="cancelEdit()">Cancel</button>
-                        <button type="submit" class="btn btn-success" id="saveBtn" style="display:none;" onclick="confirmSave(event)">Save</button>
-                        <a th:href="@{/seller/product}" class="btn btn-secondary">Back to Products</a>
-                </div>
+            <!-- Save/Cancel Buttons (visible only when editing) -->
+            <div class="btn-group" id="editButtons" style="justify-content: flex-end;">
+                <button type="button" class="btn btn-danger" id="cancelBtn" style="display:none" onclick="cancelEdit()">Cancel</button>
+                <button type="submit" class="btn btn-success" id="saveBtn" style="display:none;" onclick="confirmSave(event)">Save Changes</button>
             </div>
         </div>
     </form>

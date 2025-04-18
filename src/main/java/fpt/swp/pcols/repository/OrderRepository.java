@@ -34,8 +34,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
                            @Param("email") String email,
                            Sort sort);
 
-    @Query("SELECT o FROM Order o WHERE YEAR(o.orderDate) = :year")
-    List<Order> findByYear(@Param("year") int year);
+    @Query("SELECT o FROM Order o WHERE o.status = :status AND YEAR(o.orderDate) = :year")
+    List<Order> findByYear(@Param("status") Order.OrderStatus status, @Param("year") int year);
 
     @Query("SELECT MIN(YEAR(o.orderDate)) FROM Order o")
     Integer findEarliestOrderYear();

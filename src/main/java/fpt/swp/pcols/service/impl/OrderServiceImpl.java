@@ -162,7 +162,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public DashboardStatsDTO getDashboardStats(int year) {
-        List<Order> paidOrders = orderRepository.findByYear(year);
+        List<Order> paidOrders = orderRepository.findByYear(Order.OrderStatus.PAID, year);
 
         int totalOrders = paidOrders.size();
 

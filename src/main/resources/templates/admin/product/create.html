@@ -6,42 +6,190 @@
     <title>Add Product</title>
     <link rel="stylesheet" th:href="@{/css/admin.css}">
     <style>
-        .content {
-            padding: 20px;
+        :root {
+            --primary-color: #4361ee;
+            --primary-hover: #3a56d4;
+            --secondary-color: #4f4f4f;
+            --light-gray: #f5f5f5;
+            --border-color: #e0e0e0;
+            --text-color: #333;
+            --error-color: #e63946;
         }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-gray);
+            color: var(--text-color);
+        }
+
+        .content {
+            padding: 30px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
         .card {
             background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
         }
+
+        .card-header {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .form-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .form-subtitle {
+            color: var(--secondary-color);
+            font-size: 16px;
+        }
+
+        .form-section {
+            margin-bottom: 35px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 25px;
+        }
+
+        .form-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .form-section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
         .form-label {
-            font-weight: bold;
-            color: #333;
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text-color);
         }
+
         .form-control {
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            padding: 10px;
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            font-size: 16px;
+            transition: border 0.3s, box-shadow 0.3s;
         }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+            outline: none;
+        }
+
+        .form-control-file {
+            padding: 12px;
+            background-color: #f9f9f9;
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .form-control-file:hover {
+            border-color: var(--primary-color);
+            background-color: #f0f7ff;
+        }
+
+        .text-danger {
+            color: var(--error-color);
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
         .btn {
-            padding: 10px 15px;
-            font-weight: bold;
-            border-radius: 5px;
+            padding: 12px 24px;
+            font-weight: 600;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
         }
+
         .btn-primary {
-            background: var(--blue);
-            border: none;
+            background: var(--primary-color);
+            color: white;
         }
+
         .btn-primary:hover {
-            background: #1e1a66;
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(67, 97, 238, 0.2);
         }
+
         .btn-secondary {
-            background: var(--black2);
-            border: none;
+            background: var(--secondary-color);
+            color: white;
         }
+
         .btn-secondary:hover {
-            background: #777;
+            background: #3d3d3d;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(79, 79, 79, 0.2);
+        }
+
+        .two-column {
+            display: flex;
+            gap: 20px;
+        }
+
+        .column {
+            flex: 1;
+        }
+
+        @media (max-width: 768px) {
+            .two-column {
+                flex-direction: column;
+            }
+
+            .content {
+                padding: 15px;
+            }
+
+            .card {
+                padding: 25px;
+            }
+
+            .btn-group {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .btn {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -49,66 +197,85 @@
 <div th:replace="fragments/admin_nav :: admin_nav"></div>
 <div class="main">
     <div class="content">
-        <div class="container mt-5">
-            <div class="row">
-                <div class="col-md-6 col-12 mx-auto">
-                    <div class="card">
-                        <h3 class="mb-3 text-center">Add a Product</h3>
-                        <hr />
-                        <form th:action="@{/admin/product/create}" th:object="${newProduct}" method="post" enctype="multipart/form-data">
-                            <div class="mb-3">
-                                <label class="form-label">Product Name:</label>
-                                <input type="text" class="form-control" th:field="*{name}" required />
-                                <div th:if="${#fields.hasErrors('name')}" class="text-danger">
-                                    <p th:each="err : ${#fields.errors('name')}" th:text="${err}"></p>
-                                </div>
+        <div class="card">
+            <div class="card-header">
+                <h1 class="form-title">Add New Product</h1>
+                <p class="form-subtitle">Complete the form below to add a product to your inventory</p>
+            </div>
+
+            <form th:action="@{/admin/product/create}" th:object="${newProduct}" method="post" enctype="multipart/form-data">
+                <!-- Basic Information Section -->
+                <div class="form-section">
+                    <h2 class="form-section-title">Basic Information</h2>
+                    <div class="form-group">
+                        <label class="form-label" for="productName">Product Name</label>
+                        <input type="text" id="productName" class="form-control" th:field="*{name}" placeholder="Enter product name" required />
+                        <div th:if="${#fields.hasErrors('name')}" class="text-danger">
+                            <p th:each="err : ${#fields.errors('name')}" th:text="${err}"></p>
+                        </div>
+                    </div>
+
+                    <div class="two-column">
+                        <div class="column form-group">
+                            <label class="form-label" for="productPrice">Price ($)</label>
+                            <input type="number" id="productPrice" class="form-control" th:field="*{price}" placeholder="0.00" step="0.01" required />
+                            <div th:if="${#fields.hasErrors('price')}" class="text-danger">
+                                <p th:each="err : ${#fields.errors('price')}" th:text="${err}"></p>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">Price:</label>
-                                <input type="number" class="form-control" th:field="*{price}" required />
-                                <div th:if="${#fields.hasErrors('price')}" class="text-danger">
-                                    <p th:each="err : ${#fields.errors('price')}" th:text="${err}"></p>
-                                </div>
+                        </div>
+
+                        <div class="column form-group">
+                            <label class="form-label" for="productCategory">Category</label>
+                            <select id="productCategory" class="form-control" th:field="*{category.id}" required>
+                                <option value="">Select a category</option>
+                                <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+                            </select>
+                            <div th:if="${#fields.hasErrors('category.id')}" class="text-danger">
+                                <p th:each="err : ${#fields.errors('category.id')}" th:text="${err}"></p>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">Description:</label>
-                                <textarea class="form-control" th:field="*{description}" rows="3" required></textarea>
-                                <div th:if="${#fields.hasErrors('description')}" class="text-danger">
-                                    <p th:each="err : ${#fields.errors('description')}" th:text="${err}"></p>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Category:</label>
-                                <select class="form-control" th:field="*{category.id}" required>
-                                    <option value="">Select a category</option>
-                                    <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
-                                </select>
-                                <div th:if="${#fields.hasErrors('category.id')}" class="text-danger">
-                                    <p th:each="err : ${#fields.errors('category.id')}" th:text="${err}"></p>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Brand:</label>
-                                <select class="form-control" th:field="*{brand.id}" required>
-                                    <option value="">Select a Brand</option>
-                                    <option th:each="brand : ${brands}" th:value="${brand.id}" th:text="${brand.name}"></option>
-                                </select>
-                                <div th:if="${#fields.hasErrors('brand.id')}" class="text-danger">
-                                    <p th:each="err : ${#fields.errors('brand.id')}" th:text="${err}"></p>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Upload Product Image:</label>
-                                <input type="file" class="form-control" name="imageFiles" accept="image/*" multiple required />
-                            </div>
-                            <div class="d-flex justify-content-between">
-                                <button type="submit" class="btn btn-primary">Add Product</button>
-                                <a th:href="@{/admin/product}" class="btn btn-secondary">Back to Products</a>
-                            </div>
-                        </form>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="productBrand">Brand</label>
+                        <select id="productBrand" class="form-control" th:field="*{brand.id}" required>
+                            <option value="">Select a Brand</option>
+                            <option th:each="brand : ${brands}" th:value="${brand.id}" th:text="${brand.name}"></option>
+                        </select>
+                        <div th:if="${#fields.hasErrors('brand.id')}" class="text-danger">
+                            <p th:each="err : ${#fields.errors('brand.id')}" th:text="${err}"></p>
+                        </div>
                     </div>
                 </div>
-            </div>
+
+                <!-- Description Section -->
+                <div class="form-section">
+                    <h2 class="form-section-title">Product Description</h2>
+                    <div class="form-group">
+                        <label class="form-label" for="productDescription">Description</label>
+                        <textarea id="productDescription" class="form-control" th:field="*{description}" rows="4" placeholder="Enter detailed product description" required></textarea>
+                        <div th:if="${#fields.hasErrors('description')}" class="text-danger">
+                            <p th:each="err : ${#fields.errors('description')}" th:text="${err}"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image Upload Section -->
+                <div class="form-section">
+                    <h2 class="form-section-title">Product Images</h2>
+                    <div class="form-group">
+                        <label class="form-label" for="productImages">Upload Images</label>
+                        <input type="file" id="productImages" class="form-control form-control-file" name="imageFiles" accept="image/*" multiple required />
+                        <p class="form-subtitle" style="margin-top: 10px; font-size: 14px;">You can select multiple images. Recommended size: 800x800px</p>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="btn-group">
+                    <a th:href="@{/seller/product}" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Add Product</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
